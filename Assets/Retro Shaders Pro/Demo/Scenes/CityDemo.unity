@@ -519,39 +519,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3242fecb9575304a95f87083a4bbfda, type: 3}
---- !u!1 &56091915 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7048659585459707989, guid: cca75ef0d88b24749aca6e34f84a6cfb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1594170071}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &56091920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 56091915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de6c986ea168387458edac98bcd43dfd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  componentsToChange: 2147483647
-  restoreIntensityOnDisable: 1
-  frequency: 10
-  performPauses: 0
-  flickeringDuration:
-    m_MinValue: 1
-    m_MaxValue: 4
-  pauseDuration:
-    m_MinValue: 0
-    m_MaxValue: 1
-  restoreIntensityOnPause: 0
-  intensityAmplitude:
-    m_MinValue: -1
-    m_MaxValue: 1
-  smoothing: 0.05
 --- !u!1001 &72486236
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10920,21 +10887,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1861230817387758676, guid: cca75ef0d88b24749aca6e34f84a6cfb,
-        type: 3}
-      propertyPath: spotAngle
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 1861230817387758676, guid: cca75ef0d88b24749aca6e34f84a6cfb,
-        type: 3}
-      propertyPath: spotAngleMultiplier
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1861230817387758676, guid: cca75ef0d88b24749aca6e34f84a6cfb,
-        type: 3}
-      propertyPath: _TrackChangesDuringPlaytime
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2922464216382388418, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
       propertyPath: m_Name
@@ -10993,11 +10945,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7048659585459707989, guid: cca75ef0d88b24749aca6e34f84a6cfb,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 56091920}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cca75ef0d88b24749aca6e34f84a6cfb, type: 3}
 --- !u!1001 &1610648678
 PrefabInstance:
