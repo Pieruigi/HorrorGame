@@ -1,4 +1,5 @@
 ﻿using Cinemachine;
+using TMPro;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -80,6 +81,8 @@ namespace StarterAssets
 
 		float _cameraRootHeightDefault;
 
+		float _playerHeight;
+
 	
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
@@ -128,6 +131,7 @@ namespace StarterAssets
 			_fallTimeoutDelta = FallTimeout;
 
 			_cameraRootHeightDefault = CameraRoot.localPosition.y;
+			_playerHeight = _controller.height;
 		}
 
 		private void Update()
@@ -180,20 +184,35 @@ namespace StarterAssets
 				Debug.Log("TEST - Crouching....");
 				if (height > CrouchHeight)
 				{
-					var speed = Mathf.Abs(CrouchHeight-_cameraRootHeightDefault) / CrouchTime;
+					var heightDiff = Mathf.Abs(CrouchHeight - _cameraRootHeightDefault);
+					var speed = heightDiff / CrouchTime;
+					// Camera
 					height = Mathf.MoveTowards(height, CrouchHeight, speed * Time.deltaTime);
 					if (height < CrouchHeight) height = CrouchHeight;
 					CameraRoot.localPosition = Vector3.up * height;
+
+					// Character
+					var pHeight = Mathf.MoveTowards(_controller.height, _controller.height - heightDiff, speed * Time.deltaTime);
+					if (pHeight < _controller.height - heightDiff) pHeight = _controller.height - heightDiff;
+					_controller.height = pHeight;
+
 				}
 			}
             else
             {
                 if(height < _cameraRootHeightDefault)
-                {
-                    var speed = Mathf.Abs(CrouchHeight-_cameraRootHeightDefault) / CrouchTime;
+				{
+					var heightDiff = Mathf.Abs(CrouchHeight - _cameraRootHeightDefault);
+					var speed = heightDiff / CrouchTime;
+					// Camera
 					height = Mathf.MoveTowards(height, _cameraRootHeightDefault, speed * Time.deltaTime);
 					if (height > _cameraRootHeightDefault) height = _cameraRootHeightDefault;
 					CameraRoot.localPosition = Vector3.up * height;
+
+					// Character
+					var pHeight = Mathf.MoveTowards(_controller.height, _playerHeight, speed * Time.deltaTime);
+					if (pHeight > _playerHeight) pHeight = _playerHeight;
+					_controller.height = pHeight;
                 }
             }
         }
