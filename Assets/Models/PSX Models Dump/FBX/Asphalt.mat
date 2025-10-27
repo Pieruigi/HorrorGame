@@ -94,7 +94,7 @@ Material:
     - _SnapsPerUnit: 64
     m_Floats:
     - _AddPrecomputedVelocity: 0
-    - _AffineTextureStrength: 0.079
+    - _AffineTextureStrength: 0.082
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _AmbientLight: 0.02
@@ -104,7 +104,7 @@ Material:
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _ColorBitDepthOffset: 0
-    - _Cull: 2
+    - _Cull: 0
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1

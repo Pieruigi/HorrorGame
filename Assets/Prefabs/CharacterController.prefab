@@ -148,8 +148,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 0
-  m_Color: {r: 1, g: 0.9716017, b: 0.8349056, a: 1}
-  m_Intensity: 10
+  m_Color: {r: 1, g: 0.9882075, b: 0.9292453, a: 1}
+  m_Intensity: 8.29
   m_Range: 20
   m_SpotAngle: 35
   m_InnerSpotAngle: 25.53751
@@ -214,7 +214,7 @@ MonoBehaviour:
   pluginVersion: 20205
   colorFromLight: 1
   colorMode: 0
-  color: {r: 1, g: 0.8269179, b: 0.59039015, a: 1}
+  color: {r: 1, g: 0.8411835, b: 0.6588085, a: 1}
   colorGradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
@@ -247,8 +247,8 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   intensityFromLight: 1
   intensityModeAdvanced: 0
-  intensityInside: 1
-  intensityOutside: 1
+  intensityInside: 0.829
+  intensityOutside: 0.829
   intensityMultiplier: 0.1
   hdrpExposureWeight: 0
   blendingMode: 0
