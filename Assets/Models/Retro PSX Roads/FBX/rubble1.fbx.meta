@@ -3,7 +3,12 @@ guid: 4be803ca8645a4d4583a70d66a52eeb8
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rubble1
+    second: {fileID: 2100000, guid: 2f4180ffa29a693409325c55382fc4fe, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
