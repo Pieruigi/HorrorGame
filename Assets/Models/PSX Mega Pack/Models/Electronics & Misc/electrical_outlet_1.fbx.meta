@@ -3,7 +3,12 @@ guid: 441e025e1e5d6844290dee98b4631c7a
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: electrical_outlet_1
+    second: {fileID: 2100000, guid: 5403e6d530209654a81675986a186a76, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
