@@ -95,6 +95,16 @@ namespace StarterAssets
 
 		CinemachineVirtualCamera _virtualCamera;
 
+		public bool IsRunning
+		{
+			get { return Grounded && !_input.crouch && _input.sprint; }
+		}
+		
+		public bool IsCrouching
+        {
+            get{ return Grounded && _input.crouch; }
+        }
+
 		private bool IsCurrentDeviceMouse
 		{
 			get
