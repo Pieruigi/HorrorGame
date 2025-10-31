@@ -40,11 +40,11 @@ public class Trigger1 : MonoBehaviour
     {
         carAlarm.StartAlarm();
 
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(3f);
 
         door.Open();
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(2.5f);
 
         eyes.SetActive(true);
 
