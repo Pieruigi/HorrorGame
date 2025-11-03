@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -23,8 +24,19 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
+		void Awake()
+		{
+			var input = GetComponent<PlayerInput>();
+			input.actions["Action"].canceled += OnActionCanceled;
+        }
+
+        private void OnActionCanceled(InputAction.CallbackContext context)
+        {
+			action = false;
+        }
+
 #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
+        public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
 		}

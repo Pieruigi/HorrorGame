@@ -26,89 +26,74 @@ namespace TMM
 		[SerializeField]
 		GameObject outline;
 
-		
-
-		bool interactable = false;
-
 		StarterAssetsInputs input;
+
+		[SerializeField]
+		InteractionTrigger trigger;
 
 		
 
         void Awake()
         {
 			_renderer.material = notInteractableMaterial;
+			trigger.SetInteractable(false);
 			ShowOutline(false);
         }
 
-        // Start is called before the first frame update
-        void Start()
-	    {
-			input = FindAnyObjectByType<StarterAssetsInputs>();
-	    }
-
-		// Update is called once per frame
-		void Update()
+		// Start is called before the first frame update
+		void Start()
 		{
-			if (!interactable) return;
-
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			LayerMask mask = LayerMask.GetMask(new string[] { "Interactable" });
-
-			bool showOutline = false;
-
-			if (Physics.Raycast(ray, out hit, FirstPersonController.InteractionDistance, mask))
-			{
-				Debug.Log("TEST - Collider:" + hit.collider.gameObject);	
-				if (hit.collider.gameObject == gameObject)
-				{
-					// Show outline
-					showOutline = true;
-				}
-				else
-				{
-					showOutline = false;
-
-				}
-				if (input.action)
-				{
-					Interact();
-				}
-			}
-			else
-			{
-				Debug.Log("TEST - No Collider");	
-				showOutline = false;
-			}
-
-			Debug.Log("TEST - Outline:" + showOutline);
-			ShowOutline(showOutline && interactable);
+			input = FindAnyObjectByType<StarterAssetsInputs>();
 		}
 
-		void OnEnable()
+        void Update()
+        {
+            
+        }
+
+
+        void OnEnable()
 		{
 			GameplayManager.OnNextShiftReady += HandleOnNextShiftReady;
+			trigger.OnEnter += HandleOnTriggerEnter;
+			trigger.OnExit += HandleOnTriggerExit;
+			trigger.OnInteraction += HandleOnInteraction;
 		}
 
         void OnDisable()
         {
-            GameplayManager.OnNextShiftReady -= HandleOnNextShiftReady;
+			GameplayManager.OnNextShiftReady -= HandleOnNextShiftReady;
+			trigger.OnEnter -= HandleOnTriggerEnter;
+			trigger.OnExit -= HandleOnTriggerExit;
+			trigger.OnInteraction -= HandleOnInteraction;
         }
 
-		private void HandleOnNextShiftReady()
+        private void HandleOnInteraction()
+        {
+			Interact();
+        }
+
+        private void HandleOnTriggerExit()
+        {
+			ShowOutline(false);
+        }
+
+        private void HandleOnTriggerEnter()
+        {
+			ShowOutline(true);
+        }
+
+        private void HandleOnNextShiftReady()
 		{
-			interactable = true;
+			trigger.SetInteractable(true);
 			_renderer.material = interactableMaterial;
 		}
 
 		void Interact()
 		{
-			interactable = false;
 			_renderer.material = notInteractableMaterial;
-			
+			trigger.SetInteractable(false);
 			GameplayManager.Instance.StartWorkShift();
-
-
 			OnButtonHit?.Invoke();
 		}
 		

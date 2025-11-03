@@ -23,7 +23,7 @@ namespace TMM
 			_light.gameObject.SetActive(false);
 
 #if UNITY_EDITOR
-			SetAvailable(true);
+			//SetAvailable(true);
 #endif
         }
 

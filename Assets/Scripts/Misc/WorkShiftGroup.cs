@@ -3,11 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TMM
 {
 	public class WorkShiftGroup : MonoBehaviour
 	{
+		public static UnityAction OnMovedUp;
+		public static UnityAction OnMovedDown;
+
 		float downY = 0;
 		float upY = 2;
 
@@ -47,7 +51,7 @@ namespace TMM
 		
 		public void MoveUp()
         {
-            transform.DOMoveY(upY, time).SetEase(Ease.InOutQuad);
+            transform.DOMoveY(upY, time).SetEase(Ease.InOutQuad).OnComplete(()=> { OnMovedUp?.Invoke(); });
         }
 	}
 }
