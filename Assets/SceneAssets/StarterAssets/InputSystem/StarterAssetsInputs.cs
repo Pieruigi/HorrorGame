@@ -14,6 +14,8 @@ namespace StarterAssets
 		public bool sprint;
 		public bool crouch;
 
+		public bool action;
+
 		[Header("Movement Settings")]
 		public bool analogMovement;
 
@@ -49,6 +51,11 @@ namespace StarterAssets
 		{
 			CrouchInput(value.isPressed);
 		}
+
+		public void OnAction(InputValue value)
+        {
+			ActionInput(value.isPressed);
+        }
 #endif
 
 
@@ -86,6 +93,11 @@ namespace StarterAssets
 		{
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
+
+		public void ActionInput(bool newActionState)
+        {
+			action = newActionState;
+        }
 	}
 	
 }

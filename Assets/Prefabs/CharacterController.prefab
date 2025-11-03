@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6c986ea168387458edac98bcd43dfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  componentsToChange: 2147483647
+  componentsToChange: -1
   restoreIntensityOnDisable: 1
   frequency: 10
   performPauses: 0
@@ -358,7 +358,7 @@ PrefabInstance:
     - target: {fileID: 9005220659476430818, guid: 2d3a85ecde41a8246a79669975912b74,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4
+      value: 1.4000001
       objectReference: {fileID: 0}
     - target: {fileID: 9005220659476430818, guid: 2d3a85ecde41a8246a79669975912b74,
         type: 3}
@@ -693,6 +693,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -94.152
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 9487ffa520420ee4b8e563c69f4ac40c,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9487ffa520420ee4b8e563c69f4ac40c,
         type: 3}
       propertyPath: m_Name
@@ -710,7 +715,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6911686416359789125}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9487ffa520420ee4b8e563c69f4ac40c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 909285910031108269}
   m_SourcePrefab: {fileID: 100100000, guid: 9487ffa520420ee4b8e563c69f4ac40c, type: 3}
 --- !u!4 &2782231929801423621 stripped
 Transform:
@@ -718,6 +727,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2384304496062586094}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3303295354616701375 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9487ffa520420ee4b8e563c69f4ac40c,
+    type: 3}
+  m_PrefabInstance: {fileID: 2384304496062586094}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &909285910031108269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3303295354616701375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77bfdaf964d5d2e4e99e11382be8ec5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _light: {fileID: 7011551254606787587}
 --- !u!1001 &2472127990598665229
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -962,6 +990,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 2927ada7cd2349e4d8fbf6e44bd79c82, type: 2}
+    - target: {fileID: 7902980523659045606, guid: ea9917746a68ea5409159d3a69907500,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7902980523659045606, guid: ea9917746a68ea5409159d3a69907500,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

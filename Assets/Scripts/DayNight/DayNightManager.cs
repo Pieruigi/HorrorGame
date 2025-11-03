@@ -11,6 +11,9 @@ namespace TMM
         public delegate void DayNightSwitchDelegate(bool isNight);
         public static DayNightSwitchDelegate OnDayNightSwitch;
 
+        
+
+
         bool isNight = true;
         public bool IsNight
         {
@@ -26,7 +29,12 @@ namespace TMM
         // Update is called once per frame
         void Update()
         {
-
+#if UNITY_EDITOR
+            if(Input.GetKeyDown(KeyCode.Z))
+            {
+                Switch();
+            }
+#endif
         }
 
         public void Switch()
