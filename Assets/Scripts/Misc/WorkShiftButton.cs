@@ -23,8 +23,8 @@ namespace TMM
 		[SerializeField]
 		Renderer _renderer;
 
-		[SerializeField]
-		GameObject outline;
+		// [SerializeField]
+		// GameObject outline;
 
 		StarterAssetsInputs input;
 
@@ -37,13 +37,14 @@ namespace TMM
         {
 			_renderer.material = notInteractableMaterial;
 			trigger.SetInteractable(false);
-			ShowOutline(false);
+			//ShowOutline(false);
         }
 
 		// Start is called before the first frame update
 		void Start()
 		{
 			input = FindAnyObjectByType<StarterAssetsInputs>();
+			
 		}
 
         void Update()
@@ -99,7 +100,9 @@ namespace TMM
 		
 		void ShowOutline(bool value)
 		{
-			outline.SetActive(value);
+			GetComponent<InteractionEffect>().EnableInteractionEffect(value);
+
+			//outline.SetActive(value);
         }
     }
 }

@@ -9,12 +9,21 @@ namespace TMM
 	{
 		[SerializeField]
 		GameObject bag;
-
+		
 		[SerializeField]
 		GameObject map;
 
 		[SerializeField]
 		GameObject flashlight;
+
+		// [SerializeField]
+		// GameObject bagOutline;
+
+		// [SerializeField]
+		// GameObject flashlightOutline;
+
+		// [SerializeField]
+		// GameObject mapOutline;
 
 		
 
@@ -26,12 +35,17 @@ namespace TMM
 		{
 			trigger.SetInteractable(false);
 			flashlight.SetActive(false);
+
+			// Hide outlines
+			// mapOutline.SetActive(false);
+			// flashlightOutline.SetActive(false);
+			// bagOutline.SetActive(false);
         }
 
         // Start is called before the first frame update
         void Start()
 	    {
-	        
+	       
 	    }
 
 		// Update is called once per frame
@@ -44,12 +58,35 @@ namespace TMM
 		{
 			WorkShiftGroup.OnMovedUp += HandleOnGroupMovedUp;
 			trigger.OnInteraction += HandleOnInteraction;
+			trigger.OnEnter += HandleOnTriggerEnter;
+			trigger.OnExit += HandleOnTriggerExit;
 		}
 
         void OnDisable()
         {
 			WorkShiftGroup.OnMovedUp -= HandleOnGroupMovedUp;
 			trigger.OnInteraction -= HandleOnInteraction;
+			trigger.OnEnter -= HandleOnTriggerEnter;
+			trigger.OnExit -= HandleOnTriggerExit;
+        }
+
+        private void HandleOnTriggerExit()
+		{
+			// bagOutline.SetActive(false);
+			// mapOutline.SetActive(false);
+			// flashlightOutline.SetActive(false);
+			bag.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+			bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+			map.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+			flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+        }
+
+        private void HandleOnTriggerEnter()
+		{
+			bag.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
+			bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(true);
+			map.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
+			flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);;
         }
 
         private void HandleOnInteraction()

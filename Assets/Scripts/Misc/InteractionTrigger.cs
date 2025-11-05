@@ -12,6 +12,7 @@ namespace TMM
 		public UnityAction OnEnter;
 		public UnityAction OnExit;
 
+		[SerializeField]
 		Collider _collider;
 		StarterAssetsInputs input;
 
@@ -19,7 +20,7 @@ namespace TMM
 
         void Awake()
         {
-			_collider = GetComponent<Collider>();
+			//_collider = GetComponent<Collider>();
         }
 
         // Start is called before the first frame update
@@ -76,6 +77,7 @@ namespace TMM
 			}
 		}
 
+		
 		public void SetInteractable(bool value)
 		{
 			_collider.enabled = value;
@@ -89,11 +91,13 @@ namespace TMM
 				}
 			}
 		}
-		
+
 		public bool IsInteractable()
-        {
+		{
 			return _collider.enabled = true;
-        }
+		}
+		
+
 		
 		
 	}

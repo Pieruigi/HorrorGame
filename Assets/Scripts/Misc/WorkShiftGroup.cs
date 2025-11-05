@@ -13,7 +13,7 @@ namespace TMM
 		public static UnityAction OnMovedDown;
 
 		float downY = 0;
-		float upY = 2;
+		float upY = 2.5f;
 
 		float time = 3;
 
