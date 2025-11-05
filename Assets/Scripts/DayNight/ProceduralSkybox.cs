@@ -47,14 +47,14 @@ namespace TMM
         private void HandleOnDayNightSwitch(bool isNight)
         {
             // Get current colors
-            Vector4 c0_Start = isNight ? nightSkybox.GetVector("_Ground_Color") : daySkybox.GetVector("_Ground_Color");
-            Vector4 c1_Start = isNight ? nightSkybox.GetVector("_Sky_Color") : daySkybox.GetVector("_Sky_Color");
-            Vector4 c2_Start = isNight ? nightSkybox.GetVector("_Cloud_Color") : daySkybox.GetVector("_Cloud_Color");
+            Vector4 c0_Start = !isNight ? nightSkybox.GetVector("_Ground_Color") : daySkybox.GetVector("_Ground_Color");
+            Vector4 c1_Start = !isNight ? nightSkybox.GetVector("_Sky_Color") : daySkybox.GetVector("_Sky_Color");
+            Vector4 c2_Start = !isNight ? nightSkybox.GetVector("_Cloud_Color") : daySkybox.GetVector("_Cloud_Color");
 
             // Get target colors
-            Vector4 c0_End = !isNight ? nightSkybox.GetVector("_Ground_Color") : daySkybox.GetVector("_Ground_Color");
-            Vector4 c1_End = !isNight ? nightSkybox.GetVector("_Sky_Color") : daySkybox.GetVector("_Sky_Color");
-            Vector4 c2_End = !isNight ? nightSkybox.GetVector("_Cloud_Color") : daySkybox.GetVector("_Cloud_Color");
+            Vector4 c0_End = isNight ? nightSkybox.GetVector("_Ground_Color") : daySkybox.GetVector("_Ground_Color");
+            Vector4 c1_End = isNight ? nightSkybox.GetVector("_Sky_Color") : daySkybox.GetVector("_Sky_Color");
+            Vector4 c2_End = isNight ? nightSkybox.GetVector("_Cloud_Color") : daySkybox.GetVector("_Cloud_Color");
 
             // Set rendering setting for the lighting gradient
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;

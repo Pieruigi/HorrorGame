@@ -31,6 +31,9 @@ namespace TMM
 		[SerializeField]
 		InteractionTrigger trigger;
 
+		[SerializeField]
+		AudioSource audioSource;
+
 		
 
         void Awake()
@@ -88,6 +91,7 @@ namespace TMM
 		{
 			trigger.SetInteractable(true);
 			_renderer.material = interactableMaterial;
+			audioSource.Play();
 		}
 
 		void Interact()

@@ -348,7 +348,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6125595727112095495}
   - component: {fileID: 1744258186691708085}
-  - component: {fileID: 644521624633942502}
   - component: {fileID: 620290310957694282}
   m_Layer: 0
   m_Name: ArmsCamera
@@ -423,14 +422,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &644521624633942502
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9061724017828773848}
-  m_Enabled: 1
 --- !u!114 &620290310957694282
 MonoBehaviour:
   m_ObjectHideFlags: 0

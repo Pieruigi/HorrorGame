@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening.Core.Easing;
 using UnityEngine;
 
 namespace TMM
@@ -33,6 +34,8 @@ namespace TMM
 
 		[SerializeField]
 		PostOfficeDoors doors;
+
+	
 
         void Awake()
 		{
@@ -100,14 +103,26 @@ namespace TMM
 
 		IEnumerator DoInteraction()
         {
-            trigger.SetInteractable(false);
-			bag.SetActive(false);
-			map.SetActive(false);
+			trigger.SetInteractable(false);
 
-			yield return new WaitForSeconds(1f);
+			
+
+			// bag.SetActive(false);
+			// map.SetActive(false);
+			bag.GetComponent<PickUpEffect>().PlayEffect();
+			map.GetComponent<PickUpEffect>().PlayEffect();
+			if (flashlight.activeSelf) flashlight.GetComponent<PickUpEffect>().PlayEffect();
+
+			// Play music
+			if (!DayNightManager.Instance.IsNight)
+				MusicManager.Instance.PlayDaylightMusic(1f);
+
+			yield return new WaitForSeconds(2f);
 
 			doors.SetLocked(false);
 			doors.Open();
+
+	
         }
 
         private void HandleOnGroupMovedUp()

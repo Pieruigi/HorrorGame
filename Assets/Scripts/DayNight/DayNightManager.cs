@@ -14,7 +14,7 @@ namespace TMM
         
 
 
-        bool isNight = true;
+        bool isNight = false;
         public bool IsNight
         {
             get { return isNight; }

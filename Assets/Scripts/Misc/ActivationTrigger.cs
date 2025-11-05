@@ -36,6 +36,10 @@ namespace TMM
 			OnExit?.Invoke(other);
 		}
 		
-		
+		public void SetEnabled(bool value)
+        {
+			//disabled = !value;
+			GetComponent<Collider>().enabled = value;
+        }
     }
 }

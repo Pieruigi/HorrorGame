@@ -14,9 +14,14 @@ namespace TMM
 		[SerializeField]
 		ActivationTrigger trigger;
 
+		[SerializeField]
+		AudioSource audioSource;
+
 		bool locked = true;
 
 		bool open = false;
+
+		float time = 1.75f;
 
 
         void Awake()
@@ -33,8 +38,8 @@ namespace TMM
 		void Update()
 		{
 #if UNITY_EDITOR
-			// if (Input.GetKeyDown(KeyCode.Z))
-			// 	if (open) Close(); else Open();
+			if (Input.GetKeyDown(KeyCode.Z))
+				if (open) Close(); else Open();
 
 #endif
 		}
@@ -62,26 +67,29 @@ namespace TMM
         {
 			if (other.CompareTag("Player"))
 			{
-				SetLocked(true);  
+				trigger.SetEnabled(false);
+				SetLocked(true);
 	        } 
         }
 
         public void Close()
 		{
 			open = false;
+			audioSource.Play();
 			leftDoor.transform.DOKill();
 			rightDoor.transform.DOKill();
-			leftDoor.transform.DOMoveX(0, 1f).SetEase(Ease.OutBounce);
-			rightDoor.transform.DOMoveX(0, 1f).SetEase(Ease.OutBounce);
+			leftDoor.transform.DOMoveX(0, time).SetEase(Ease.OutBounce);
+			rightDoor.transform.DOMoveX(0, time).SetEase(Ease.OutBounce);
 		}
 
 		public void Open()
 		{
 			open = true;
+			audioSource.Play();
 			leftDoor.transform.DOKill();
 			rightDoor.transform.DOKill();
-			leftDoor.transform.DOMoveX(-1.06f, 1f).SetEase(Ease.OutBounce);
-			rightDoor.transform.DOMoveX(1.06f, 1f).SetEase(Ease.OutBounce);
+			leftDoor.transform.DOMoveX(-1.06f, time).SetEase(Ease.OutBounce);
+			rightDoor.transform.DOMoveX(1.06f, time).SetEase(Ease.OutBounce);
 		}
 		
 		public void SetLocked(bool value)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,10 @@ namespace TMM
 		int workingDay = 1;
 
 		bool nightShift = false;
+		// public bool NightShift
+        // {
+        //     get{ return nightShift; }
+        // }
 
 		bool workShiftRunning = false;
 		// public bool WorkShiftStarted
@@ -62,8 +67,8 @@ namespace TMM
 				workingDay++;
 			}
             else
-            {
-                if(DayNightManager.Instance.IsNight)
+			{
+		        if(DayNightManager.Instance.IsNight)
 					DayNightManager.Instance.Switch();
             }
 
@@ -75,7 +80,13 @@ namespace TMM
 			{
 				// Start a new day of work
 				workShiftRunning = true;
+
+				// if(!nightShift)
+				// 	MusicManager.Instance.PlayDaylightMusic();
+
 				OnWorkShiftStarted?.Invoke();
+
+
 			}
 
 			

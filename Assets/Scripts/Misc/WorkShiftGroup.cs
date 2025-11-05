@@ -15,7 +15,10 @@ namespace TMM
 		float downY = 0;
 		float upY = 2.5f;
 
-		float time = 3;
+		float time = 1.6f;
+
+		[SerializeField]
+		AudioSource pillarAudioSource;
 
 	    // Start is called before the first frame update
 	    void Start()
@@ -47,11 +50,13 @@ namespace TMM
         public void MoveDown()
 		{
 			transform.DOMoveY(downY, time).SetEase(Ease.InOutQuad);
+			pillarAudioSource.Play();
 		}
 		
 		public void MoveUp()
         {
-            transform.DOMoveY(upY, time).SetEase(Ease.InOutQuad).OnComplete(()=> { OnMovedUp?.Invoke(); });
+			transform.DOMoveY(upY, time).SetEase(Ease.InOutQuad).OnComplete(() => { OnMovedUp?.Invoke(); });
+			pillarAudioSource.Play();
         }
 	}
 }
