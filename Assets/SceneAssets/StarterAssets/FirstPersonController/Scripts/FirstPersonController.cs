@@ -14,7 +14,7 @@ namespace StarterAssets
 	public class FirstPersonController : MonoBehaviour
 	{
 
-		public const float InteractionDistance = 1f;
+		public const float InteractionDistance = 1.5f;
 
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]

@@ -56,16 +56,16 @@ namespace TMM
         void OnEnable()
 		{
 			GameplayManager.OnNextShiftReady += HandleOnNextShiftReady;
-			trigger.OnEnter += HandleOnTriggerEnter;
-			trigger.OnExit += HandleOnTriggerExit;
+			// trigger.OnEnter += HandleOnTriggerEnter;
+			// trigger.OnExit += HandleOnTriggerExit;
 			trigger.OnInteraction += HandleOnInteraction;
 		}
 
         void OnDisable()
         {
 			GameplayManager.OnNextShiftReady -= HandleOnNextShiftReady;
-			trigger.OnEnter -= HandleOnTriggerEnter;
-			trigger.OnExit -= HandleOnTriggerExit;
+			// trigger.OnEnter -= HandleOnTriggerEnter;
+			// trigger.OnExit -= HandleOnTriggerExit;
 			trigger.OnInteraction -= HandleOnInteraction;
         }
 
@@ -74,15 +74,15 @@ namespace TMM
 			Interact();
         }
 
-        private void HandleOnTriggerExit()
-        {
-			ShowOutline(false);
-        }
+        // private void HandleOnTriggerExit()
+        // {
+		// 	ShowOutline(false);
+        // }
 
-        private void HandleOnTriggerEnter()
-        {
-			ShowOutline(true);
-        }
+        // private void HandleOnTriggerEnter()
+        // {
+		// 	ShowOutline(true);
+        // }
 
         private void HandleOnNextShiftReady()
 		{
@@ -98,11 +98,11 @@ namespace TMM
 			OnButtonHit?.Invoke();
 		}
 		
-		void ShowOutline(bool value)
-		{
-			GetComponent<InteractionEffect>().EnableInteractionEffect(value);
+		// void ShowOutline(bool value)
+		// {
+		// 	GetComponent<InteractionEffect>().EnableInteractionEffect(value);
 
-			//outline.SetActive(value);
-        }
+		// 	//outline.SetActive(value);
+        // }
     }
 }

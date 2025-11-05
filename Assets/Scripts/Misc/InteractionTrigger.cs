@@ -9,8 +9,8 @@ namespace TMM
 	public class InteractionTrigger : MonoBehaviour
 	{
 		public UnityAction OnInteraction;
-		public UnityAction OnEnter;
-		public UnityAction OnExit;
+		// public UnityAction OnEnter;
+		// public UnityAction OnExit;
 
 		[SerializeField]
 		Collider _collider;
@@ -48,7 +48,8 @@ namespace TMM
                     if (!isHover)
                     {
 						isHover = true;
-						OnEnter?.Invoke();
+						//OnEnter?.Invoke();
+						ArmsController.Instance.PlayLeftHint();
                     }
 				}
 				else
@@ -57,13 +58,16 @@ namespace TMM
                     if (isHover)
                     {
 						isHover = false;
-						OnExit?.Invoke();
+						//OnExit?.Invoke();
+						ArmsController.Instance.PlayLeftIdle();
                     }
 
 				}
 				if (input.action)
 				{
+					ArmsController.Instance.PlayLeftInteraction();
 					OnInteraction?.Invoke();
+					
 					//SetInteractable(false);
 				}
 			}
@@ -72,7 +76,8 @@ namespace TMM
                 if (isHover)
                 {
 					isHover = false;
-					OnExit?.Invoke();
+					//OnExit?.Invoke();
+					ArmsController.Instance.PlayLeftIdle();
                 }
 			}
 		}
@@ -87,7 +92,8 @@ namespace TMM
 				if (isHover)
 				{
 					isHover = false;
-					OnExit?.Invoke();
+					//OnExit?.Invoke();
+					//ArmsController.Instance.PlayLeftIdle();
 				}
 			}
 		}

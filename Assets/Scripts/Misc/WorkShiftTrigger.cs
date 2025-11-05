@@ -25,11 +25,14 @@ namespace TMM
 		// [SerializeField]
 		// GameObject mapOutline;
 
-		
+
 
 		//bool interactable = false;
 		[SerializeField]
 		InteractionTrigger trigger;
+
+		[SerializeField]
+		PostOfficeDoors doors;
 
         void Awake()
 		{
@@ -58,42 +61,53 @@ namespace TMM
 		{
 			WorkShiftGroup.OnMovedUp += HandleOnGroupMovedUp;
 			trigger.OnInteraction += HandleOnInteraction;
-			trigger.OnEnter += HandleOnTriggerEnter;
-			trigger.OnExit += HandleOnTriggerExit;
+			// trigger.OnEnter += HandleOnTriggerEnter;
+			// trigger.OnExit += HandleOnTriggerExit;
 		}
 
         void OnDisable()
         {
 			WorkShiftGroup.OnMovedUp -= HandleOnGroupMovedUp;
 			trigger.OnInteraction -= HandleOnInteraction;
-			trigger.OnEnter -= HandleOnTriggerEnter;
-			trigger.OnExit -= HandleOnTriggerExit;
+			// trigger.OnEnter -= HandleOnTriggerEnter;
+			// trigger.OnExit -= HandleOnTriggerExit;
         }
 
-        private void HandleOnTriggerExit()
-		{
-			// bagOutline.SetActive(false);
-			// mapOutline.SetActive(false);
-			// flashlightOutline.SetActive(false);
-			bag.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-			bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-			map.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-			flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-        }
+		// private void HandleOnTriggerExit()
+		// {
+		// 	// bagOutline.SetActive(false);
+		// 	// mapOutline.SetActive(false);
+		// 	// flashlightOutline.SetActive(false);
+		// 	bag.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+		// 	bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+		// 	map.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+		// 	flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+		// }
 
-        private void HandleOnTriggerEnter()
-		{
-			bag.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
-			bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(true);
-			map.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
-			flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);;
-        }
+		// private void HandleOnTriggerEnter()
+		// {
+		// 	bag.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
+		// 	bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(true);
+		// 	map.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
+		// 	flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);;
+		// }
 
-        private void HandleOnInteraction()
+		private void HandleOnInteraction()
 		{
-			trigger.SetInteractable(false);
+			StartCoroutine(DoInteraction());
+
+		}
+
+		IEnumerator DoInteraction()
+        {
+            trigger.SetInteractable(false);
 			bag.SetActive(false);
 			map.SetActive(false);
+
+			yield return new WaitForSeconds(1f);
+
+			doors.SetLocked(false);
+			doors.Open();
         }
 
         private void HandleOnGroupMovedUp()

@@ -18,11 +18,11 @@ namespace TMM
 
 		bool nightShift = false;
 
-		bool workShiftStarted = false;
-		public bool WorkShiftStarted
-		{
-			get { return workShiftStarted; }
-		}
+		bool workShiftRunning = false;
+		// public bool WorkShiftStarted
+		// {
+		// 	get { return workShiftStarted; }
+		// }
 
 		int workingDayMax = 5;
 
@@ -74,6 +74,7 @@ namespace TMM
 			else
 			{
 				// Start a new day of work
+				workShiftRunning = true;
 				OnWorkShiftStarted?.Invoke();
 			}
 
@@ -82,7 +83,7 @@ namespace TMM
 
 		public void EndWorkShift()
 		{
-			workShiftStarted = false;
+			workShiftRunning = false;
 
 			if (workingDay == workingDayMax)
 			{

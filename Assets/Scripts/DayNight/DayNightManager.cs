@@ -30,10 +30,10 @@ namespace TMM
         void Update()
         {
 #if UNITY_EDITOR
-            if(Input.GetKeyDown(KeyCode.Z))
-            {
-                Switch();
-            }
+            // if(Input.GetKeyDown(KeyCode.Z))
+            // {
+            //     Switch();
+            // }
 #endif
         }
 
