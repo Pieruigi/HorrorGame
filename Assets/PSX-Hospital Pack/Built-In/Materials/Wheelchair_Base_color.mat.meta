@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7bc74f7a5fb03214f89fc05f729700af
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 328450
+  packageName: PSX-Hospital Pack
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Hospital Pack/Built-In/Materials/Wheelchair_Base_color.mat
+  uploadId: 777496

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 65c4e517b7d13bd4e9937e27bc8f6347
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 328450
+  packageName: PSX-Hospital Pack
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Hospital Pack/Built-In/Materials/Bed_Base_color.mat
+  uploadId: 777496

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 07825a1438179b54a8342e5d02edf049
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 328450
+  packageName: PSX-Hospital Pack
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Hospital Pack/Built-In/Materials/MedicalBox_Variant_1_Base_color.mat
+  uploadId: 777496

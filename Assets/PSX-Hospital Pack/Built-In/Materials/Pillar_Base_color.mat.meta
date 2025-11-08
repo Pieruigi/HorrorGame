@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2eb8bdd5bb9e74b4c9c95648785f5e67
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 328450
+  packageName: PSX-Hospital Pack
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Hospital Pack/Built-In/Materials/Pillar_Base_color.mat
+  uploadId: 777496

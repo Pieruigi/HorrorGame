@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bcd0f68762d78f14d8091b9be532b9fc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 328450
+  packageName: PSX-Hospital Pack
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Hospital Pack/Built-In/Materials/Cage_Base_color.mat
+  uploadId: 777496

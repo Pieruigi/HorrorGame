@@ -1,0 +1,18 @@
+Dear Creator!
+
+Thank you for supporting my assets! I hope they help bring your PSX-inspired project to life. 
+
+
+Usage Instructions
+Importing: Drag and drop the prefabs into your Unity project.
+Materials & Shaders: The models use simple materials to replicate PSX graphics. You may tweak the textures for different effects (Point filtering on/off)
+Performance: Designed to be lightweight for low-spec and retro-style games.
+
+Texture Filtering: Use Point (No Filter)
+
+Need Help?
+If you have any questions or need assistance, feel free to reach out.
+
+Happy creating!
+
+[Wildenza]

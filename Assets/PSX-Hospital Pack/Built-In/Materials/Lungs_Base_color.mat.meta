@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7c9bb722ff740c44f9015a5e2205600f
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 328450
+  packageName: PSX-Hospital Pack
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Hospital Pack/Built-In/Materials/Lungs_Base_color.mat
+  uploadId: 777496

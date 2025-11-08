@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 06bd42df04f75c64a8ea0b1ab8738df9
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 328450
+  packageName: PSX-Hospital Pack
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Hospital Pack/Info/Info.txt
+  uploadId: 777496

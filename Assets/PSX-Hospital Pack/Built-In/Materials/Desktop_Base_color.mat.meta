@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f4c70c1b0d97056479ab018c64080aa0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 328450
+  packageName: PSX-Hospital Pack
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Hospital Pack/Built-In/Materials/Desktop_Base_color.mat
+  uploadId: 777496

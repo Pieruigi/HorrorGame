@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cd8df187d15ec3f49b8463558bb55c60
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 328450
+  packageName: PSX-Hospital Pack
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Hospital Pack/Built-In/Materials/light_Base_color.mat
+  uploadId: 777496
