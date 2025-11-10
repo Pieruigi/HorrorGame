@@ -10,7 +10,7 @@ namespace TMM
 		[SerializeField]
 		Light _light;
 
-		bool available = false;
+		bool available = true;
 
 		bool isOn = false;
 

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks.Triggers;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,112 +10,79 @@ namespace TMM
 {
 	public class GameplayManager : Singleton<GameplayManager>
 	{
-		public static UnityAction OnNextShiftReady;
 
-		public static UnityAction OnWorkShiftStarted;
-		public static UnityAction OnWorkShiftCompleted;
+		public static UnityAction OnNightStarted;
+		public static UnityAction OnDayStarted;
 
+		public static UnityAction OnNightComing;
+
+		public static UnityAction OnDayComing;
+
+		int days = 0;
+
+		float time = 0;
+
+		bool isNight = false;
+
+		float dayDuration = 24f;
+
+		float nightDuration = 12f;
+
+		float elapsed = 0;
+
+		float alertTime = 5;
+		bool alert = false;
 		
 
-		int workingDay = 1;
+		void Start()
+		{
+			time = dayDuration;
+		}
 
-		bool nightShift = false;
-		// public bool NightShift
-        // {
-        //     get{ return nightShift; }
-        // }
-
-		bool workShiftRunning = false;
-		// public bool WorkShiftStarted
-		// {
-		// 	get { return workShiftStarted; }
-		// }
-
-		int workingDayMax = 5;
-
-		bool ready = false;
-
-
-	    // Start is called before the first frame update
-	    void Start()
-	    {
-			StartCoroutine(SetNextShiftReady());
-	    }
-
-		// Update is called once per frame
 		void Update()
 		{
+			elapsed += Time.deltaTime;
 
-		}
-
-		IEnumerator SetNextShiftReady()
-        {
-			yield return new WaitForSeconds(5);
-
-			ready = true;
-			OnNextShiftReady?.Invoke();
-        }
-
-		/// <summary>
-		/// Every time you hit the button you start the next work shift
-		/// </summary>
-		public void StartWorkShift()
-		{
-			if (!ready) return;
-			if (nightShift)
+			if (elapsed > time)
 			{
-				if(!DayNightManager.Instance.IsNight)
-					DayNightManager.Instance.Switch();
-				workingDay++;
-			}
-            else
-			{
-		        if(DayNightManager.Instance.IsNight)
-					DayNightManager.Instance.Switch();
-            }
+				elapsed -= time;
 
-			if (workingDay == workingDayMax + 1)
-			{
-				// Let the player free to go (lying, you leave the base but you get killed by some creature)
-			}
-			else
-			{
-				// Start a new day of work
-				workShiftRunning = true;
-
-				// if(!nightShift)
-				// 	MusicManager.Instance.PlayDaylightMusic();
-
-				OnWorkShiftStarted?.Invoke();
-
+				if (isNight)
+				{
+					days++;
+					isNight = false;
+					alert = false;
+					time = dayDuration;
+					OnDayStarted?.Invoke();
+				}
+				else
+				{
+					isNight = true;
+					alert = false;
+					time = nightDuration;
+					OnNightStarted?.Invoke();
+				}
 
 			}
-
-			
-		}
-
-		public void EndWorkShift()
-		{
-			workShiftRunning = false;
-
-			if (workingDay == workingDayMax)
+			else // Elapsed < time
 			{
-				// Do wmoething
+				if (!alert && elapsed > time - alertTime)
+				{
+					alert = true;
+					if (!isNight)
+						OnNightComing?.Invoke();
+					else
+						OnDayComing?.Invoke();
+				}
 			}
-
-			nightShift = !nightShift;
-			workingDay++;
-
-			ready = false;
-			StartCoroutine(SetNextShiftReady());
-
-			OnWorkShiftCompleted?.Invoke();
-
-
 
 		}
 		
-	
+		public bool IsFirstDay()
+        {
+			return days == 0;
+        }
 
-	}
+
+    }
 }
