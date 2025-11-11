@@ -12,8 +12,8 @@ namespace TMM
 		[SerializeField]
 		Transform subjectSpawnPoint;
 
-		[SerializeField]
-		SubjectInfo subjectInfo;
+		// [SerializeField]
+		// SubjectInfo subjectInfo;
 
 		public Transform SubjectSpawnPoint
 		{
@@ -48,13 +48,13 @@ namespace TMM
 		{
 			this.subject = subject;
 			subject.OnDestroyed += () => { SetFree(); };
-			subjectInfo.Init(subject);
+			//subjectInfo.Init(subject);
 		}
 		
 		public void SetFree()
 		{
 			subject = null;
-			subjectInfo.Clear();
+			//subjectInfo.Clear();
         }
 		
 

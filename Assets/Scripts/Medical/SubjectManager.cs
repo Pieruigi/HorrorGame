@@ -36,17 +36,18 @@ namespace TMM
 
 			// Get free bed 
 			var bed = BedManager.Instance.GetRandomFreeBed();
-			if(!bed)
-            {
+			if (!bed)
+			{
 				Debug.LogWarning("No free beds");
 				return;
-            }
+			}
+
+			counter++; 
 
 			GameObject go = GameObject.Instantiate(subjectPrefab);
 
-			
 			var subject = go.GetComponent<Subject>();
-			subject.Init(++counter);
+			
 			subject.transform.position = bed.SubjectSpawnPoint.position;
 			subject.transform.rotation = bed.SubjectSpawnPoint.rotation;
 			bed.SetBusy(subject);

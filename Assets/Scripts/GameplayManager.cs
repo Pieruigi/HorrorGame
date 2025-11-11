@@ -24,9 +24,9 @@ namespace TMM
 
 		bool isNight = false;
 
-		float dayDuration = 24f;
+		float dayDuration = 240f;
 
-		float nightDuration = 12f;
+		float nightDuration = 120f;
 
 		float elapsed = 0;
 

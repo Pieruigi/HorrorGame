@@ -8,9 +8,10 @@ namespace TMM
 {
 	public enum Application { None, Capsule, Needle, Drug }
 
-	public enum Symptom { RottenTeeth, Sweating, Pustules, Fetor }
+	public enum Symptom { Head, Chest, Arms, Legs }
+
 	
-	
+
 	[System.Serializable]	
 	public class Illness
 	{
@@ -22,9 +23,9 @@ namespace TMM
 		Symptom[] symptoms;
 
 		public IList<Symptom> Symptoms
-        {
-            get{ return symptoms.ToList().AsReadOnly(); }
-        }
+		{
+			get { return symptoms.ToList().AsReadOnly(); }
+		}
 
 		
 
@@ -39,32 +40,32 @@ namespace TMM
 			{
 				case 0:
 					_name = "Sudor pustulosus";
-					symptoms = new Symptom[] { Symptom.Sweating, Symptom.Pustules };
+					symptoms = new Symptom[] { Symptom.Chest, Symptom.Arms };
 					neededApplications = new Application[] { Application.Capsule, Application.Needle };
 					break;
 				case 1:
 					_name = "Fetor mortis";
-					symptoms = new Symptom[] { Symptom.Fetor, Symptom.Pustules };
+					symptoms = new Symptom[] { Symptom.Legs, Symptom.Arms };
 					neededApplications = new Application[] { Application.Capsule, Application.Drug };
 					break;
 				case 2:
 					_name = "Senilitas putrida";
-					symptoms = new Symptom[] { Symptom.RottenTeeth, Symptom.Sweating };
+					symptoms = new Symptom[] { Symptom.Head, Symptom.Chest };
 					neededApplications = new Application[] { Application.Needle, Application.Drug };
 					break;
 				case 3:
 					_name = "Halitus mortis";
-					symptoms = new Symptom[] { Symptom.RottenTeeth, Symptom.Fetor };
+					symptoms = new Symptom[] { Symptom.Head, Symptom.Legs };
 					neededApplications = new Application[] { Application.Needle, Application.Capsule };
 					break;
 				case 4:
 					_name = "Putridus pustulosus";
-					symptoms = new Symptom[] { Symptom.RottenTeeth, Symptom.Pustules };
+					symptoms = new Symptom[] { Symptom.Head, Symptom.Arms };
 					neededApplications = new Application[] { Application.Drug, Application.Capsule };
 					break;
 				case 5:
 					_name = "Fetores sudati";
-					symptoms = new Symptom[] { Symptom.Sweating, Symptom.Fetor };
+					symptoms = new Symptom[] { Symptom.Chest, Symptom.Legs };
 					neededApplications = new Application[] { Application.Drug, Application.Needle };
 					break;
 			}

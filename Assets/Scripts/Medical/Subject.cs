@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.Windows;
 
 namespace TMM
 {
@@ -12,8 +13,10 @@ namespace TMM
 	/// Black: dead
 	/// </summary>
 	public enum Severity { Black, Red, Yellow, Green, White }
-	
+
 	public enum SubjectState { Bedbound, Patrol, Chase, Attack }
+	
+	public enum Leak {Head, Chest, Pelvis}
 
 	public class Subject : MonoBehaviour
 	{
@@ -21,25 +24,27 @@ namespace TMM
 		public UnityAction OnDestroyed;
 
 		[SerializeField]
-		List<Collider> applicationTriggers;
+		List<Collider> leakTriggers;
 
-		string _name;
-		string surname;
+		List<Leak> leaks = new List<Leak>();
 
-		int id;
-		public int Id
-        {
-            get{ return id; }
-        }
+		// string _name;
+		// string surname;
+
+		// int id;
+		// public int Id
+        // {
+        //     get{ return id; }
+        // }
 
 
-		int age;
+//		int age;
 
-		Illness illness;
-		public Illness Illness
-        {
-			get { return illness; }
-	    }
+		// Illness illness;
+		// public Illness Illness
+        // {
+		// 	get { return illness; }
+	    // }
 
 
 		Severity severity;
@@ -59,9 +64,11 @@ namespace TMM
 		
 
         void Awake()
-        {
-			illness = Illness.CreateRandomIllness();
+		{
+			//illness = Illness.CreateRandomIllness();
+			DisableLeakTriggerAll();
 			severity = (Severity)Random.Range(1, 4);
+			InitLeaks(severity);
 			SetState(SubjectState.Bedbound);
         }
 
@@ -75,14 +82,14 @@ namespace TMM
 		void Update()
 		{
 #if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.Alpha1))
-				Apply(Application.Capsule);
+			// if (Input.GetKeyDown(KeyCode.Alpha1))
+			// 	Apply(Application.Capsule);
 
-			if (Input.GetKeyDown(KeyCode.Alpha2))
-				Apply(Application.Needle);
+			// if (Input.GetKeyDown(KeyCode.Alpha2))
+			// 	Apply(Application.Needle);
 
-			if (Input.GetKeyDown(KeyCode.Alpha3))
-				Apply(Application.Drug);
+			// if (Input.GetKeyDown(KeyCode.Alpha3))
+			// 	Apply(Application.Drug);
 
 #endif
 
@@ -113,36 +120,36 @@ namespace TMM
         private void HandleOnNightStarted()
 		{
 			// Check applications
-			CheckApplications();
+			//CheckApplications();
         }
 
-		void CheckApplications()
-		{
-			Debug.Log($"TEST - Illness - Current severity:{severity}");
-			DebugApplications();
-			int ret = illness.CheckApplications(applications);
-			Debug.Log($"TEST - Illness - Applications result:{ret}");
+		// void CheckApplications()
+		// {
+		// 	Debug.Log($"TEST - Illness - Current severity:{severity}");
+		// 	DebugApplications();
+		// 	int ret = illness.CheckApplications(applications);
+		// 	Debug.Log($"TEST - Illness - Applications result:{ret}");
 
-			severity = (Severity)Mathf.Clamp((int)severity + ret, (int)Severity.Black, (int)Severity.White);
-			Debug.Log($"TEST - Illness - Severity after treatment:{severity}");
-			applications.Clear();
+		// 	severity = (Severity)Mathf.Clamp((int)severity + ret, (int)Severity.Black, (int)Severity.White);
+		// 	Debug.Log($"TEST - Illness - Severity after treatment:{severity}");
+		// 	applications.Clear();
 
-			// Check severity 
-			if(severity == Severity.Black)
-			{
-				// Subject become a psycho (no longer bedbound)
-				SetState(SubjectState.Patrol);
+		// 	// Check severity 
+		// 	if(severity == Severity.Black)
+		// 	{
+		// 		// Subject become a psycho (no longer bedbound)
+		// 		SetState(SubjectState.Patrol);
 				
-            }
-        }
+        //     }
+        // }
 
-		void Apply(Application application)
-		{
-			if (applications.Count == 2) return;
-			if (applications.Contains(application)) return;
+		// void Apply(Application application)
+		// {
+		// 	if (applications.Count == 2) return;
+		// 	if (applications.Contains(application)) return;
 
-			applications.Add(application);
-		}
+		// 	applications.Add(application);
+		// }
 
 		void Die()
 		{
@@ -172,21 +179,53 @@ namespace TMM
 		{
 
 		}
+
+		void InitLeaks(Severity severity)
+		{
+
+			this.severity = severity;
+
+			if (severity == Severity.Red) // Three leaks
+			{
+				leaks = new List<Leak> { Leak.Head, Leak.Chest, Leak.Pelvis };
+			}
+			else if (severity == Severity.Green) // Just one
+			{
+				leaks = new List<Leak> { (Leak)Random.Range(0, 3) };
+			}
+			else // Two leaks
+			{
+				var all = new List<int>() { 0, 1, 2 };
+				var l1 = all[Random.Range(0, all.Count)];
+				all.Remove(l1);
+				var l2 = all[Random.Range(0, all.Count)];
+				leaks = new List<Leak>() { (Leak)l1, (Leak)l2 };
+			}
+
+			// Initialize triggers
+			foreach (var leak in leaks)
+			{
+				leakTriggers[(int)leak].enabled = true;
+			}
+
+
+		}
 		
-		public void Init(int id)
+		void DisableLeakTriggerAll()
         {
-			this.id = id;
+			foreach (var t in leakTriggers)
+				t.enabled = false;
         }
 
-		void DebugApplications()
-        {
-			if (applications.Count == 0)
-				Debug.Log("TEST - Illness - Applications:[None,None]");
-			else if (applications.Count == 1)
-				Debug.Log($"TEST - Illness - Applications:[{applications[0]},None]");
-			else
-				Debug.Log($"TEST - Illness - Applications:[{applications[0]},{applications[1]}]");
-        }
+		// void DebugApplications()
+        // {
+		// 	if (applications.Count == 0)
+		// 		Debug.Log("TEST - Illness - Applications:[None,None]");
+		// 	else if (applications.Count == 1)
+		// 		Debug.Log($"TEST - Illness - Applications:[{applications[0]},None]");
+		// 	else
+		// 		Debug.Log($"TEST - Illness - Applications:[{applications[0]},{applications[1]}]");
+        // }
 
 	}
 }

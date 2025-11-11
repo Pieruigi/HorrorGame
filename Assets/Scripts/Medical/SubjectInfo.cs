@@ -39,22 +39,22 @@ namespace TMM
 
 		}
 
-		public void Init(Subject subject)
-		{
-			root.SetActive(true);
-			var id = subject.Id;
-			var illness = subject.Illness;
+		// public void Init(Subject subject)
+		// {
+		// 	root.SetActive(true);
+		// 	var id = subject.Id;
+		// 	var illness = subject.Illness;
 
-			// Set number and color
-			numField.text = string.Format(nameFormatString, id);
-			numField.color = colors[(int)subject.Severity];
+		// 	// Set number and color
+		// 	numField.text = string.Format(nameFormatString, id);
+		// 	numField.color = colors[(int)subject.Severity];
 
-			foreach (var s in symptomFlags)
-				s.SetActive(false);
+		// 	foreach (var s in symptomFlags)
+		// 		s.SetActive(false);
 
-			for (int i = 0; i < illness.Symptoms.Count; i++)
-				symptomFlags[(int)illness.Symptoms[i]].SetActive(true);
-		}
+		// 	for (int i = 0; i < illness.Symptoms.Count; i++)
+		// 		symptomFlags[(int)illness.Symptoms[i]].SetActive(true);
+		// }
 		
 		public void Clear()
         {
