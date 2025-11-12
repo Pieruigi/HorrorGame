@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,20 +7,20 @@ using UnityEngine;
 
 namespace TMM
 {
-	public class MailBoxManager : Singleton<MailBoxManager>
+	public class MailboxManager : Singleton<MailboxManager>
 	{
 
-		List<MailBox> mailBoxes;
-		public IList<MailBox> MailBoxes
+		List<Mailbox> mailboxes;
+		public IList<Mailbox> Mailboxes
         {
-            get{ return mailBoxes.AsReadOnly(); }
+            get{ return mailboxes.AsReadOnly(); }
         }
 
 	    // Start is called before the first frame update
 	    void Start()
 		{
 			// Get all mailboxes in scene
-			mailBoxes = FindObjectsByType<MailBox>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList(); 
+			mailboxes = FindObjectsByType<Mailbox>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList(); 
 	    }
 
 		// Update is called once per frame
@@ -27,7 +28,9 @@ namespace TMM
 		{
 
 		}
+
 		
-		
-	}
+
+        
+    }
 }

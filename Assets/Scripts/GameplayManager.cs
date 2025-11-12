@@ -12,17 +12,21 @@ namespace TMM
 
 		public delegate void WorkShiftStartedDelegate(int day, bool isNightShift);
 		public static WorkShiftStartedDelegate OnWorkShiftStarted;
-		public static UnityAction OnWorkShiftCompleted;
+
+		public delegate void WorkShiftCompletedDelegate(int day, bool isNightShift);
+		public static WorkShiftCompletedDelegate OnWorkShiftCompleted;
+
+		public static UnityAction OnTaskCompleted;
 
 		
 
 		int workingDay = 1;
 
 		bool nightShift = false;
-		// public bool NightShift
-        // {
-        //     get{ return nightShift; }
-        // }
+		public bool NightShift
+        {
+            get{ return nightShift; }
+        }
 
 		bool workShiftRunning = false;
 		// public bool WorkShiftStarted
@@ -33,6 +37,12 @@ namespace TMM
 		int workingDayMax = 5;
 
 		bool ready = false;
+
+		bool taskCompleted = false;
+		public bool TaskCompleted
+        {
+            get{ return taskCompleted; }
+        }
 
 
 	    // Start is called before the first frame update
@@ -47,7 +57,39 @@ namespace TMM
 
 		}
 
-		IEnumerator SetNextShiftReady()
+		void OnEnable()
+		{
+			Mail.OnCollected += HandleOnMailCollected;
+			Mail.OnDelivered += HandleOnMailDelivered;
+		}
+
+        void OnDisable()
+        {
+			Mail.OnCollected -= HandleOnMailCollected;
+			Mail.OnDelivered -= HandleOnMailDelivered;
+        }
+
+        private void HandleOnMailCollected(Mail mail)
+		{
+            if (MailManager.Instance.MailCollectedAll())
+            {
+				taskCompleted = true;
+				OnTaskCompleted?.Invoke();    
+            }
+			
+        }
+
+        private void HandleOnMailDelivered(Mail mail)
+		{
+            if (MailManager.Instance.MailDeliveredAll())
+            {
+				taskCompleted = true;
+				OnTaskCompleted?.Invoke();    
+            }
+			
+        }
+
+        IEnumerator SetNextShiftReady()
         {
 			yield return new WaitForSeconds(5);
 
@@ -79,6 +121,8 @@ namespace TMM
 			}
 			else
 			{
+				taskCompleted = false;
+
 				// Start a new day of work
 				workShiftRunning = true;
 
@@ -108,7 +152,7 @@ namespace TMM
 			ready = false;
 			StartCoroutine(SetNextShiftReady());
 
-			OnWorkShiftCompleted?.Invoke();
+			OnWorkShiftCompleted?.Invoke(workingDay-1, !nightShift);
 
 
 

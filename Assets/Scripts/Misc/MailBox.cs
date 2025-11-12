@@ -1,12 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace TMM
 {
-	public class MailBox : MonoBehaviour
+	public class Mailbox : MonoBehaviour
 	{
-		List<Letter> letters = new List<Letter>();
+		public delegate void MailboxIsEmptyDelegate(Mailbox mailBox);
+		public static MailboxIsEmptyDelegate OnMailboxIsEmpty;
+
+		public delegate void NotAllowedOnNightShiftDelegate(Mailbox mailbox);
+		public static NotAllowedOnNightShiftDelegate NotAllowedOnNightShift;
+
+		
+
+		[SerializeField]
+		ActivationTrigger proximityTrigger;
+
+		[SerializeField]
+		InteractionTrigger interactionTrigger;
+
+		List<Mail> mails = new List<Mail>();
 
 	    // Start is called before the first frame update
 	    void Start()
@@ -20,16 +36,80 @@ namespace TMM
 
 		}
 
-		public List<Letter> CollectLetterAll()
+		void OnEnable()
 		{
-			var ret = letters;
-			letters.Clear();
-			return ret;
+			proximityTrigger.OnEnter += HandleOnProximityEnter;
+			proximityTrigger.OnExit += HandleOnProximityExit;
+			interactionTrigger.OnInteraction += HandleOnInteraction;
 		}
-		
-		public void AddLetter(Letter letter)
+
+        void OnDisable()
         {
-			letters.Add(letter);
+			proximityTrigger.OnEnter -= HandleOnProximityEnter;
+			proximityTrigger.OnExit += HandleOnProximityExit;
+			interactionTrigger.OnInteraction -= HandleOnInteraction;
         }
-	}
+
+        private void HandleOnInteraction()
+		{
+			CollectMailAll();
+			interactionTrigger.SetInteractable(false); // Just for now (if you exit and enter the activation trigger the interaction becomes available again)
+        }
+
+        private void HandleOnProximityExit(Collider other)
+        {
+			if (!other.CompareTag("Player")) return;
+			//if(interactionTrigger.IsInteractable())
+			interactionTrigger.SetInteractable(false);
+        }
+
+        private void HandleOnProximityEnter(Collider other)
+        {
+			if (!other.CompareTag("Player")) return;
+			//if(letters.Count > 0)
+			interactionTrigger.SetInteractable(true);
+        }
+
+        public void CollectMailAll()
+		{
+            if (GameplayManager.Instance.NightShift)
+			{
+				NotAllowedOnNightShift?.Invoke(this);
+				return;
+            }
+
+			if(mails.Count == 0)
+            {
+				OnMailboxIsEmpty?.Invoke(this);
+				return;
+            }
+			// Set interaction disabled
+			//interactionTrigger.SetInteractable(false);
+			
+			// Set collected flags
+			foreach (var l in mails)
+				l.SetCollected();
+
+			// Clear mailbox list
+			mails.Clear();
+			
+		}
+
+		public void AddMail(Mail mail)
+		{
+			mails.Add(mail);
+
+			// Set interaction enabled
+			// if(!interactionTrigger.IsInteractable())
+			// 	interactionTrigger.SetInteractable(true);
+		}
+
+		
+
+        void OnTriggerExit(Collider other)
+        {
+			if (!other.CompareTag("Player")) return;
+			interactionTrigger.SetInteractable(false);
+        }
+    }
 }

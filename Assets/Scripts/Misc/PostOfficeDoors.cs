@@ -47,20 +47,28 @@ namespace TMM
 		void OnEnable()
 		{
 			trigger.OnEnter += HandleOnTriggerEnter;
+			GameplayManager.OnTaskCompleted += HandleOnTaskCompleted;
 			//trigger.OnExit += HandleOnTriggerExit;
 		}
 
         void OnDisable()
         {
-            trigger.OnEnter -= HandleOnTriggerEnter;
+			trigger.OnEnter -= HandleOnTriggerEnter;
+			GameplayManager.OnTaskCompleted -= HandleOnTaskCompleted;
 			//trigger.OnExit -= HandleOnTriggerExit;
+        }
+
+        private void HandleOnTaskCompleted()
+		{
+			// Open the door
+			Open();
         }
 
         // private void HandleOnTriggerEnter(Collider other)
         // {
-		// 	if (locked || open) return;
+        // 	if (locked || open) return;
 
-		// 	Open();
+        // 	Open();
         // }
 
         private void HandleOnTriggerEnter(Collider other)

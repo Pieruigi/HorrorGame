@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening.Core.Easing;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace TMM
 {
@@ -64,6 +66,7 @@ namespace TMM
 		{
 			WorkShiftGroup.OnMovedUp += HandleOnGroupMovedUp;
 			trigger.OnInteraction += HandleOnInteraction;
+			GameplayManager.OnTaskCompleted += HandleOnTaskCompleted;
 			// trigger.OnEnter += HandleOnTriggerEnter;
 			// trigger.OnExit += HandleOnTriggerExit;
 		}
@@ -72,40 +75,93 @@ namespace TMM
         {
 			WorkShiftGroup.OnMovedUp -= HandleOnGroupMovedUp;
 			trigger.OnInteraction -= HandleOnInteraction;
+			GameplayManager.OnTaskCompleted -= HandleOnTaskCompleted;
 			// trigger.OnEnter -= HandleOnTriggerEnter;
 			// trigger.OnExit -= HandleOnTriggerExit;
         }
 
-		// private void HandleOnTriggerExit()
-		// {
-		// 	// bagOutline.SetActive(false);
-		// 	// mapOutline.SetActive(false);
-		// 	// flashlightOutline.SetActive(false);
-		// 	bag.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-		// 	bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-		// 	map.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-		// 	flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-		// }
-
-		// private void HandleOnTriggerEnter()
-		// {
-		// 	bag.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
-		// 	bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(true);
-		// 	map.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
-		// 	flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);;
-		// }
-
-		private void HandleOnInteraction()
+        private void HandleOnTaskCompleted()
 		{
-			StartCoroutine(DoInteraction());
+			// Activate the trigger back
+			trigger.SetInteractable(true);
+        }
+
+        // private void HandleOnTriggerExit()
+        // {
+        // 	// bagOutline.SetActive(false);
+        // 	// mapOutline.SetActive(false);
+        // 	// flashlightOutline.SetActive(false);
+        // 	bag.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+        // 	bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+        // 	map.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+        // 	flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
+        // }
+
+        // private void HandleOnTriggerEnter()
+        // {
+        // 	bag.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
+        // 	bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(true);
+        // 	map.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
+        // 	flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);;
+        // }
+
+        private void HandleOnInteraction()
+		{
+            //if(GameplayManager.Instance.)
+            // Work shift always starts when you hit the button and stop when you return back the equipment after you completed your task
+            if (!GameplayManager.Instance.NightShift) // Daylight
+            {
+				if (GameplayManager.Instance.TaskCompleted) // Start collect mail
+					StartCoroutine(StopCollectingMail()); 
+				else // All mails collected from mailboxes
+					StartCoroutine(StartCollectingMail()); 
+            }
+            else // Night shift
+            {
+				if (GameplayManager.Instance.TaskCompleted) // We delivered all the mails
+					StartCoroutine(StopDeliveringMail());
+				else
+					StartCoroutine(StartDeliveringMail());
+				
+            }
+			
 
 		}
 
-		IEnumerator DoInteraction()
+		IEnumerator StartDeliveringMail()
+		{
+			yield return null;
+		}
+		
+		IEnumerator StopDeliveringMail()
         {
-			trigger.SetInteractable(false);
+            yield return null;
+        }
 
+		IEnumerator StopCollectingMail()
+		{
+			trigger.SetInteractable(false);
+			// Check flashlight
+			var fl = GameObject.FindGameObjectWithTag("Player").transform.root.GetComponentInChildren<Flashlight>();
+			if (fl.IsAvailable())
+				fl.SetAvailable(false);
+
+			// Move equipment to the pillar
+			bag.GetComponent<PutDownEffect>().PlayEffect();
+			map.GetComponent<PutDownEffect>().PlayEffect();
+			if (GameplayManager.Instance.NightShift)
+				flashlight.GetComponent<PutDownEffect>().PlayEffect();
+
+			yield return new WaitForSeconds(1f);
 			
+			// Close doors
+			doors.SetLocked(true);
+			
+        }
+
+		IEnumerator StartCollectingMail()
+		{
+			trigger.SetInteractable(false);
 
 			// bag.SetActive(false);
 			// map.SetActive(false);

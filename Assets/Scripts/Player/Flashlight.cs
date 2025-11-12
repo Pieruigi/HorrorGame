@@ -64,6 +64,11 @@ namespace TMM
 
 		}
 
+		public bool IsAvailable()
+        {
+			return available;
+        }
+
 		void SetOn(bool value)
 		{
 			if (!available) return;

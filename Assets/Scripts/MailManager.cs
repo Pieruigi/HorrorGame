@@ -4,12 +4,21 @@ using System.Linq;
 using System.Net.Sockets;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TMM
 {
 	[System.Serializable]
-	public class Letter
+	public class Mail
 	{
+		public delegate void CollectedDelegate(Mail mail);
+		public static CollectedDelegate OnCollected;
+
+
+		public delegate void DeliveredDelegate(Mail mail);
+		public static DeliveredDelegate OnDelivered;
+
+
 		[SerializeField]
 		Address address;
 
@@ -23,30 +32,53 @@ namespace TMM
 		bool collected = false;
 		public bool Collected
         {
-            get{ return collected; }
+			get { return collected; }
+			//set{ collected = value; }
         }
 
 		[SerializeField]
 		bool delivered = false;
 		public bool Delivered
         {
-            get{ return delivered; }
+			get { return delivered; }
+			//set{ delivered = value; }
         }
 
-		public Letter(Address address)
+		public Mail(Address address)
 		{
 			this.address = address;
 		}
+
+		public void SetCollected()
+		{
+			collected = true;
+			OnCollected?.Invoke(this);
+		}
+		
+		public void SetDelivered()
+        {
+			delivered = true;
+			OnDelivered?.Invoke(this);
+        }
 	}
 
 
 
 
-	public class LetterManager : MonoBehaviour
+	public class MailManager : Singleton<MailManager>
 	{
+		public static UnityAction OnMailCollectedAll;
+		public static UnityAction OnMailDeliveredAll;
 
 		[SerializeField]
-		List<Letter> letters = new List<Letter>();
+		List<Mail> mails = new List<Mail>();
+
+		public IList<Mail> Mails
+		{
+			get { return mails.AsReadOnly(); }
+		}
+
+	
 
 	    // Start is called before the first frame update
 	    void Start()
@@ -63,19 +95,24 @@ namespace TMM
 		void OnEnable()
 		{
 			GameplayManager.OnWorkShiftStarted += HandleOnNextShiftStarted;
+			
 		}
 
-        void OnDisable()
-        {
-            GameplayManager.OnWorkShiftStarted -= HandleOnNextShiftStarted;
-        }
+		void OnDisable()
+		{
+			GameplayManager.OnWorkShiftStarted -= HandleOnNextShiftStarted;
+			
+		}
 
-		/// <summary>
+      
+
+        /// <summary>
         /// We must create letters and fill mailboxes or the player bag depending whether we are playing day or night shift
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-		private void HandleOnNextShiftStarted(int day, bool isNightShift)
+        private void HandleOnNextShiftStarted(int day, bool isNightShift)
 		{
+			
 			if (isNightShift)
 			{
 				// Init night shift
@@ -98,56 +135,48 @@ namespace TMM
         /// <param name="day"></param>
 		void InitDayShift(int day)
 		{
-			int letterCount = 10; // Depending on the day???
-			int mailBoxCount = MailBoxManager.Instance.MailBoxes.Count;
+			int letterCount = 5; // Depending on the day???
+			int mailBoxCount = MailboxManager.Instance.Mailboxes.Count;
 
 			for (int i = 0; i < letterCount; i++)
 			{
-				var letter = CreateLetter();
-				letters.Add(letter);
-				MailBoxManager.Instance.MailBoxes[i % mailBoxCount].AddLetter(letter);
+				var letter = CreateMail();
+				MailboxManager.Instance.Mailboxes[i % mailBoxCount].AddMail(letter);
 			}
 			
 							
 
         }
 
-		public void AddLetter(Letter letter)
-		{
-			letters.Add(letter);
-		}
-
-		public void RemoveLetter(Letter letter)
-		{
-			letters.Remove(letter);
-		}
-
-		public Letter CreateLetter()
+	
+		public Mail CreateMail()
 		{
 			// Get all the addresses from the address manager which are not used yet
-			var addresses = AddressManager.Instance.Addresses.Where(a => !letters.Exists(l => l.Address == a)).ToList();
+			var addresses = AddressManager.Instance.Addresses.Where(a => !mails.Exists(l => l.Address == a)).ToList();
 
 			// Get a random address from the filtred list
 			var address = addresses[Random.Range(0, addresses.Count)];
 
 			// Create a new letter
-			var letter = new Letter(address);
+			var letter = new Mail(address);
 
 			// Add the letter to the list
-			letters.Add(letter);
+			mails.Add(letter);
 
 			// Return
 			return letter;
 		}
 
-		public bool LetterDeliveredAll()
+		public bool MailDeliveredAll()
 		{
-			return !letters.Exists(l => !l.Delivered);
+			return !mails.Exists(l => !l.Delivered);
 		}
+
+		public bool MailCollectedAll()
+		{
+			return !mails.Exists(l => !l.Collected);
+		}
+
 		
-		public bool LetterCollectedAll()
-        {
-			return !letters.Exists(l => !l.Collected);
-        }
 	}
 }

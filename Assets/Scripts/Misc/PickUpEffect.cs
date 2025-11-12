@@ -33,6 +33,7 @@ namespace TMM
 		
 		IEnumerator DoPlayEffect()
 		{
+			transform.DOKill();
 			yield return new WaitForSeconds(.5f);
 			if(audioSource) audioSource.Play();
 			// Store original position and rotation

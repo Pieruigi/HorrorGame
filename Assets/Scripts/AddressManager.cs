@@ -24,20 +24,7 @@ namespace TMM
 
 	public class AddressManager : Singleton<AddressManager>
 	{
-		List<Address> addresses = new List<Address>()
-		{
-			new Address("Via A", 1),
-			new Address("Via A", 2),
-			new Address("Via B", 1),
-			new Address("Via B", 2),
-			new Address("Via B", 3),
-			new Address("Via C", 1),
-			new Address("Via C", 2),
-			new Address("Via D", 1),
-			new Address("Via D", 2),
-			new Address("Via D", 3),
-			new Address("Via D", 4),
-		};
+		List<Address> addresses = new List<Address>();
 
 		public IList<Address> Addresses
         {
@@ -47,7 +34,12 @@ namespace TMM
 		// Start is called before the first frame update
 		void Start()
 		{
+			// Get all the letterboxes
+			var letterboxes = FindObjectsByType<Letterbox>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
+			// Read all the addresses
+			foreach (var letterbox in letterboxes)
+				addresses.Add(letterbox.Address);
 		}
 
 		// Update is called once per frame

@@ -34,6 +34,7 @@ namespace TMM
 		{
 			if (_collider.enabled == false) return;
 
+			
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			LayerMask mask = LayerMask.GetMask(new string[] { "Interactable" });
@@ -41,8 +42,7 @@ namespace TMM
 			
 			if (Physics.Raycast(ray, out hit, FirstPersonController.InteractionDistance, mask))
 			{
-				Debug.Log("TEST - Collider:" + hit.collider.gameObject);	
-				if (hit.collider.gameObject == gameObject)
+				if (hit.collider == _collider)
 				{
                     // Show outline
                     if (!isHover)
@@ -63,7 +63,7 @@ namespace TMM
                     }
 
 				}
-				if (input.action)
+				if (isHover && input.action)
 				{
 					ArmsController.Instance.PlayLeftInteraction();
 					OnInteraction?.Invoke();
