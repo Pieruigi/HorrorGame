@@ -10,7 +10,8 @@ namespace TMM
 	{
 		public static UnityAction OnNextShiftReady;
 
-		public static UnityAction OnWorkShiftStarted;
+		public delegate void WorkShiftStartedDelegate(int day, bool isNightShift);
+		public static WorkShiftStartedDelegate OnWorkShiftStarted;
 		public static UnityAction OnWorkShiftCompleted;
 
 		
@@ -84,7 +85,7 @@ namespace TMM
 				// if(!nightShift)
 				// 	MusicManager.Instance.PlayDaylightMusic();
 
-				OnWorkShiftStarted?.Invoke();
+				OnWorkShiftStarted?.Invoke(workingDay, nightShift);
 
 
 			}
