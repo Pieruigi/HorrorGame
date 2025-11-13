@@ -99,6 +99,8 @@ namespace TMM
 				workShiftRunning = true;
 
 				MailManager.Instance.InitShift(workingDay, nightShift);
+
+				OnWorkShiftStarted?.Invoke(workingDay, nightShift);
 				
 			}
 

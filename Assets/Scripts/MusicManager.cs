@@ -61,9 +61,9 @@ namespace TMM
 			nightAudioSource.DOFade(0, 1f).SetDelay(delay).OnComplete(()=> { nightAudioSource.Stop(); });
         }
 
-		public void PlayNightMusic()
+		public void PlayNightMusic(float delay = 0)
 		{
-
+			PlayDaylightMusic(delay); // TODO: change audio source
 		}
 
 		public void PlayPreShiftMusic(float delay = 0)

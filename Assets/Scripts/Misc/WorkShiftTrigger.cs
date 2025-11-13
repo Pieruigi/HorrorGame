@@ -65,14 +65,24 @@ namespace TMM
 		{
 			trigger.OnInteraction += HandleOnInteraction;
 			GameplayManager.OnTaskCompleted += HandleOnTaskCompleted;
-	
+			GameplayManager.OnWorkShiftStarted += HandleOnWorkShiftStarted;
 		}
 
         void OnDisable()
         {
 			trigger.OnInteraction -= HandleOnInteraction;
 			GameplayManager.OnTaskCompleted -= HandleOnTaskCompleted;
-		
+			GameplayManager.OnWorkShiftStarted -= HandleOnWorkShiftStarted;
+        }
+
+        private void HandleOnWorkShiftStarted(int day, bool isNightShift)
+		{
+			Debug.Log("TEST - Shift started:" + isNightShift);
+			// Check the flashlight
+			if (isNightShift)
+				flashlight.SetActive(true);
+			else
+				flashlight.SetActive(false);
         }
 
         private void HandleOnTaskCompleted()
@@ -92,14 +102,14 @@ namespace TMM
 				if (GameplayManager.Instance.TaskCompleted) // Start collect mail
 					StartCoroutine(StopCollectingMail()); 
 				else // All mails collected from mailboxes
-					StartCoroutine(StartCollectingMail()); 
+					StartCoroutine(StartTask()); 
             }
             else // Night shift
             {
 				if (GameplayManager.Instance.TaskCompleted) // We delivered all the mails
 					StartCoroutine(StopDeliveringMail());
 				else
-					StartCoroutine(StartDeliveringMail());
+					StartCoroutine(StartTask());
 				
             }
 			
@@ -128,7 +138,11 @@ namespace TMM
 			bag.GetComponent<PutDownEffect>().PlayEffect();
 			map.GetComponent<PutDownEffect>().PlayEffect();
 			if (GameplayManager.Instance.NightShift)
-				flashlight.GetComponent<PutDownEffect>().PlayEffect();
+			{
+                flashlight.GetComponent<PutDownEffect>().PlayEffect();
+				GameObject.FindGameObjectWithTag("Player").transform.root.GetComponentInChildren<Flashlight>().SetAvailable(false);
+            }
+				
 
 			MusicManager.Instance.StopDaylightMusic();
 			MusicManager.Instance.PlayPreShiftMusic(1f);
@@ -144,7 +158,7 @@ namespace TMM
 			
         }
 
-		IEnumerator StartCollectingMail()
+		IEnumerator StartTask()
 		{
 			trigger.SetInteractable(false);
 
@@ -152,12 +166,20 @@ namespace TMM
 			// map.SetActive(false);
 			bag.GetComponent<PickUpEffect>().PlayEffect();
 			map.GetComponent<PickUpEffect>().PlayEffect();
-			if (flashlight.activeSelf) flashlight.GetComponent<PickUpEffect>().PlayEffect();
+			if (GameplayManager.Instance.NightShift)
+            {
+				StartCoroutine(SetFlashlightAvailable());    
+				flashlight.GetComponent<PickUpEffect>().PlayEffect();
+            } 
+
+			
 
 			// Play music
 			MusicManager.Instance.StopPreShiftMusic();
 			if (!DayNightManager.Instance.IsNight)
 				MusicManager.Instance.PlayDaylightMusic(1f);
+			else
+				MusicManager.Instance.PlayNightMusic(1f);
 
 			yield return new WaitForSeconds(2f);
 
@@ -167,7 +189,14 @@ namespace TMM
 
         }
 
-        public void Activate()
+		IEnumerator SetFlashlightAvailable()
+        {
+			yield return new WaitForSeconds(.5f);
+
+			GameObject.FindGameObjectWithTag("Player").transform.root.GetComponentInChildren<Flashlight>().SetAvailable(true);
+        }
+
+		public void Activate()
 		{
 			StartCoroutine(SetInteractabledDelayed(.5f));
 		}

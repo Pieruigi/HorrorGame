@@ -119,7 +119,7 @@ namespace TMM
 
 		void InitNightShift()
 		{
-
+			Debug.Log("Init Nightshift");
 		}
 		
 		/// <summary>
