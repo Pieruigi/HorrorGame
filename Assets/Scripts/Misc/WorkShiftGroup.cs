@@ -37,11 +37,18 @@ namespace TMM
 		void OnEnable()
 		{
 			WorkShiftButton.OnButtonHit += HandleOnWorkShiftButtonHit;
+			WorkShiftTrigger.OnEquipmentReturnedBack += HandleOnEquipmentReturnedBack;
 		}
 
         void OnDisable()
         {
-            WorkShiftButton.OnButtonHit -= HandleOnWorkShiftButtonHit;
+			WorkShiftButton.OnButtonHit -= HandleOnWorkShiftButtonHit;
+			WorkShiftTrigger.OnEquipmentReturnedBack -= HandleOnEquipmentReturnedBack;
+        }
+
+        private void HandleOnEquipmentReturnedBack()
+        {
+			MoveDown();
         }
 
         private void HandleOnWorkShiftButtonHit()
@@ -51,13 +58,13 @@ namespace TMM
 
         public void MoveDown()
 		{
-			transform.DOLocalMoveY(downY, time).SetEase(Ease.InOutQuad);
+			transform.DOLocalMoveY(downY, time).SetEase(Ease.InOutQuad).OnComplete(()=> { Vector3 v = transform.localPosition; v.y = downY; transform.localPosition = v; OnMovedDown?.Invoke(); });
 			pillarAudioSource.Play();
 		}
 		
 		public void MoveUp()
         {
-			transform.DOLocalMoveY(upY, time).SetEase(Ease.InOutQuad).OnComplete(() => { OnMovedUp?.Invoke(); });
+			transform.DOLocalMoveY(upY, time).SetEase(Ease.InOutQuad).OnComplete(() => { Vector3 v = transform.localPosition; v.y = upY; transform.localPosition = v; OnMovedUp?.Invoke(); });
 			pillarAudioSource.Play();
         }
 	}

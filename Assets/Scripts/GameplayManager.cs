@@ -61,12 +61,14 @@ namespace TMM
 		{
 			Mail.OnCollected += HandleOnMailCollected;
 			Mail.OnDelivered += HandleOnMailDelivered;
+			WorkShiftTrigger.OnEquipmentReturnedBack += HandleOnEquipmentReturnedback;
 		}
 
         void OnDisable()
         {
 			Mail.OnCollected -= HandleOnMailCollected;
 			Mail.OnDelivered -= HandleOnMailDelivered;
+			WorkShiftTrigger.OnEquipmentReturnedBack -= HandleOnEquipmentReturnedback;
         }
 
         private void HandleOnMailCollected(Mail mail)
@@ -90,7 +92,8 @@ namespace TMM
         }
 
         IEnumerator SetNextShiftReady()
-        {
+		{
+			
 			yield return new WaitForSeconds(5);
 
 			ready = true;
@@ -105,14 +108,14 @@ namespace TMM
 			if (!ready) return;
 			if (nightShift)
 			{
-				if(!DayNightManager.Instance.IsNight)
-					DayNightManager.Instance.Switch();
-				workingDay++;
+				// if(!DayNightManager.Instance.IsNight)
+				// 	DayNightManager.Instance.Switch();
+				//workingDay++;
 			}
             else
 			{
-		        if(DayNightManager.Instance.IsNight)
-					DayNightManager.Instance.Switch();
+		        // if(DayNightManager.Instance.IsNight)
+				// 	DayNightManager.Instance.Switch();
             }
 
 			if (workingDay == workingDayMax + 1)
@@ -137,22 +140,29 @@ namespace TMM
 			
 		}
 
-		public void EndWorkShift()
+		public void HandleOnEquipmentReturnedback()
 		{
 			workShiftRunning = false;
-
+			ready = false;
 			if (workingDay == workingDayMax)
 			{
-				// Do wmoething
+				// Do something
 			}
+            else
+			{
+				workingDay++;
+				nightShift = !nightShift;
+				//if(!DayNightManager.Instance.IsNight)
+				DayNightManager.Instance.Switch();
+            	StartCoroutine(SetNextShiftReady());    
+            }
+			//nightShift = !nightShift;
+			//workingDay++;
 
-			nightShift = !nightShift;
-			workingDay++;
+			
+			
 
-			ready = false;
-			StartCoroutine(SetNextShiftReady());
-
-			OnWorkShiftCompleted?.Invoke(workingDay-1, !nightShift);
+			OnWorkShiftCompleted?.Invoke(workingDay, nightShift);
 
 
 

@@ -41,7 +41,7 @@ namespace TMM
 
 		public void PlayDaylightMusic(float delay = 0)
 		{
-			StopPreShiftMusic(delay);
+			//StopPreShiftMusic(delay);
 
 			Debug.Log("TEST - Playing music");
 			daylightAudioSource.volume = 0;
@@ -49,9 +49,16 @@ namespace TMM
 			daylightAudioSource.PlayDelayed(delay);
 		}
 
-		public void StopDaylightMusic()
-        {
-			daylightAudioSource.DOFade(0, 1f).OnComplete(()=> { daylightAudioSource.Stop(); });
+		public void StopDaylightMusic(float delay=0)
+		{
+			if (!daylightAudioSource.isPlaying) return;
+			daylightAudioSource.DOFade(0, 1f).SetDelay(delay).OnComplete(() => { daylightAudioSource.Stop(); });
+		}
+		
+		public void StopNightMusic(float delay)
+		{
+			if (!nightAudioSource.isPlaying) return;
+			nightAudioSource.DOFade(0, 1f).SetDelay(delay).OnComplete(()=> { nightAudioSource.Stop(); });
         }
 
 		public void PlayNightMusic()
@@ -61,12 +68,14 @@ namespace TMM
 
 		public void PlayPreShiftMusic(float delay = 0)
 		{
+			// StopDaylightMusic();
+			// StopNightMusic();
 			preShiftSource.volume = 0;
 			preShiftSource.DOFade(preShiftVolume, 1f).SetDelay(delay);
 			preShiftSource.PlayDelayed(delay);
 		}
 		
-		public void StopPreShiftMusic(float delay)
+		public void StopPreShiftMusic(float delay = 0)
         {
 			preShiftSource.DOFade(0, 1f).SetDelay(delay).OnComplete(() => { preShiftSource.Stop(); });
         }

@@ -23,7 +23,7 @@ namespace TMM
         // Start is called before the first frame update
         void Start()
         {
-
+             OnDayNightSwitch?.Invoke(isNight);
         }
 
         // Update is called once per frame

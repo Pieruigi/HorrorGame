@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using DG.Tweening.Core.Easing;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem.LowLevel;
 
 namespace TMM
 {
 	public class WorkShiftTrigger : MonoBehaviour
 	{
+		public static UnityAction OnEquipmentReturnedBack;
+
 		[SerializeField]
 		GameObject bag;
 		
@@ -152,10 +155,17 @@ namespace TMM
 			if (GameplayManager.Instance.NightShift)
 				flashlight.GetComponent<PutDownEffect>().PlayEffect();
 
-			yield return new WaitForSeconds(1f);
-			
+			MusicManager.Instance.StopDaylightMusic();
+			MusicManager.Instance.PlayPreShiftMusic(1f);
+
 			// Close doors
 			doors.SetLocked(true);
+
+			yield return new WaitForSeconds(1f);
+
+			
+
+			OnEquipmentReturnedBack?.Invoke();
 			
         }
 
@@ -170,6 +180,7 @@ namespace TMM
 			if (flashlight.activeSelf) flashlight.GetComponent<PickUpEffect>().PlayEffect();
 
 			// Play music
+			MusicManager.Instance.StopPreShiftMusic();
 			if (!DayNightManager.Instance.IsNight)
 				MusicManager.Instance.PlayDaylightMusic(1f);
 
@@ -178,7 +189,7 @@ namespace TMM
 			doors.SetLocked(false);
 			doors.Open();
 
-	
+
         }
 
         private void HandleOnGroupMovedUp()

@@ -18,6 +18,8 @@ namespace TMM
 
 		bool isHover = false;
 
+		bool lastInputAction = false;
+
         void Awake()
         {
 			//_collider = GetComponent<Collider>();
@@ -39,47 +41,49 @@ namespace TMM
 			RaycastHit hit;
 			LayerMask mask = LayerMask.GetMask(new string[] { "Interactable" });
 
-			
+
 			if (Physics.Raycast(ray, out hit, FirstPersonController.InteractionDistance, mask))
 			{
 				if (hit.collider == _collider)
 				{
-                    // Show outline
-                    if (!isHover)
-                    {
+					// Show outline
+					if (!isHover)
+					{
 						isHover = true;
 						//OnEnter?.Invoke();
 						ArmsController.Instance.PlayLeftHint();
-                    }
+					}
 				}
 				else
 				{
-                    //showOutline = false;
-                    if (isHover)
-                    {
+					//showOutline = false;
+					if (isHover)
+					{
 						isHover = false;
 						//OnExit?.Invoke();
 						ArmsController.Instance.PlayLeftIdle();
-                    }
+					}
 
 				}
-				if (isHover && input.action)
+				if (isHover && input.action && !lastInputAction)
 				{
 					ArmsController.Instance.PlayLeftInteraction();
 					OnInteraction?.Invoke();
-					
+
 					//SetInteractable(false);
 				}
 			}
 			else
 			{
-                if (isHover)
-                {
+				if (isHover)
+				{
 					isHover = false;
 					//OnExit?.Invoke();
 					ArmsController.Instance.PlayLeftIdle();
-                }
+				}
 			}
+
+			lastInputAction = input.action;
 		}
 
 		

@@ -21,7 +21,7 @@ namespace TMM
 
 		bool open = false;
 
-		float time = 1.75f;
+		float time = 1f;
 
 
         void Awake()
@@ -86,8 +86,8 @@ namespace TMM
 			audioSource.Play();
 			leftDoor.transform.DOKill();
 			rightDoor.transform.DOKill();
-			leftDoor.transform.DOMoveX(0, time).SetEase(Ease.OutBounce);
-			rightDoor.transform.DOMoveX(0, time).SetEase(Ease.OutBounce);
+			leftDoor.transform.DOLocalMoveX(0, time).SetEase(Ease.OutBounce).OnComplete(()=> { Vector3 v = leftDoor.transform.localPosition; v.x = 0; leftDoor.transform.localPosition = v; });
+			rightDoor.transform.DOLocalMoveX(0, time).SetEase(Ease.OutBounce).OnComplete(()=> { Vector3 v = rightDoor.transform.localPosition; v.x = 0; rightDoor.transform.localPosition = v; });
 		}
 
 		public void Open()
@@ -96,8 +96,8 @@ namespace TMM
 			audioSource.Play();
 			leftDoor.transform.DOKill();
 			rightDoor.transform.DOKill();
-			leftDoor.transform.DOMoveX(-1.06f, time).SetEase(Ease.OutBounce);
-			rightDoor.transform.DOMoveX(1.06f, time).SetEase(Ease.OutBounce);
+			leftDoor.transform.DOLocalMoveX(1.06f, time).SetEase(Ease.OutBounce);
+			rightDoor.transform.DOLocalMoveX(-1.06f, time).SetEase(Ease.OutBounce);
 		}
 		
 		public void SetLocked(bool value)
