@@ -19,12 +19,15 @@ namespace TMM
 		float daylightVolume;
 		float preShiftVolume;
 
+		float nightVolume;
+
         protected override void Awake()
         {
 			base.Awake();
 
 			daylightVolume = daylightAudioSource.volume;
 			preShiftVolume = preShiftSource.volume;
+			nightVolume = nightAudioSource.volume;
         }
 
         // Start is called before the first frame update
@@ -63,7 +66,9 @@ namespace TMM
 
 		public void PlayNightMusic(float delay = 0)
 		{
-			PlayDaylightMusic(delay); // TODO: change audio source
+			nightAudioSource.volume = 0;
+			nightAudioSource.DOFade(nightVolume, 1f).SetDelay(delay);
+			nightAudioSource.PlayDelayed(delay);
 		}
 
 		public void PlayPreShiftMusic(float delay = 0)

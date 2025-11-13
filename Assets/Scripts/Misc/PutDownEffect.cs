@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using StarterAssets;
 using UnityEngine;
 
 namespace TMM
@@ -39,6 +40,8 @@ namespace TMM
 		
 		IEnumerator DoPlayEffect(Vector3 position, Quaternion rotation)
 		{
+			FirstPersonController fpc = FindFirstObjectByType<FirstPersonController>();
+			fpc.InputDisabled = true;
 			transform.DOKill();
 			yield return new WaitForSeconds(.5f);
 			if (audioSource) audioSource.Play();
@@ -49,7 +52,7 @@ namespace TMM
 			transform.rotation = rotation;
 			transform.DOMove(position, duration);
 			//transform.DORotate(Vector3.up * 180f, duration); 
-
+			fpc.InputDisabled = false;
         }
 	}
 }

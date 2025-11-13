@@ -112,13 +112,16 @@ namespace StarterAssets
 		{
 			get
 			{
-				#if ENABLE_INPUT_SYSTEM
+#if ENABLE_INPUT_SYSTEM
 				return _playerInput.currentControlScheme == "KeyboardMouse";
-				#else
+#else
 				return false;
-				#endif
+#endif
 			}
 		}
+		
+		public bool InputDisabled { get; set; }
+        
 
 		private void Awake()
 		{
@@ -192,6 +195,7 @@ namespace StarterAssets
 		void CrouchCheck()
 		{
 			var height = CameraRoot.localPosition.y;
+			if(InputDisabled) _input.crouch = false;
 			if (_input.crouch && CanCrouch)
 			{
 				Debug.Log("TEST - Crouching....");
@@ -232,6 +236,13 @@ namespace StarterAssets
 
 		private void Move()
 		{
+			if (InputDisabled)
+			{
+				_input.crouch = false;
+				_input.sprint = false;
+				_input.move = Vector3.zero;
+			}
+
 			// set target speed based on move speed, sprint speed and if sprint is pressed
 			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 			if (_input.crouch) targetSpeed = CrouchSpeed;

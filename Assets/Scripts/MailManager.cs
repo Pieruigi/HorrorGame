@@ -129,6 +129,8 @@ namespace TMM
         /// <param name="day"></param>
 		void InitDayShift(int day)
 		{
+			mails.Clear();
+
 			int mailCount = 5; // Depending on the day???
 			
 			for (int i = 0; i < mailCount; i++)
@@ -141,6 +143,7 @@ namespace TMM
 	
 		public void CreateMail()
 		{
+			
 			// Get all the addresses from the address manager which are not used yet
 			var addresses = AddressManager.Instance.Addresses.Where(a => !mails.Exists(l => l.Address == a)).ToList();
 

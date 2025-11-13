@@ -33,6 +33,8 @@ namespace TMM
 		
 		IEnumerator DoPlayEffect()
 		{
+			FirstPersonController fpc = FindFirstObjectByType<FirstPersonController>();
+			fpc.InputDisabled = true;
 			transform.DOKill();
 			yield return new WaitForSeconds(.5f);
 			if(audioSource) audioSource.Play();
@@ -43,6 +45,7 @@ namespace TMM
 			var targetPosition = player.transform.position + Vector3.up;
 			float duration = .25f;
 			transform.DOMove(targetPosition, duration);
+			//tweener.OnUpdate(()=>{ tweener.ChangeEndValue(player.transform.position + Vector3.up); });
 			//transform.DORotate(Vector3.up * 180f, duration); 
 
 			yield return new WaitForSeconds(duration);
@@ -50,6 +53,8 @@ namespace TMM
 			// Reset original position and rotation
 			transform.position = originalPosition;
 			transform.rotation = originalRotation;
+
+			fpc.InputDisabled = false;
         }
 	}
 }

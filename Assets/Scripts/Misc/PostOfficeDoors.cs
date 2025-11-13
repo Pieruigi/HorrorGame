@@ -46,23 +46,23 @@ namespace TMM
 
 		void OnEnable()
 		{
-			trigger.OnEnter += HandleOnTriggerEnter;
-			GameplayManager.OnTaskCompleted += HandleOnTaskCompleted;
+			//trigger.OnEnter += HandleOnTriggerEnter;
+			//GameplayManager.OnTaskCompleted += HandleOnTaskCompleted;
 			//trigger.OnExit += HandleOnTriggerExit;
 		}
 
         void OnDisable()
         {
-			trigger.OnEnter -= HandleOnTriggerEnter;
-			GameplayManager.OnTaskCompleted -= HandleOnTaskCompleted;
+			//trigger.OnEnter -= HandleOnTriggerEnter;
+			//GameplayManager.OnTaskCompleted -= HandleOnTaskCompleted;
 			//trigger.OnExit -= HandleOnTriggerExit;
         }
 
-        private void HandleOnTaskCompleted()
-		{
-			// Open the door
-			Open();
-        }
+        // private void HandleOnTaskCompleted()
+		// {
+		// 	// Open the door
+		// 	//Open();
+        // }
 
         // private void HandleOnTriggerEnter(Collider other)
         // {
@@ -71,14 +71,14 @@ namespace TMM
         // 	Open();
         // }
 
-        private void HandleOnTriggerEnter(Collider other)
-        {
-			if (other.CompareTag("Player"))
-			{
-				trigger.SetEnabled(false);
-				SetLocked(true);
-	        } 
-        }
+        // private void HandleOnTriggerEnter(Collider other)
+        // {
+		// 	if (other.CompareTag("Player"))
+		// 	{
+		// 		trigger.SetEnabled(false);
+		// 		SetLocked(true);
+	    //     } 
+        // }
 
         public void Close()
 		{
