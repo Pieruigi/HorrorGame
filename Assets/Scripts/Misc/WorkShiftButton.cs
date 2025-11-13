@@ -12,8 +12,7 @@ namespace TMM
 {
 	public class WorkShiftButton : MonoBehaviour
 	{
-		public static UnityAction OnButtonHit;
-
+		
 		[SerializeField]
 		Material interactableMaterial;
 
@@ -99,7 +98,8 @@ namespace TMM
 			_renderer.material = notInteractableMaterial;
 			trigger.SetInteractable(false);
 			GameplayManager.Instance.StartWorkShift();
-			OnButtonHit?.Invoke();
+			GetComponentInParent<WorkShiftGroup>().MoveUp();
+			
 		}
 		
 		// void ShowOutline(bool value)

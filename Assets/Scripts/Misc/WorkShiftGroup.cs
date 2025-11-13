@@ -9,8 +9,7 @@ namespace TMM
 {
 	public class WorkShiftGroup : MonoBehaviour
 	{
-		public static UnityAction OnMovedUp;
-		public static UnityAction OnMovedDown;
+		
 
 		float downY = 0;
 		float upY = 2.5f;
@@ -34,37 +33,16 @@ namespace TMM
 
 		}
 
-		void OnEnable()
-		{
-			WorkShiftButton.OnButtonHit += HandleOnWorkShiftButtonHit;
-			WorkShiftTrigger.OnEquipmentReturnedBack += HandleOnEquipmentReturnedBack;
-		}
-
-        void OnDisable()
-        {
-			WorkShiftButton.OnButtonHit -= HandleOnWorkShiftButtonHit;
-			WorkShiftTrigger.OnEquipmentReturnedBack -= HandleOnEquipmentReturnedBack;
-        }
-
-        private void HandleOnEquipmentReturnedBack()
-        {
-			MoveDown();
-        }
-
-        private void HandleOnWorkShiftButtonHit()
-        {
-			MoveUp();
-        }
-
+		
         public void MoveDown()
 		{
-			transform.DOLocalMoveY(downY, time).SetEase(Ease.InOutQuad).OnComplete(()=> { Vector3 v = transform.localPosition; v.y = downY; transform.localPosition = v; OnMovedDown?.Invoke(); });
+			transform.DOLocalMoveY(downY, time).SetEase(Ease.InOutQuad).OnComplete(()=> { Vector3 v = transform.localPosition; v.y = downY; transform.localPosition = v; });
 			pillarAudioSource.Play();
 		}
 		
 		public void MoveUp()
         {
-			transform.DOLocalMoveY(upY, time).SetEase(Ease.InOutQuad).OnComplete(() => { Vector3 v = transform.localPosition; v.y = upY; transform.localPosition = v; OnMovedUp?.Invoke(); });
+			transform.DOLocalMoveY(upY, time).SetEase(Ease.InOutQuad).OnComplete(() => { Vector3 v = transform.localPosition; v.y = upY; transform.localPosition = v; GetComponentInChildren<WorkShiftTrigger>().Activate(); });
 			pillarAudioSource.Play();
         }
 	}

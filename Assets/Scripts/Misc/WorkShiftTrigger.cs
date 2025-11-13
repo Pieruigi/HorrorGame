@@ -11,8 +11,7 @@ namespace TMM
 {
 	public class WorkShiftTrigger : MonoBehaviour
 	{
-		public static UnityAction OnEquipmentReturnedBack;
-
+		
 		[SerializeField]
 		GameObject bag;
 		
@@ -47,10 +46,7 @@ namespace TMM
 			trigger.SetInteractable(false);
 			flashlight.SetActive(false);
 
-			// Hide outlines
-			// mapOutline.SetActive(false);
-			// flashlightOutline.SetActive(false);
-			// bagOutline.SetActive(false);
+		
         }
 
         // Start is called before the first frame update
@@ -67,20 +63,16 @@ namespace TMM
 
 		void OnEnable()
 		{
-			WorkShiftGroup.OnMovedUp += HandleOnGroupMovedUp;
 			trigger.OnInteraction += HandleOnInteraction;
 			GameplayManager.OnTaskCompleted += HandleOnTaskCompleted;
-			// trigger.OnEnter += HandleOnTriggerEnter;
-			// trigger.OnExit += HandleOnTriggerExit;
+	
 		}
 
         void OnDisable()
         {
-			WorkShiftGroup.OnMovedUp -= HandleOnGroupMovedUp;
 			trigger.OnInteraction -= HandleOnInteraction;
 			GameplayManager.OnTaskCompleted -= HandleOnTaskCompleted;
-			// trigger.OnEnter -= HandleOnTriggerEnter;
-			// trigger.OnExit -= HandleOnTriggerExit;
+		
         }
 
         private void HandleOnTaskCompleted()
@@ -89,24 +81,7 @@ namespace TMM
 			trigger.SetInteractable(true);
         }
 
-        // private void HandleOnTriggerExit()
-        // {
-        // 	// bagOutline.SetActive(false);
-        // 	// mapOutline.SetActive(false);
-        // 	// flashlightOutline.SetActive(false);
-        // 	bag.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-        // 	bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-        // 	map.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-        // 	flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);
-        // }
-
-        // private void HandleOnTriggerEnter()
-        // {
-        // 	bag.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
-        // 	bag.transform.GetChild(0).GetComponent<InteractionEffect>().EnableInteractionEffect(true);
-        // 	map.GetComponent<InteractionEffect>().EnableInteractionEffect(true);
-        // 	flashlight.GetComponent<InteractionEffect>().EnableInteractionEffect(false);;
-        // }
+      
 
         private void HandleOnInteraction()
 		{
@@ -163,9 +138,9 @@ namespace TMM
 
 			yield return new WaitForSeconds(1f);
 
-			
 
-			OnEquipmentReturnedBack?.Invoke();
+			GameplayManager.Instance.StopWorkShift();
+			GetComponentInParent<WorkShiftGroup>().MoveDown();
 			
         }
 
@@ -192,16 +167,18 @@ namespace TMM
 
         }
 
-        private void HandleOnGroupMovedUp()
+        public void Activate()
 		{
 			StartCoroutine(SetInteractabledDelayed(.5f));
 		}
 
-        private IEnumerator SetInteractabledDelayed(float delay)
-        {
+		private IEnumerator SetInteractabledDelayed(float delay)
+		{
 			yield return new WaitForSeconds(delay);
 
 			trigger.SetInteractable(true);
-        }
+		}
+		
+		
     }
 }

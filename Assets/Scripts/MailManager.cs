@@ -11,14 +11,7 @@ namespace TMM
 	[System.Serializable]
 	public class Mail
 	{
-		public delegate void CollectedDelegate(Mail mail);
-		public static CollectedDelegate OnCollected;
-
-
-		public delegate void DeliveredDelegate(Mail mail);
-		public static DeliveredDelegate OnDelivered;
-
-
+	
 		[SerializeField]
 		Address address;
 
@@ -52,13 +45,14 @@ namespace TMM
 		public void SetCollected()
 		{
 			collected = true;
-			OnCollected?.Invoke(this);
+			MailManager.Instance.ReportMailCollected(this);
+			
 		}
 		
 		public void SetDelivered()
         {
 			delivered = true;
-			OnDelivered?.Invoke(this);
+			MailManager.Instance.ReportMailDelivered(this);
         }
 	}
 
@@ -67,8 +61,7 @@ namespace TMM
 
 	public class MailManager : Singleton<MailManager>
 	{
-		public static UnityAction OnMailCollectedAll;
-		public static UnityAction OnMailDeliveredAll;
+	
 
 		[SerializeField]
 		List<Mail> mails = new List<Mail>();
@@ -92,17 +85,17 @@ namespace TMM
 
 		}
 
-		void OnEnable()
-		{
-			GameplayManager.OnWorkShiftStarted += HandleOnNextShiftStarted;
+		// void OnEnable()
+		// {
+		// 	GameplayManager.OnWorkShiftStarted += HandleOnNextShiftStarted;
 			
-		}
+		// }
 
-		void OnDisable()
-		{
-			GameplayManager.OnWorkShiftStarted -= HandleOnNextShiftStarted;
+		// void OnDisable()
+		// {
+		// 	GameplayManager.OnWorkShiftStarted -= HandleOnNextShiftStarted;
 			
-		}
+		// }
 
       
 
@@ -110,7 +103,7 @@ namespace TMM
         /// We must create letters and fill mailboxes or the player bag depending whether we are playing day or night shift
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        private void HandleOnNextShiftStarted(int day, bool isNightShift)
+        public void InitShift(int day, bool isNightShift)
 		{
 			
 			if (isNightShift)
@@ -176,6 +169,18 @@ namespace TMM
 		{
 			return !mails.Exists(l => !l.Collected);
 		}
+
+		public void ReportMailCollected(Mail mail)
+		{
+			if (MailCollectedAll())
+				GameplayManager.Instance.ReportMailCollectedAll();
+		}
+		
+		public void ReportMailDelivered(Mail mail)
+        {
+			if (MailDeliveredAll())
+				GameplayManager.Instance.ReportMailDeliveredAll();
+        }
 
 		
 	}

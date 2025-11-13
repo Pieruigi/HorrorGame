@@ -13,9 +13,6 @@ namespace TMM
 		public delegate void WorkShiftStartedDelegate(int day, bool isNightShift);
 		public static WorkShiftStartedDelegate OnWorkShiftStarted;
 
-		public delegate void WorkShiftCompletedDelegate(int day, bool isNightShift);
-		public static WorkShiftCompletedDelegate OnWorkShiftCompleted;
-
 		public static UnityAction OnTaskCompleted;
 
 		
@@ -29,11 +26,7 @@ namespace TMM
         }
 
 		bool workShiftRunning = false;
-		// public bool WorkShiftStarted
-		// {
-		// 	get { return workShiftStarted; }
-		// }
-
+	
 		int workingDayMax = 5;
 
 		bool ready = false;
@@ -57,41 +50,20 @@ namespace TMM
 
 		}
 
-		void OnEnable()
+	
+		public void ReportMailCollectedAll()
 		{
-			Mail.OnCollected += HandleOnMailCollected;
-			Mail.OnDelivered += HandleOnMailDelivered;
-			WorkShiftTrigger.OnEquipmentReturnedBack += HandleOnEquipmentReturnedback;
+			taskCompleted = true;
+			OnTaskCompleted?.Invoke();
 		}
-
-        void OnDisable()
+		
+		public void ReportMailDeliveredAll()
         {
-			Mail.OnCollected -= HandleOnMailCollected;
-			Mail.OnDelivered -= HandleOnMailDelivered;
-			WorkShiftTrigger.OnEquipmentReturnedBack -= HandleOnEquipmentReturnedback;
+            taskCompleted = true;
+			OnTaskCompleted?.Invoke();
         }
 
-        private void HandleOnMailCollected(Mail mail)
-		{
-            if (MailManager.Instance.MailCollectedAll())
-            {
-				taskCompleted = true;
-				OnTaskCompleted?.Invoke();    
-            }
-			
-        }
-
-        private void HandleOnMailDelivered(Mail mail)
-		{
-            if (MailManager.Instance.MailDeliveredAll())
-            {
-				taskCompleted = true;
-				OnTaskCompleted?.Invoke();    
-            }
-			
-        }
-
-        IEnumerator SetNextShiftReady()
+		IEnumerator SetNextShiftReady()
 		{
 			
 			yield return new WaitForSeconds(5);
@@ -108,14 +80,11 @@ namespace TMM
 			if (!ready) return;
 			if (nightShift)
 			{
-				// if(!DayNightManager.Instance.IsNight)
-				// 	DayNightManager.Instance.Switch();
-				//workingDay++;
+				
 			}
             else
 			{
-		        // if(DayNightManager.Instance.IsNight)
-				// 	DayNightManager.Instance.Switch();
+		       
             }
 
 			if (workingDay == workingDayMax + 1)
@@ -129,18 +98,14 @@ namespace TMM
 				// Start a new day of work
 				workShiftRunning = true;
 
-				// if(!nightShift)
-				// 	MusicManager.Instance.PlayDaylightMusic();
-
-				OnWorkShiftStarted?.Invoke(workingDay, nightShift);
-
-
+				MailManager.Instance.InitShift(workingDay, nightShift);
+				
 			}
 
 			
 		}
 
-		public void HandleOnEquipmentReturnedback()
+		public void StopWorkShift()
 		{
 			workShiftRunning = false;
 			ready = false;
@@ -156,15 +121,7 @@ namespace TMM
 				DayNightManager.Instance.Switch();
             	StartCoroutine(SetNextShiftReady());    
             }
-			//nightShift = !nightShift;
-			//workingDay++;
-
-			
-			
-
-			OnWorkShiftCompleted?.Invoke(workingDay, nightShift);
-
-
+						
 
 		}
 		
