@@ -109,6 +109,7 @@ namespace TMM
 			if (isNightShift)
 			{
 				// Init night shift
+
 			}
             else
 			{
@@ -128,21 +129,17 @@ namespace TMM
         /// <param name="day"></param>
 		void InitDayShift(int day)
 		{
-			int letterCount = 5; // Depending on the day???
-			int mailBoxCount = MailboxManager.Instance.Mailboxes.Count;
-
-			for (int i = 0; i < letterCount; i++)
-			{
-				var letter = CreateMail();
-				MailboxManager.Instance.Mailboxes[i % mailBoxCount].AddMail(letter);
-			}
+			int mailCount = 5; // Depending on the day???
 			
-							
+			for (int i = 0; i < mailCount; i++)
+				CreateMail();
 
+			MailboxManager.Instance.Init(mails);
+			
         }
 
 	
-		public Mail CreateMail()
+		public void CreateMail()
 		{
 			// Get all the addresses from the address manager which are not used yet
 			var addresses = AddressManager.Instance.Addresses.Where(a => !mails.Exists(l => l.Address == a)).ToList();
@@ -156,8 +153,6 @@ namespace TMM
 			// Add the letter to the list
 			mails.Add(letter);
 
-			// Return
-			return letter;
 		}
 
 		public bool MailDeliveredAll()

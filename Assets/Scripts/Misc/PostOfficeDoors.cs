@@ -90,8 +90,10 @@ namespace TMM
 			rightDoor.transform.DOLocalMoveX(0, time).SetEase(Ease.OutBounce).OnComplete(()=> { Vector3 v = rightDoor.transform.localPosition; v.x = 0; rightDoor.transform.localPosition = v; });
 		}
 
-		public void Open()
+		public void Open(bool forceTriggerOn = false)
 		{
+			if (forceTriggerOn) trigger.SetEnabled(true);
+
 			open = true;
 			audioSource.Play();
 			leftDoor.transform.DOKill();

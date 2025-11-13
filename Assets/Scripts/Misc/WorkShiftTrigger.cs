@@ -95,56 +95,58 @@ namespace TMM
 
         private void HandleOnInteraction()
 		{
+			if (GameplayManager.Instance.TaskCompleted) // Start collect mail
+				StartCoroutine(StopTask()); 
+			else // All mails collected from mailboxes
+				StartCoroutine(StartTask()); 
+
             //if(GameplayManager.Instance.)
             // Work shift always starts when you hit the button and stop when you return back the equipment after you completed your task
-            if (!GameplayManager.Instance.NightShift) // Daylight
-            {
-				if (GameplayManager.Instance.TaskCompleted) // Start collect mail
-					StartCoroutine(StopCollectingMail()); 
-				else // All mails collected from mailboxes
-					StartCoroutine(StartTask()); 
-            }
-            else // Night shift
-            {
-				if (GameplayManager.Instance.TaskCompleted) // We delivered all the mails
-					StartCoroutine(StopDeliveringMail());
-				else
-					StartCoroutine(StartTask());
+            // if (!GameplayManager.Instance.NightShift) // Daylight
+            // {
+			// 	if (GameplayManager.Instance.TaskCompleted) // Start collect mail
+			// 		StartCoroutine(StopTask()); 
+			// 	else // All mails collected from mailboxes
+			// 		StartCoroutine(StartTask()); 
+            // }
+            // else // Night shift
+            // {
+			// 	if (GameplayManager.Instance.TaskCompleted) // We delivered all the mails
+			// 		StartCoroutine(StopDeliveringMail());
+			// 	else
+			// 		StartCoroutine(StartTask());
 				
-            }
+            // }
 			
 
 		}
 
-		IEnumerator StartDeliveringMail()
-		{
-			yield return null;
-		}
 		
-		IEnumerator StopDeliveringMail()
-        {
-            yield return null;
-        }
-
-		IEnumerator StopCollectingMail()
+		IEnumerator StopTask()
 		{
 			trigger.SetInteractable(false);
 			// Check flashlight
-			var fl = GameObject.FindGameObjectWithTag("Player").transform.root.GetComponentInChildren<Flashlight>();
-			if (fl.IsAvailable())
-				fl.SetAvailable(false);
+			// var fl = GameObject.FindGameObjectWithTag("Player").transform.root.GetComponentInChildren<Flashlight>();
+			// if (fl.IsAvailable())
+			// 	fl.SetAvailable(false);
 
 			// Move equipment to the pillar
 			bag.GetComponent<PutDownEffect>().PlayEffect();
 			map.GetComponent<PutDownEffect>().PlayEffect();
+
 			if (GameplayManager.Instance.NightShift)
-			{
+            {
                 flashlight.GetComponent<PutDownEffect>().PlayEffect();
-				GameObject.FindGameObjectWithTag("Player").transform.root.GetComponentInChildren<Flashlight>().SetAvailable(false);
             }
 				
+			
+			SetEquipmentNotAvailable();
 
-			MusicManager.Instance.StopDaylightMusic();
+			if (GameplayManager.Instance.NightShift)
+				MusicManager.Instance.StopNightMusic();
+			else
+				MusicManager.Instance.StopDaylightMusic();
+
 			MusicManager.Instance.PlayPreShiftMusic(1f);
 
 			// Close doors
@@ -168,10 +170,9 @@ namespace TMM
 			map.GetComponent<PickUpEffect>().PlayEffect();
 			if (GameplayManager.Instance.NightShift)
             {
-				StartCoroutine(SetFlashlightAvailable());    
 				flashlight.GetComponent<PickUpEffect>().PlayEffect();
             } 
-
+			StartCoroutine(SetEquipmentAvailable());    
 			
 
 			// Play music
@@ -184,16 +185,26 @@ namespace TMM
 			yield return new WaitForSeconds(2f);
 
 			doors.SetLocked(false);
-			doors.Open();
+			doors.Open(true);
 
 
         }
 
-		IEnumerator SetFlashlightAvailable()
-        {
+		IEnumerator SetEquipmentAvailable()
+		{
 			yield return new WaitForSeconds(.5f);
 
-			GameObject.FindGameObjectWithTag("Player").transform.root.GetComponentInChildren<Flashlight>().SetAvailable(true);
+			GameUI.Instance.SetMapAvailable(true);
+			if(GameplayManager.Instance.NightShift)
+				GameObject.FindGameObjectWithTag("Player").transform.root.GetComponentInChildren<Flashlight>().SetAvailable(true);
+		}
+		
+		void SetEquipmentNotAvailable()
+        {
+            GameUI.Instance.SetMapAvailable(false);
+			if (GameplayManager.Instance.NightShift)
+				GameObject.FindGameObjectWithTag("Player").transform.root.GetComponentInChildren<Flashlight>().SetAvailable(false);
+            
         }
 
 		public void Activate()

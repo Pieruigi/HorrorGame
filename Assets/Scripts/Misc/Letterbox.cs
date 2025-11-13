@@ -65,6 +65,7 @@ namespace TMM
 
         private void HandleOnInteraction()
 		{
+			Debug.Log("TEST - Trying delive mail");
 			// Letterbox interaction is only allowed on night shift
 			if(!GameplayManager.Instance.NightShift)
             {
@@ -88,8 +89,9 @@ namespace TMM
 				OnThisLetterboxIsAlreadyFull?.Invoke(this);
 				return;
 			}
-			
-			// Ok, lets open a UI to let the player choose the mail to deliver
+			Debug.Log("TEST - Set delivered");
+			// Ok, lets open a UI to let the player choose the mail to deliver (for now we just deliver the mail)
+			mail.SetDelivered();
         }
 
         private void HandleOnActivationExit(Collider other)

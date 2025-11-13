@@ -41,19 +41,42 @@ namespace TMM
 
         public void PlayLeftHint()
         {
-            animator.SetTrigger("Hint");
+            // if (animator.GetCurrentAnimatorStateInfo(2).IsName("Hint") || (animator.IsInTransition(2) && animator.GetNextAnimatorStateInfo(2).IsName("Hint")))
+            //     animator.ResetTrigger("Hint");
+            // else
+            animator.ResetTrigger("Idle");
+            animator.ResetTrigger("Interaction");
+            animator.SetTrigger("Hint"); 
+
         }
 
         public void PlayLeftIdle()
         {
-            animator.SetTrigger("Idle");
+            // if (animator.GetCurrentAnimatorStateInfo(2).IsName("Idle") || (animator.IsInTransition(2) && animator.GetNextAnimatorStateInfo(2).IsName("Idle")))
+            // {
+            //     animator.ResetTrigger("Idle");
+            // }
+            // else
+            // {
+            animator.ResetTrigger("Hint");
+            animator.ResetTrigger("Interaction");
+            animator.SetTrigger("Idle");    
+            //}
+            
         }
-        
+
         public void PlayLeftInteraction()
         {
-            animator.SetTrigger("Interaction");
+            // if (animator.GetCurrentAnimatorStateInfo(2).IsName("L_Interact") || (animator.IsInTransition(2) && animator.GetNextAnimatorStateInfo(2).IsName("L_Interact")))
+            //     animator.ResetTrigger("Interaction");
+            // else
+            animator.ResetTrigger("Hint");
+            animator.ResetTrigger("Idle");
+                animator.SetTrigger("Interaction");
             //animator.SetBool("Hint", false);
         }
+        
+
     }
     
 }

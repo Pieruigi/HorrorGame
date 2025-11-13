@@ -55,7 +55,7 @@ namespace TMM
 			daylightAudioSource.DOFade(0, 1f).SetDelay(delay).OnComplete(() => { daylightAudioSource.Stop(); });
 		}
 		
-		public void StopNightMusic(float delay)
+		public void StopNightMusic(float delay = 0)
 		{
 			if (!nightAudioSource.isPlaying) return;
 			nightAudioSource.DOFade(0, 1f).SetDelay(delay).OnComplete(()=> { nightAudioSource.Stop(); });
