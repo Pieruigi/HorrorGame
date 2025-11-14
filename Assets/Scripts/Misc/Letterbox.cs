@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -36,6 +37,11 @@ namespace TMM
 
 		[SerializeField]
 		InteractionTrigger interactionTrigger;
+
+		[SerializeField]
+		LetterboxEffect letterboxEffect;
+
+		bool full = false;
 
 	    // Start is called before the first frame update
 	    void Start()
@@ -91,31 +97,42 @@ namespace TMM
 			}
 			Debug.Log("TEST - Set delivered");
 			// Ok, lets open a UI to let the player choose the mail to deliver (for now we just deliver the mail)
-			mail.SetDelivered();
+			//mail.SetDelivered();
+			DeliverMail(mail);
         }
 
         private void HandleOnActivationExit(Collider other)
-        {
-			interactionTrigger.SetInteractable(false);
+		{
+			if(interactionTrigger.IsInteractable())
+				interactionTrigger.SetInteractable(false);
         }
 
         private void HandleOnActivationEnter(Collider other)
-        {
-			interactionTrigger.SetInteractable(true);
+		{
+			if(!full)
+				interactionTrigger.SetInteractable(true);
         }
 
-        public void DeliverMail(Mail mail)
+		public void DeliverMail(Mail mail)
 		{
 			if (mail.Address != address)
 			{
 				OnWrongMailForThisLetterbox?.Invoke(this);
-				return ;  
-            }
+				return;
+			}
 
 			mail.SetDelivered();
+
+			full = true;
+
+			letterboxEffect.PlayDeliverEffect();
+
+		}
 		
-			
-			
+		public void Reset()
+        {
+			full = false;
+			letterboxEffect.Reset();
         }
 	}
 }

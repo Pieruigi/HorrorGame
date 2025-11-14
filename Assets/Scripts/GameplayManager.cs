@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -98,6 +99,8 @@ namespace TMM
 				// Start a new day of work
 				workShiftRunning = true;
 
+				LetterboxManager.Instance.InitShift(workingDay, nightShift);
+				MailboxManager.Instance.InitShift(workingDay, nightShift);
 				MailManager.Instance.InitShift(workingDay, nightShift);
 
 				OnWorkShiftStarted?.Invoke(workingDay, nightShift);

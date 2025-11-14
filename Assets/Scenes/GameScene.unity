@@ -1235,6 +1235,50 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 28001fbb95ce2fa49a788ab4e32da63a, type: 3}
+--- !u!1 &19792568
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 19792570}
+  - component: {fileID: 19792569}
+  m_Layer: 0
+  m_Name: LetterboxManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &19792569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19792568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14db50a3f2aac9344af4dae71bffb787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &19792570
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19792568}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &20340838 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8763920829272048918, guid: e90f6f383303abd4b93f6c334dd4cbc1,
@@ -37425,7 +37469,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 400, y: 0}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!1001 &1238905845
@@ -55730,7 +55774,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 400, y: 0}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!1001 &1911048132
@@ -61898,16 +61942,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2946924054075970433, guid: ea68c0faa99a05c49a211806736c9593,
-        type: 3}
-      propertyPath: address.number
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2946924054075970433, guid: ea68c0faa99a05c49a211806736c9593,
-        type: 3}
-      propertyPath: address.street
-      value: Via A
-      objectReference: {fileID: 0}
     - target: {fileID: 8266643103098128536, guid: ea68c0faa99a05c49a211806736c9593,
         type: 3}
       propertyPath: m_Name
@@ -62353,11 +62387,12 @@ SceneRoots:
   - {fileID: 858258507}
   - {fileID: 1819984047}
   - {fileID: 1508241627}
-  - {fileID: 1301894955}
-  - {fileID: 278901305}
-  - {fileID: 208848681}
   - {fileID: 1011581188}
+  - {fileID: 208848681}
+  - {fileID: 19792570}
+  - {fileID: 278901305}
   - {fileID: 1600617538}
+  - {fileID: 1301894955}
   - {fileID: 48741200}
   - {fileID: 324880077}
   - {fileID: 1194572296}

@@ -29,13 +29,22 @@ namespace TMM
 
 		}
 
-		
+
 		public void Init(List<Mail> mails)
+		{
+			
+			for (int i = 0; i < mails.Count; i++)
+			{
+				mailboxes[i % mailboxes.Count].AddMail(mails[i]);
+			}
+		}
+		
+		public void InitShift(int workingDay, bool isNightShift)
         {
-            for(int i=0; i<mails.Count; i++)
-            {
-                mailboxes[i % mailboxes.Count].AddMail(mails[i]);
-            }
+			if (isNightShift) return;
+
+			foreach (var mb in mailboxes)
+				mb.Reset();
         }
         
     }

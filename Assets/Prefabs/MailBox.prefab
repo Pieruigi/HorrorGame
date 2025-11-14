@@ -349,6 +349,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6011342225517391993}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 36a7d3184bc3ff0438e59b2603eeb32f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9187356577389638967}
   m_SourcePrefab: {fileID: 100100000, guid: 36a7d3184bc3ff0438e59b2603eeb32f, type: 3}
 --- !u!1 &1797695237752523885 stripped
 GameObject:
@@ -382,10 +386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   proximityTrigger: {fileID: 3138010824910779202}
   interactionTrigger: {fileID: 6011342225517391993}
-  door: {fileID: 1797695237752523885}
-  mailPrefab: {fileID: 5344598260239632115, guid: 2ddbcc38221738e46b94b5cbc76294ab,
-    type: 3}
-  mailSpawnPoint: {fileID: 7194134085380511883}
+  mailboxEffect: {fileID: 9187356577389638967}
 --- !u!65 &4724042425331844319
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -420,3 +421,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _collider: {fileID: 126154506990235853}
+--- !u!114 &9187356577389638967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7846862765573337388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03dd292fd3484c147b69accf931f6651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  door: {fileID: 1797695237752523885}
+  mailPrefab: {fileID: 5344598260239632115, guid: 2ddbcc38221738e46b94b5cbc76294ab,
+    type: 3}
+  mailSpawnPoint: {fileID: 7194134085380511883}

@@ -39,13 +39,17 @@ namespace TMM
 
 			// Read all the addresses
 			foreach (var letterbox in letterboxes)
-				addresses.Add(letterbox.Address);
+			{
+				letterbox.Reset();
+                addresses.Add(letterbox.Address);
+            }
+				
 		}
 
 		// Update is called once per frame
 		void Update()
 		{
-
+			
 		}
 	}
 }
