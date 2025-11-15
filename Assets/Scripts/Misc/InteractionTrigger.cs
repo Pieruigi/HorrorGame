@@ -97,7 +97,7 @@ namespace TMM
 				{
 					isHover = false;
 					//OnExit?.Invoke();
-					//ArmsController.Instance.PlayLeftIdle();
+					ArmsController.Instance.PlayLeftIdle();
 				}
 			}
 		}

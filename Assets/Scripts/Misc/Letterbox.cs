@@ -10,18 +10,6 @@ namespace TMM
 {
 	public class Letterbox : MonoBehaviour
 	{
-		public delegate void NoMailForThisLetterboxDelegate(Letterbox letterbox);
-		public static NoMailForThisLetterboxDelegate OnNoMailForThisLetterbox;
-
-		public delegate void ThisLetterboxIsAlreadyFullDelegate(Letterbox letterbox);
-		public static ThisLetterboxIsAlreadyFullDelegate OnThisLetterboxIsAlreadyFull;
-
-		public delegate void WrongMailForThisLetterboxDelegate(Letterbox letterbox);
-		public static WrongMailForThisLetterboxDelegate OnWrongMailForThisLetterbox;
-
-		public delegate void OnlyAllowedOnNightShiftDelegate(Letterbox letterbox);
-		public static OnlyAllowedOnNightShiftDelegate OnlyAllowedOnNightShift;
-
 		
 
 		[SerializeField]
@@ -43,8 +31,13 @@ namespace TMM
 
 		bool full = false;
 
-	    // Start is called before the first frame update
-	    void Start()
+        void Awake()
+        {
+			interactionTrigger.SetInteractable(false);
+        }
+
+        // Start is called before the first frame update
+        void Start()
 	    {
 	        
 	    }
@@ -71,31 +64,21 @@ namespace TMM
 
         private void HandleOnInteraction()
 		{
-			Debug.Log("TEST - Trying delive mail");
-			// Letterbox interaction is only allowed on night shift
-			if(!GameplayManager.Instance.NightShift)
-            {
-				OnlyAllowedOnNightShift?.Invoke(this);
-				return;
-            }
+			if (full) return;
 
+			Debug.Log("TEST - Trying delive mail");
+		
 			// We open a UI to let the player choose the mail to deliver, but first we want to check if the mail has already been delivered or if there is no mail to deliver at all
 			Mail mail = MailManager.Instance.Mails.ToList().Find(l => l.Address == address);
 
 			// If mail is null send an event to scare the player
 			if (mail == null)
 			{
-				OnNoMailForThisLetterbox?.Invoke(this);
+				letterboxEffect.PlayWrongChoiceEffect();
 				return;
 			}
 
-			// If the mail has already been delivered send an event to scare the player
-			if (mail.Delivered)
-			{
-				OnThisLetterboxIsAlreadyFull?.Invoke(this);
-				return;
-			}
-			Debug.Log("TEST - Set delivered");
+			
 			// Ok, lets open a UI to let the player choose the mail to deliver (for now we just deliver the mail)
 			//mail.SetDelivered();
 			DeliverMail(mail);
@@ -109,18 +92,12 @@ namespace TMM
 
         private void HandleOnActivationEnter(Collider other)
 		{
-			if(!full)
+			if(!full && GameplayManager.Instance.NightShift)
 				interactionTrigger.SetInteractable(true);
         }
 
 		public void DeliverMail(Mail mail)
 		{
-			if (mail.Address != address)
-			{
-				OnWrongMailForThisLetterbox?.Invoke(this);
-				return;
-			}
-
 			mail.SetDelivered();
 
 			full = true;
