@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3530863673028601134}
   - component: {fileID: 4226748999410854734}
   m_Layer: 0
-  m_Name: Side4
+  m_Name: Side4_small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 122.740005, y: 0.26999915, z: -70.52}
-  m_LocalScale: {x: 1.4, y: 1, z: 1.4}
+  m_LocalScale: {x: 0.49, y: 1, z: 0.49}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 673003436177a79489b80f5ca4fe4817, type: 2}
+  - {fileID: 2100000, guid: fdb49540999b6584bb76d0e0c0e4e73f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
