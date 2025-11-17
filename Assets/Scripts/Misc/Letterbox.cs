@@ -8,6 +8,22 @@ using UnityEngine.Events;
 
 namespace TMM
 {
+	[System.Serializable]
+		public class Address
+		{
+			[SerializeField]
+			string street;
+
+			[SerializeField]
+			int number;
+
+			public Address(string street, int number)
+			{
+				this.street = street;
+				this.number = number;
+			}
+		}
+
 	public class Letterbox : MonoBehaviour
 	{
 		
@@ -31,6 +47,14 @@ namespace TMM
 
 		bool full = false;
 
+		bool used = false;
+		public bool Used
+        {
+			get { return used; }
+			set { used = value; }
+        }
+
+		
         void Awake()
         {
 			interactionTrigger.SetInteractable(false);

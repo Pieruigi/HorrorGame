@@ -32,6 +32,9 @@ namespace TMM
 
 			foreach (var lb in letterboxes)
 				lb.Reset();
+
+			
+
         }
 	}
 }

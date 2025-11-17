@@ -143,15 +143,18 @@ namespace TMM
 	
 		public void CreateMail()
 		{
-			
+
 			// Get all the addresses from the address manager which are not used yet
-			var addresses = AddressManager.Instance.Addresses.Where(a => !mails.Exists(l => l.Address == a)).ToList();
+			var letterboxes = LetterboxManager.Instance.Letterboxes.Where(l => !l.Used).ToList();
+			//var addresses = AddressManager.Instance.Addresses.Where(a => !mails.Exists(l => l.Address == a)).ToList();
 
 			// Get a random address from the filtred list
-			var address = addresses[Random.Range(0, addresses.Count)];
+			var letterbox = letterboxes[Random.Range(0, letterboxes.Count)];
+
+			letterbox.Used = true;
 
 			// Create a new letter
-			var letter = new Mail(address);
+			var letter = new Mail(letterbox.Address);
 
 			// Add the letter to the list
 			mails.Add(letter);
