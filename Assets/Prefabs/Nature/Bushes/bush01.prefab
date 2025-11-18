@@ -76,6 +76,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8424560067334240178}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d61d98cda9af2c942802b0ad2afb8ceb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -602171313017230896}
   m_SourcePrefab: {fileID: 100100000, guid: d61d98cda9af2c942802b0ad2afb8ceb, type: 3}
 --- !u!1 &8274347417476276140 stripped
 GameObject:
@@ -90,10 +94,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8274347417476276140}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 013e21844c55ff64e817df340e9f02b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dayMaterial: {fileID: 2100000, guid: 0661605179d359a4bae97a89b68ac598, type: 2}
   nightMaterial: {fileID: 2100000, guid: 56c86e8b092ad114c9a882f8567b11fd, type: 2}
+--- !u!114 &-602171313017230896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8274347417476276140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b052d297ac946c54bb040ab83cfed86f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleMax: 1.05
+  scaleMin: 0.95
+  rotate: 1

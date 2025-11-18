@@ -18,6 +18,18 @@ namespace TMM
         [SerializeField]
         Material nightSkybox;
 
+        [SerializeField]
+        float dayFogDensity = .5f;
+
+        [SerializeField]
+        float nightFogDensity = .6f;
+
+        [SerializeField]
+        Color dayFogColor;
+
+        [SerializeField]
+        Color nightFogColor;
+
         float speed = 1f;
         float elapsed = 0;
 
@@ -72,10 +84,20 @@ namespace TMM
                             material.SetVector("_Sky_Color", c1);
                             material.SetVector("_Cloud_Color", c2);
 
+                            // Ambient colors
                             RenderSettings.ambientGroundColor = c0;
                             RenderSettings.ambientSkyColor = c1;
                             RenderSettings.ambientEquatorColor = isNight ? Vector4.Lerp(c0, c1, 0.3f) : Vector4.Lerp(c0, c1, 0.7f);
-                            
+
+                            // Fog density
+                            var fogDensity_Start = isNight ? dayFogDensity : nightFogDensity;
+                            var fogDensity_End = !isNight ? dayFogDensity : nightFogDensity;
+                            RenderSettings.fogDensity = Mathf.Lerp(fogDensity_Start, fogDensity_End, t);
+
+                            // Fog color
+                            var fogColor_Start = isNight ? dayFogColor : nightFogColor;
+                            var fogColor_End = !isNight ? dayFogColor : nightFogColor;
+                            RenderSettings.fogColor = Color.Lerp(fogColor_Start, fogColor_End, t);
                         },
                         1f,
                         duration);

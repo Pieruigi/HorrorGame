@@ -54,6 +54,7 @@ namespace TMM
 	
 		public void ReportMailCollectedAll()
 		{
+			Debug.Log("TEST - mail collected all");
 			taskCompleted = true;
 			OnTaskCompleted?.Invoke();
 		}

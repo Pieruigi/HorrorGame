@@ -34,8 +34,8 @@ namespace TMM
         void Update()
         {
 #if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.Z))
-                Open();
+            // if (Input.GetKeyDown(KeyCode.Z))
+            //     Open();
 #endif
         }
 

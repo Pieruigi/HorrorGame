@@ -82,7 +82,15 @@ namespace TMM
 		// Update is called once per frame
 		void Update()
 		{
+#if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+				foreach (var mail in mails)
+					mail.SetCollected();
 
+				
+            }
+#endif
 		}
 
 		// void OnEnable()
@@ -161,12 +169,12 @@ namespace TMM
 
 		}
 
-		public bool MailDeliveredAll()
+		bool MailDeliveredAll()
 		{
 			return !mails.Exists(l => !l.Delivered);
 		}
 
-		public bool MailCollectedAll()
+		bool MailCollectedAll()
 		{
 			return !mails.Exists(l => !l.Collected);
 		}
