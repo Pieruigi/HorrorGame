@@ -139,7 +139,7 @@ namespace TMM
 		{
 			mails.Clear();
 
-			int mailCount = 5; // Depending on the day???
+			int mailCount = 1; // Depending on the day???
 			
 			for (int i = 0; i < mailCount; i++)
 				CreateMail();

@@ -25,8 +25,8 @@ public class CameraShake : MonoBehaviour
         rotTween?.Kill();
 
         float duration = 1.7f;
-        float positionStrength = 0.25f * .6f;  // Shake position power
-        float rotationStrength = 15f * .6f;    // Shake rotation power
+        float positionStrength = 0.25f * .4f;  // Shake position power
+        float rotationStrength = 15f * .4f;    // Shake rotation power
 
         // Shake position
         shakeTween = transform.DOShakePosition(

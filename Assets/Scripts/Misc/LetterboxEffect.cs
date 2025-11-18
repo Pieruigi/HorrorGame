@@ -54,11 +54,11 @@ namespace TMM
 		void Update()
 		{
 #if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.Z))
-			{
-				//PlayDeliverEffect();
-				PlayWrongChoiceEffect();
-            }
+            // if (Input.GetKeyDown(KeyCode.Z))
+			// {
+			// 	//PlayDeliverEffect();
+			// 	PlayWrongChoiceEffect();
+            // }
 #endif
 		}
 
@@ -123,13 +123,13 @@ namespace TMM
 
 			Sequence seq = DOTween.Sequence();
 			seq.Append(transform.DOMove(targetPos, 0));
-			seq.Join(transform.DORotateQuaternion(targetRot, 0));
-			seq.Join(door.transform.DORotate(Vector3.right * 100, 0));
+			seq.Join(transform.DOLocalRotateQuaternion(targetRot, 0));
+			seq.Join(door.transform.DOLocalRotate(Vector3.right * 100, 0));
 
 			seq.AppendInterval(1f);
 			seq.Append(transform.DOMove(originalPos, 0));
-			seq.Join(transform.DORotateQuaternion(originalRot, 0));
-			seq.Join(door.transform.DORotate(Vector3.zero, 0));
+			seq.Join(transform.DOLocalRotateQuaternion(originalRot, 0));
+			seq.Join(door.transform.DOLocalRotate(Vector3.zero, 0));
 
 			seq.OnStart(() => { collider.enabled = false; fish.SetActive(true); });
 			seq.OnComplete(() => { collider.enabled = true; fish.SetActive(false);});

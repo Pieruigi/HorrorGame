@@ -30,6 +30,21 @@ namespace TMM
         [SerializeField]
         Color nightFogColor;
 
+        [SerializeField]
+        Light directionalLight;
+
+        [SerializeField]
+        Color sunColor;
+
+        [SerializeField]
+        float sunIntensity;
+
+        [SerializeField]
+        Color moonColor;
+
+        [SerializeField]
+        float moonIntensity;
+
         float speed = 1f;
         float elapsed = 0;
 
@@ -98,6 +113,15 @@ namespace TMM
                             var fogColor_Start = isNight ? dayFogColor : nightFogColor;
                             var fogColor_End = !isNight ? dayFogColor : nightFogColor;
                             RenderSettings.fogColor = Color.Lerp(fogColor_Start, fogColor_End, t);
+
+                            // Directional light
+                            var intensity_Start = isNight ? sunIntensity : moonIntensity;
+                            var intensity_End = !isNight ? sunIntensity : moonIntensity;
+                            var color_Start = isNight ? sunColor : moonColor;
+                            var color_End = !isNight ? sunColor : moonColor;
+
+                            directionalLight.color = Color.Lerp(color_Start, color_End, t);
+                            directionalLight.intensity = Mathf.Lerp(intensity_Start, intensity_End, t);
                         },
                         1f,
                         duration);
