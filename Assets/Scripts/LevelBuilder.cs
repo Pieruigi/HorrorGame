@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
 
 namespace TMM
@@ -22,6 +23,8 @@ namespace TMM
 
 		}
 
+
+
 		[SerializeField]
 		GameObject floorPrefab;
 
@@ -29,7 +32,7 @@ namespace TMM
 		List<WallBlockData> blockPrefabs;
 
 		[SerializeField]
-		List<GameObject> walls;
+		List<GameObject> blocks;
 
 
 		[SerializeField]
@@ -117,7 +120,7 @@ namespace TMM
 					wall.transform.eulerAngles = Vector3.up * 90f * Random.Range(0, 4);
 
 					// Add to the wall list
-					walls.Add(wall);
+					blocks.Add(wall);
 
 					// Set position
 					wall.transform.position = Vector3.zero;
@@ -128,7 +131,7 @@ namespace TMM
 				}
 				else
 				{
-					//if (i > 1) return;
+					if (i > 1) return;
 					if (!TryAddWall(wall))
 					{
 						// Destroy wall
@@ -141,19 +144,56 @@ namespace TMM
                     else
                     {
                         // Place floor all around
-						PlaceFloorAllAround(wall);
+						//PlaceFloorAllAround(wall);
                     }
 				}
 			}
 		}
 
+		int GetTile(float x, float z)
+		{
+			Debug.Log($"GetTile({x},{z})");
+			foreach (var block in blocks)
+			{
+				var walls = block.GetComponentsInChildren<Transform>();
+				foreach (var wall in walls)
+				{
+					if (wall.position.x == x && wall.position.z == z)
+                    {
+						Debug.Log($"GetTile({x},{z}) => 1");
+							return 1;
+                    }
+						
+                    	
+				}
+			}
+
+			foreach (var floor in floors)
+			{
+				if (floor.transform.position.x == x && floor.transform.position.z == z)
+                {
+					Debug.Log($"GetTile({x},{z}) => 0");
+					return 0;
+                }
+					
+			}
+					Debug.Log($"GetTile({x},{z}) => -1");
+			return -1;
+        }
+
 		bool TryAddWall(GameObject wall)
 		{
 			// Get boundaries
-			var top = floors.Where(f => !floors.Exists(f1 => Mathf.Abs(f1.transform.position.z - f.transform.position.z - cellSize) < epsilon)).ToList();
+			//var top = floors.Where(f => !floors.Exists(f1 => f1.transform.position.x == f.transform.position.x && f1.transform.position.z == f.transform.position.z + cellSize) && !blocks.Exists(w => w.transform.position.x == f.transform.position.x && w.transform.position.z == f.transform.position.z + cellSize)).ToList();
+
+			var top = floors.Where(f => GetTile(f.transform.position.x, f.transform.position.z + cellSize) < 0).ToList();
+
 			var right = floors.Where(f => !floors.Exists(f1 => f1.transform.position.x == f.transform.position.x + cellSize)).ToList();
 			var bottom = floors.Where(f => !floors.Exists(f1 => f1.transform.position.z == f.transform.position.z - cellSize)).ToList();
 			var left = floors.Where(f => !floors.Exists(f1 => f1.transform.position.x == f.transform.position.x - cellSize)).ToList();
+
+			Debug.Log("TopCOunt:" + top.Count);
+			
 
 			List<GameObject>[] tot = new List<GameObject>[4];
 			tot[0] = top;
@@ -171,7 +211,12 @@ namespace TMM
 				if (bottom.Count == 0) dirs.Remove(2);
 				if (left.Count == 0) dirs.Remove(3);
 				int dir = dirs[Random.Range(0, dirs.Count)];
+#if UNITY_EDITOR			
 				dir = 0;
+				// if (tot[dir].Count == 0)
+				// 	dir = 1;
+
+#endif
 
 				var floor = tot[dir][Random.Range(0, tot[dir].Count)];
 				tot[dir].Remove(floor);
@@ -206,21 +251,100 @@ namespace TMM
 						break;
                 }
 
-				// Check every cell
+				// Check every cell in the wall block we have chosen
 				bool found = true;
 				foreach (var cell in cells)
 				{
-                    switch (dir)
-                    {
+					switch (dir)
+					{
 						case 0:
-							if(floors.Exists(f=>Mathf.Abs(f.transform.position.z - cell.transform.position.z + cellSize*2) < epsilon))
-                            {
-								// found = false;
-								// break;
-                            }
+							if (!cells.Exists(c => c.transform.position.z == cell.transform.position.z - cellSize)) // South border (no other cell below)
+							{
+								Debug.Log($"Tile name:{cell.name}");
 
+								// If there is a hole and then a floor under the cell fail
+								if (!floors.Exists(f => f.transform.position.z == cell.transform.position.z - cellSize && f.transform.position.x == cell.transform.position.x) &&
+									 floors.Exists(f => f.transform.position.z == cell.transform.position.z - 2f * cellSize && f.transform.position.x == cell.transform.position.x)
+									)
+								{
+									Debug.Log($"Tile name:{cell.name} found is false");
+									found = false;
+								}
+							}
+							
+							// No cell to the right
+							// if(!cells.Exists(c=>c.transform.position.x == cell.transform.position.x + cellSize))
+							// {
+                            //     // Check bottom right coord
+							// 	if(!floors.Exists(f => f.transform.position.x == cell.transform.position.x + cellSize && f.transform.position.z == cell.transform.position.z - cellSize) &&
+							// 	    floors.Exists(f=> f.transform.position.x == cell.transform.position.x + cellSize && f.transform.position.z == cell.transform.position.z - 2 + cellSize))
+                            //    	{
+							// 		found = false;
+                            // 	}
+                            // }
+
+							// if (!cells.Exists(c => Mathf.Abs(c.transform.position.x - cell.transform.position.x - cellSize) < epsilon)) // South east border
+							// {
+							// 	// If there is a hole and then a floor under the cell fail
+							// 	if (!floors.Exists(f => Mathf.Abs(f.transform.position.z - cell.transform.position.z + cellSize) < epsilon &&
+							// 							Mathf.Abs(f.transform.position.x - cell.transform.position.x - cellSize) < epsilon) &&
+							// 		floors.Exists(f => Mathf.Abs(f.transform.position.z - cell.transform.position.z + 2f * cellSize) < epsilon &&
+							// 						   Mathf.Abs(f.transform.position.x - cell.transform.position.x - cellSize) < epsilon))
+							// 	{
+							// 		found = false;
+							// 	}
+							// }
+							// if(!cells.Exists(c => Mathf.Abs(c.transform.position.x - cell.transform.position.x + cellSize) < epsilon)) // South west border
+							// {
+							// 	// If there is a hole and then a floor under the cell fail
+							// 	if (!floors.Exists(f => Mathf.Abs(f.transform.position.z - cell.transform.position.z + cellSize) < epsilon && 
+							// 	                        Mathf.Abs(f.transform.position.x - cell.transform.position.x + cellSize) < epsilon) && 
+							// 		floors.Exists(f => Mathf.Abs(f.transform.position.z - cell.transform.position.z + 2f * cellSize) < epsilon &&
+							// 						   Mathf.Abs(f.transform.position.x - cell.transform.position.x + cellSize) < epsilon))
+							// 	{
+							// 		found = false;
+							// 	}    
+                            // }
 							break;
-                    }
+						case 1:
+							if (!cells.Exists(c => Mathf.Abs(c.transform.position.x - cell.transform.position.x + cellSize) < epsilon)) // West border
+							{
+								// If there is a hole and then a floor under the cell fail
+								if (!floors.Exists(f => Mathf.Abs(f.transform.position.x - cell.transform.position.x + cellSize) < epsilon) &&
+									floors.Exists(f => Mathf.Abs(f.transform.position.x - cell.transform.position.x + 2f * cellSize) < epsilon))
+								{
+									found = false;
+								}
+							}
+							if (!cells.Exists(c => Mathf.Abs(c.transform.position.x - cell.transform.position.x + cellSize) < epsilon &&
+												Mathf.Abs(c.transform.position.z - cell.transform.position.z - cellSize) < epsilon)) // North west border
+							{
+								// If there is a hole and then a floor under the cell fail
+								if (!floors.Exists(f => Mathf.Abs(f.transform.position.x - cell.transform.position.x + cellSize) < epsilon &&
+														Mathf.Abs(f.transform.position.z - cell.transform.position.z - cellSize) < epsilon) &&
+									floors.Exists(f => Mathf.Abs(f.transform.position.x - cell.transform.position.x + 2f * cellSize) < epsilon &&
+													   Mathf.Abs(f.transform.position.z - cell.transform.position.z - cellSize) < epsilon))
+								{
+									found = false;
+								}
+							}
+							// if(!cells.Exists(c=>Mathf.Abs(c.transform.position.x - cell.transform.position.x + cellSize) < epsilon &&
+							//     			    Mathf.Abs(c.transform.position.z - cell.transform.position.z + cellSize) < epsilon)) // South west border
+							// {
+							// 	// If there is a hole and then a floor under the cell fail
+							// 	if (!floors.Exists(f => Mathf.Abs(f.transform.position.x - cell.transform.position.x + cellSize) < epsilon && 
+							// 	                        Mathf.Abs(f.transform.position.z - cell.transform.position.z + cellSize) < epsilon) && 
+							// 		floors.Exists(f => Mathf.Abs(f.transform.position.x - cell.transform.position.x + 2f * cellSize) < epsilon &&
+							// 						   Mathf.Abs(f.transform.position.z - cell.transform.position.z + cellSize) < epsilon))
+							// 	{
+							// 		found = false;
+							// 	}    
+                            // }
+							break;	
+					}
+
+					if (!found)
+						break;
 
 				}
 

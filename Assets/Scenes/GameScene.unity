@@ -373,12 +373,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3798ad11d8fed75409bc9f4e686582c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 20
-  wallPrefab: {fileID: 5431305892701798227, guid: 5147286fa88dea24e8c8a82fb3469bfd,
-    type: 3}
-  floorPrefab: {fileID: 4997608689104768734, guid: af5cdf1e44366614eb998960a94537fa,
-    type: 3}
-  cellSize: 2
 --- !u!4 &686608035
 Transform:
   m_ObjectHideFlags: 0
@@ -669,6 +663,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1457909763}
   - component: {fileID: 1457909764}
+  - component: {fileID: 1457909765}
   m_Layer: 0
   m_Name: Builder
   m_TagString: Untagged
@@ -698,7 +693,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457909762}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ed5f585b67357b4c831f3a727992bb9, type: 3}
   m_Name: 
@@ -731,9 +726,62 @@ MonoBehaviour:
     min: 1
     max: 2
     count: 0
-  walls: []
+  blocks: []
   floors: []
   cellSize: 2
+--- !u!114 &1457909765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1457909762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4b324713259d0f46a4b477fd800c2fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallPrefab: {fileID: 3161725957375498167, guid: 209d6d6bdf52a7e4d9619b185c657f98,
+    type: 3}
+  floorPrefab: {fileID: 3996190567127872303, guid: 6014e93875694d04bb51d00761220476,
+    type: 3}
+  availableBlocks:
+  - tiles:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 0, y: 2}
+    - {x: 1, y: 0}
+    min: 3
+    max: 5
+    count: 0
+  - tiles:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    min: 4
+    max: -1
+    count: 0
+  - tiles:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 2, y: 0}
+    min: 4
+    max: -1
+    count: 0
+  - tiles:
+    - {x: 0, y: 0}
+    - {x: 1, y: 0}
+    - {x: 0, y: 1}
+    min: 2
+    max: 3
+    count: 0
+  - tiles:
+    - {x: 0, y: 0}
+    - {x: 0, y: 1}
+    - {x: 0, y: 2}
+    - {x: 1, y: 1}
+    min: 1
+    max: 2
+    count: 0
 --- !u!1 &1766260161
 GameObject:
   m_ObjectHideFlags: 0
