@@ -1,8 +1,11 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TMM
 {
@@ -64,7 +67,10 @@ namespace TMM
 		// Update is called once per frame
 		void Update()
 		{
-
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.Z))
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+#endif
 		}
 
 
@@ -90,24 +96,63 @@ namespace TMM
 				}
                 else
 				{
-					if (i > 4) return;
+					//if (i > 3) return;
 					AddAnotherBlock();
 					
                 }
 			}
 		}
 
+		Tile GetClosestBorderToTheOrigin()
+        {
+			var borders = GetBorderTileAll();
+
+			Tile tile = null;
+			float minDist = 0;
+
+			foreach (var border in borders)
+			{
+				var dist = border.coords.magnitude;
+				if (tile == null || dist < minDist)
+				{
+					tile = border;
+					minDist = dist;
+				}
+			}
+
+			return tile;
+        }
+
+		List<Tile> GetBorderTileAll()
+        {
+			return tiles.Where(t => GetTile(t.coords.x, t.coords.y + 1) < 0 || GetTile(t.coords.x + 1, t.coords.y) < 0 ||
+										  GetTile(t.coords.x, t.coords.y - 1) < 0 || GetTile(t.coords.x - 1, t.coords.y) < 0).ToList();
+        }
+
 		void AddAnotherBlock()
 		{
+			
 			// Get borders
 			List<Tile>[] borders = new List<Tile>[4];
-			borders[0] = tiles.Where(t => GetTile(t.coords.x, t.coords.y + 1) < 0).ToList(); // North
-			borders[1] = tiles.Where(t => GetTile(t.coords.x + 1, t.coords.y) < 0).ToList(); // East
-			borders[2] = tiles.Where(t => GetTile(t.coords.x, t.coords.y - 1) < 0).ToList(); // South
-			borders[3] = tiles.Where(t => GetTile(t.coords.x - 1, t.coords.y) < 0).ToList(); // West
+			borders[0] = tiles.Where(t => GetTile(t.coords.x, t.coords.y + 1) < 0).OrderBy(_=>System.Guid.NewGuid()).ToList(); // North
+			borders[1] = tiles.Where(t => GetTile(t.coords.x + 1, t.coords.y) < 0).OrderBy(_=>System.Guid.NewGuid()).ToList(); // East
+			borders[2] = tiles.Where(t => GetTile(t.coords.x, t.coords.y - 1) < 0).OrderBy(_=>System.Guid.NewGuid()).ToList(); // South
+			borders[3] = tiles.Where(t => GetTile(t.coords.x - 1, t.coords.y) < 0).OrderBy(_=>System.Guid.NewGuid()).ToList(); // West
 
-			int borderType = 0; // Top
+			var closestTile = GetClosestBorderToTheOrigin();
+			List<int> availableBorderTypes = new List<int>();
+			for(int i=0;  i<4;  i++)
+			{
+				if (!borders[i].Contains(closestTile)) borders[i].Clear();
+				else availableBorderTypes.Add(i);
 
+			}
+
+			int borderType = availableBorderTypes[Random.Range(0, availableBorderTypes.Count)];// 3; // Top
+#if UNITY_EDITOR
+			//int borderType = 1;
+#endif
+			Debug.Log($"TEST - Border type:{borderType}({borders[borderType].Count})");
 
 			var borderDirs = new Vector2[] { Vector2.up, Vector2.right, Vector2.down, Vector2.left };
 
@@ -117,7 +162,7 @@ namespace TMM
 			var candidates = new List<WallBlockData>();
 			foreach (WallBlockData block in availableBlocks)
 			{
-				if (candidates.Contains(block)) continue;
+				if (block.count <= 0 || candidates.Contains(block)) continue;
 
 				candidates.Add(block);
 			}
@@ -129,6 +174,9 @@ namespace TMM
 				// Choose the next candidate
 				var candidate = candidates[Random.Range(0, candidates.Count)];
 				candidates.Remove(candidate);
+#if UNITY_EDITOR
+				//if (candidate != availableBlocks[0]) continue;
+#endif
 
 				// Create the rotation type array
 				List<int> rotTypes = new List<int>() { 0, 1, 2, 3 };
@@ -143,11 +191,13 @@ namespace TMM
 					// Rotate tiles
 					var rotatedTiles = RotateTiles(candidate.tiles, rotType);
 
-					
+					Debug.Log($"TEST - Adding tile, rotate:" + rotType);
+
 
 					// Loop through each border to check if the candidate can be positioned rotated this way starting from a specific position
 					foreach (var borderTile in borders[borderType])
 					{
+
 						done = true;
 						var offset = borderTile.coords + borderDirs[borderType];
 
@@ -161,21 +211,69 @@ namespace TMM
 								break;
 							}
 
-							if (GetTile(placedTile - borderDirs[borderType]) < 0 && GetTile(placedTile - 2 * borderDirs[borderType]) == 0)
+							foreach (var borderDir in borderDirs)
 							{
-								done = false;
-								break;
+								if (!rotatedTiles.Exists(t=>new Vector2(t.x,t.y) == new Vector2(rotatedTile.x, rotatedTile.y)-borderDir) && GetTile(placedTile - borderDir) < 0 && GetTile(placedTile - 2 * borderDir) == 0)
+								{
+									done = false;
+									break;
+								}
 							}
 
-							switch (borderType)
-							{
-								case 0:
-									if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y - 1) < 0 && GetTile(placedTile.x - 1, placedTile.y - 2) == 0)
-										done = false;
-									if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y - 1) < 0 && GetTile(placedTile.x + 1, placedTile.y - 2) == 0)
-										done = false;
-									break;
-							}
+							if (!done) break;
+							
+
+							// switch (borderType)
+							// {
+							// 	case 0:
+							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x - 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y - 1) < 0 && GetTile(placedTile.x - 1, placedTile.y - 2) == 0)
+							// 			done = false;
+							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x + 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y - 1) < 0 && GetTile(placedTile.x + 1, placedTile.y - 2) == 0)
+							// 			done = false;
+							// 		break;
+							// 	case 1:
+							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y + 1) < 0 && GetTile(placedTile.x - 2, placedTile.y + 1) == 0)
+							// 			done = false;
+							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y - 1) < 0 && GetTile(placedTile.x - 2, placedTile.y - 1) == 0)
+							// 			done = false;
+							// 		break;
+							// 	case 2:
+							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x - 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y + 1) < 0 && GetTile(placedTile.x - 1, placedTile.y + 2) == 0)
+							// 			done = false;
+							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x + 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y + 1) < 0 && GetTile(placedTile.x + 1, placedTile.y + 2) == 0)
+							// 			done = false;
+							// 		break;
+							// 	case 3:
+							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y + 1) < 0 && GetTile(placedTile.x + 2, placedTile.y + 1) == 0)
+							// 			done = false;
+							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y - 1) < 0 && GetTile(placedTile.x + 2, placedTile.y - 1) == 0)
+							// 			done = false;
+							// 		break;
+							// }
+
+							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x - 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y - 1) < 0 && GetTile(placedTile.x - 1, placedTile.y - 2) == 0)
+								done = false;
+							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x + 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y - 1) < 0 && GetTile(placedTile.x + 1, placedTile.y - 2) == 0)
+								done = false;
+					
+					
+							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y + 1) < 0 && GetTile(placedTile.x - 2, placedTile.y + 1) == 0)
+								done = false;
+							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y - 1) < 0 && GetTile(placedTile.x - 2, placedTile.y - 1) == 0)
+								done = false;
+					
+					
+							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x - 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y + 1) < 0 && GetTile(placedTile.x - 1, placedTile.y + 2) == 0)
+								done = false;
+							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x + 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y + 1) < 0 && GetTile(placedTile.x + 1, placedTile.y + 2) == 0)
+								done = false;
+					
+					
+							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y + 1) < 0 && GetTile(placedTile.x + 2, placedTile.y + 1) == 0)
+								done = false;
+							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y - 1) < 0 && GetTile(placedTile.x + 2, placedTile.y - 1) == 0)
+								done = false;
+					
 
 							if (!done) break;
 
@@ -332,6 +430,8 @@ namespace TMM
 				List<WallBlockData> tmp = new List<WallBlockData>();
 				foreach (var bp in availableBlocks)
 				{
+					if (bp.max == 0) continue;
+
 					if (bp.max > 0 && bp.count >= bp.max) continue; // Maximum reached
 
 					// Add prefab
