@@ -1,11 +1,14 @@
-
+#define USE_HELPERS
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using StarterAssets;
 using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.InputSystem.Android;
 using UnityEngine.SceneManagement;
+using UnityEngine.WSA;
 
 namespace TMM
 {
@@ -16,6 +19,8 @@ namespace TMM
 		{
 			public List<Vector2> tiles;
 
+			public bool createFlippedVariant; 
+
 			public int min;
 
 			public int max;
@@ -23,20 +28,35 @@ namespace TMM
 			public int count;
 
 
+
+
 		}
 
-		
+
 
 
 		[System.Serializable]
 		class Tile
-        {
+		{
 			public Vector2 coords;
 
 			public int type; // 0: floor, 1: wall
 
-			
+
+		}
+
+		[System.Serializable]
+		class WallBlock
+        {
+			public WallBlockData data;
+
+			public int rotationType;
+
+			public List<Tile> tiles; // Keeping track of all tiles belonging to this block
+
+			public Tile origin;
         }
+		
 		
 
 		[SerializeField]
@@ -44,6 +64,12 @@ namespace TMM
 
 		[SerializeField]
 		GameObject floorPrefab;
+
+		[SerializeField]
+		GameObject entrancePrefab;
+
+		[SerializeField]
+		GameObject exitPrefab;
 
 		[SerializeField]
 		List<WallBlockData> availableBlocks = new List<WallBlockData>();
@@ -54,14 +80,26 @@ namespace TMM
 
 		List<Tile> tiles = new List<Tile>();
 
+		int nextBorderDirection = 0;
+
+
+		List<WallBlock> blocks = new List<WallBlock>();
+
+		Tile inTile, outTile;
 		
 
 		// Start is called before the first frame update
 		void Start()
-	    {
+		{
+			CreateFlippedVariants();
+
 			ChooseBlocks();
 
 			CreateMaze();
+
+			AddInAndOut();
+
+		
 	    }
 
 		// Update is called once per frame
@@ -73,6 +111,57 @@ namespace TMM
 #endif
 		}
 
+		
+
+		void AddInAndOut()
+		{
+			// Add the entrance to the south and the exit to the north
+			var candidates = tiles.Where(t => t.type == 0 && GetTile(t.coords + Vector2.down) < 0 && !tiles.Exists(t2 => t2.coords.x == t.coords.x && t2.coords.y < t.coords.y)).ToList();
+
+			inTile = candidates[Random.Range(0, candidates.Count)];
+
+			candidates = tiles.Where(t => t.type == 0 && GetTile(t.coords + Vector2.up) < 0 && !tiles.Exists(t2 => t2.coords.x == t.coords.x && t2.coords.y > t.coords.y)).ToList();
+
+			outTile = candidates[Random.Range(0, candidates.Count)];
+
+			FindFirstObjectByType<FirstPersonController>().transform.root.position = new Vector3(inTile.coords.x, 0, inTile.coords.y) * cellSize;
+
+
+#if USE_HELPERS
+			var obj = Instantiate(entrancePrefab);
+			obj.transform.position = new Vector3(inTile.coords.x, 0, inTile.coords.y)  * cellSize;
+			obj = Instantiate(exitPrefab);
+			obj.transform.position = new Vector3(outTile.coords.x, 0, outTile.coords.y) * cellSize;
+#endif
+
+		}
+
+		void CreateFlippedVariants()
+		{
+			Debug.Log("TO ADD Start");
+			List<WallBlockData> toAdd = new List<WallBlockData>();
+			foreach (var b in availableBlocks)
+			{
+				if (!b.createFlippedVariant) continue;
+
+				WallBlockData wbd = new WallBlockData();
+				wbd.min = b.min;
+				wbd.max = b.max;
+				wbd.count = 0;
+				wbd.tiles = new List<Vector2>();
+
+				foreach (var tile in b.tiles)
+				{
+					Vector2 t = tile;
+					t.x *= -1;
+					wbd.tiles.Add(t);
+				}
+
+				toAdd.Add(wbd); 
+			}
+			Debug.Log("TO ADD " + toAdd.Count);
+			availableBlocks.AddRange(toAdd);
+        }
 
 		void CreateMaze()
 		{
@@ -87,10 +176,13 @@ namespace TMM
 					var block = blocks[Random.Range(0, blocks.Count)];
 					block.count--;
 
-					List<Vector2> tiles = RotateTiles(block.tiles, Random.Range(0, 4));
+					var rotType = Random.Range(0, 4);
+					List<Vector2> tiles = RotateTiles(block.tiles, rotType);
 
 					// Add tiles
 					AddTiles(tiles, 1);
+
+					AddToWallBlockList(block, tiles, rotType);
 
 					BorderWithFloor(tiles);
 				}
@@ -102,6 +194,16 @@ namespace TMM
                 }
 			}
 		}
+
+
+		void AddToWallBlockList(WallBlockData data, List<Vector2> tileCoords, int rotationType)
+		{
+			// Get tiles
+			var t = tiles.Where(t => tileCoords.Contains(t.coords)).ToList();
+
+			// Create new block and add to list
+			blocks.Add(new WallBlock() { data = data, origin = tiles[0], rotationType = rotationType, tiles = t });
+        }
 
 		Tile GetClosestBorderToTheOrigin()
         {
@@ -134,26 +236,26 @@ namespace TMM
 			
 			// Get borders
 			List<Tile>[] borders = new List<Tile>[4];
-			borders[0] = tiles.Where(t => GetTile(t.coords.x, t.coords.y + 1) < 0).OrderBy(_=>System.Guid.NewGuid()).ToList(); // North
-			borders[1] = tiles.Where(t => GetTile(t.coords.x + 1, t.coords.y) < 0).OrderBy(_=>System.Guid.NewGuid()).ToList(); // East
-			borders[2] = tiles.Where(t => GetTile(t.coords.x, t.coords.y - 1) < 0).OrderBy(_=>System.Guid.NewGuid()).ToList(); // South
-			borders[3] = tiles.Where(t => GetTile(t.coords.x - 1, t.coords.y) < 0).OrderBy(_=>System.Guid.NewGuid()).ToList(); // West
+			borders[0] = tiles.Where(t => GetTile(t.coords.x, t.coords.y + 1) < 0).OrderBy(t=>t.coords.y).ToList(); // North
+			borders[1] = tiles.Where(t => GetTile(t.coords.x + 1, t.coords.y) < 0).OrderBy(t=>t.coords.x).ToList(); // East
+			borders[2] = tiles.Where(t => GetTile(t.coords.x, t.coords.y - 1) < 0).OrderBy(t=>t.coords.y).ToList(); // South
+			borders[3] = tiles.Where(t => GetTile(t.coords.x - 1, t.coords.y) < 0).OrderBy(t=>t.coords.x).ToList(); // West
 
-			var closestTile = GetClosestBorderToTheOrigin();
-			List<int> availableBorderTypes = new List<int>();
-			for(int i=0;  i<4;  i++)
-			{
-				if (!borders[i].Contains(closestTile)) borders[i].Clear();
-				else availableBorderTypes.Add(i);
+			// var closestTile = GetClosestBorderToTheOrigin();
+			// List<int> availableBorderTypes = new List<int>();
+			// for (int i = 0; i < 4; i++)
+			// {
+			// 	if (!borders[i].Contains(closestTile)) borders[i].Clear();
+			// 	else availableBorderTypes.Add(i);
 
-			}
+			// }
 
-			int borderType = availableBorderTypes[Random.Range(0, availableBorderTypes.Count)];// 3; // Top
+			//int borderType = availableBorderTypes[Random.Range(0, availableBorderTypes.Count)];// 3; // Top
+			int borderType = nextBorderDirection;
+			nextBorderDirection = (nextBorderDirection + 1) % 4;
 #if UNITY_EDITOR
 			//int borderType = 1;
 #endif
-			Debug.Log($"TEST - Border type:{borderType}({borders[borderType].Count})");
-
 			var borderDirs = new Vector2[] { Vector2.up, Vector2.right, Vector2.down, Vector2.left };
 
 			bool done = false;
@@ -190,9 +292,6 @@ namespace TMM
 
 					// Rotate tiles
 					var rotatedTiles = RotateTiles(candidate.tiles, rotType);
-
-					Debug.Log($"TEST - Adding tile, rotate:" + rotType);
-
 
 					// Loop through each border to check if the candidate can be positioned rotated this way starting from a specific position
 					foreach (var borderTile in borders[borderType])
@@ -295,6 +394,9 @@ namespace TMM
 							// Update wall block data counter
 							candidate.count--;
 
+							// Add to the wall block list
+							AddToWallBlockList(candidate, rotatedTiles, rotType);
+
 							// Border with floor
 							BorderWithFloor(rotatedTiles);
 
@@ -320,7 +422,9 @@ namespace TMM
             if (!tiles.Exists(t => t.coords == coords && t.type == type))
 			{
 				tiles.Add(new Tile() { coords = coords, type = type });
+#if USE_HELPERS
 				CreateHelperTile(coords, type);
+#endif
 			}
         }
 		
