@@ -78,6 +78,9 @@ namespace TMM
 		GameObject exitPrefab;
 
 		[SerializeField]
+		GameObject borderPrefab;
+
+		[SerializeField]
 		List<WallBlockData> availableBlocks = new List<WallBlockData>();
 
 		float cellSize = 2;
@@ -105,6 +108,8 @@ namespace TMM
 
 			AddInAndOut();
 
+			CloseBorders();
+
 		
 	    }
 
@@ -117,7 +122,33 @@ namespace TMM
 #endif
 		}
 
-		
+		void CloseBorders()
+		{
+            // Loop through each floor and check borders
+			foreach(var tile in tiles)
+			{
+				bool[] dirs = new bool[4];
+				dirs[0] = outTile != tile && GetTile(tile.coords.x, tile.coords.y + 1) < 0;
+				dirs[1] = GetTile(tile.coords.x + 1, tile.coords.y) < 0;
+				dirs[2] = inTile != tile && GetTile(tile.coords.x, tile.coords.y - 1) < 0;
+				dirs[3] = GetTile(tile.coords.x - 1, tile.coords.y) < 0;
+
+				if (dirs[0] || dirs[1] || dirs[2] || dirs[3])
+				{
+#if USE_HELPERS
+					var go = Instantiate(borderPrefab);
+					go.transform.position = new Vector3(tile.coords.x, 0, tile.coords.y) * cellSize;
+					for(int i=0; i<dirs.Length; i++)
+                    {
+						if (!dirs[i])
+							go.transform.GetChild(i).gameObject.SetActive(false);
+
+                    }
+#endif
+
+				}
+            }
+        }
 
 		void AddInAndOut()
 		{

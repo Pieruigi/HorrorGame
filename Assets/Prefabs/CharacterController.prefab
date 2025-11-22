@@ -914,7 +914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _light: {fileID: 7011551254606787587}
-  available: 0
+  available: 1
 --- !u!1001 &2472127990598665229
 PrefabInstance:
   m_ObjectHideFlags: 0

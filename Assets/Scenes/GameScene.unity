@@ -736,6 +736,8 @@ MonoBehaviour:
     type: 3}
   exitPrefab: {fileID: 6337492655042021990, guid: 8d990e7ed1ae7ec4bab07685e8696379,
     type: 3}
+  borderPrefab: {fileID: 613710988119220956, guid: 048deeb65ef799f44a18559092a352f0,
+    type: 3}
   availableBlocks:
   - tiles:
     - {x: 0, y: 0}
@@ -835,11 +837,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 909285910031108269, guid: cca75ef0d88b24749aca6e34f84a6cfb,
-        type: 3}
-      propertyPath: available
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2922464216382388418, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
       propertyPath: m_Name
