@@ -1,4 +1,5 @@
 #define USE_HELPERS
+#define USE_WEIGHT
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,12 @@ namespace TMM
 
 			public int min;
 
+#if USE_WEIGHT
+			public int weight;
+#else
 			public int max;
+#endif 
+
 
 			public int count;
 
@@ -76,7 +82,7 @@ namespace TMM
 
 		float cellSize = 2;
 
-		int wallMax = 20;
+		int wallMax = 14;
 
 		List<Tile> tiles = new List<Tile>();
 
@@ -146,7 +152,11 @@ namespace TMM
 
 				WallBlockData wbd = new WallBlockData();
 				wbd.min = b.min;
+#if USE_WEIGHT
+				wbd.weight = b.weight;
+#else
 				wbd.max = b.max;
+#endif
 				wbd.count = 0;
 				wbd.tiles = new List<Vector2>();
 
@@ -516,6 +526,37 @@ namespace TMM
 
 		void ChooseBlocks()
 		{
+#if USE_WEIGHT
+			// Minumum
+			int count = 0;
+			foreach (var bp in availableBlocks)
+			{
+				bp.count = bp.min;
+				count += bp.min;
+			}
+
+			if (wallMax < count) return; // Enough
+
+			// Fill a temp list depending on the weights
+			List<WallBlockData> tmp = new List<WallBlockData>();
+			foreach (var wb in availableBlocks)
+			{
+				for (int i = 0; i < wb.weight; i++)
+					tmp.Add(wb);
+			}
+			
+			int left = wallMax - count;
+			for (int i = 0; i < left; i++)
+			{
+				// Choose a random block
+				var wbd = tmp[Random.Range(0, tmp.Count)];
+				// Remove the block
+				tmp.Remove(wbd);
+
+				// Increase the counter
+				wbd.count++;
+            }
+#else
 			// Minumum
 			int count = 0;
 			foreach (var bp in availableBlocks)
@@ -548,7 +589,7 @@ namespace TMM
 				wbd.count++;
 				
 			}
-
+#endif
 
 
 		}
