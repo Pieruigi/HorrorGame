@@ -52,7 +52,7 @@ namespace TMM
 
 			public int type; // 0: floor, 1: wall
 
-
+			public GameObject mainObject;
 		}
 
 		[System.Serializable]
@@ -123,7 +123,7 @@ namespace TMM
 
 			AddInAndOut();
 
-			CloseBorders();
+			//CloseBorders();
 
 			InstantiateWallsAndFloors();
 
@@ -150,19 +150,21 @@ namespace TMM
 				if (t.type == 0)
 				{
 					if (t != inTile && t != outTile)
-                    {
-                        InstantiateObject(floorPrefab, t.coords);
-                    }
-                    else
-                    {
+					{
+						t.mainObject = InstantiateObject(floorPrefab, t.coords);
+					}
+					else
+					{
 						if (t == inTile)
-							InstantiateObject(inPrefab, t.coords);
+							t.mainObject = InstantiateObject(inPrefab, t.coords);
 						else
-							InstantiateObject(outPrefab, t.coords);
-                    }
-					
+							t.mainObject = InstantiateObject(outPrefab, t.coords);
+					}
+
+					CheckBorders(t);
+
 				}
-				
+
 			}
 
 			// Instantiate wall blocks
@@ -172,17 +174,44 @@ namespace TMM
 				InstantiateObject(b.data.prefabs[Random.Range(0, b.data.prefabs.Count)], b.origin.coords, b.rotationType);
 			}
 
-			
+
 #endif
 		}
 		
-		void InstantiateObject(GameObject prefab, Vector2 coords, int rotationType = 0)
+		void CheckBorders(Tile tile)
+        {
+            bool[] dirs = new bool[4];
+			dirs[0] = tile != outTile && GetTile(tile.coords.x, tile.coords.y + 1) < 0;
+			dirs[1] = GetTile(tile.coords.x + 1, tile.coords.y) < 0;
+			dirs[2] = tile != inTile && GetTile(tile.coords.x, tile.coords.y - 1) < 0;
+			dirs[3] = GetTile(tile.coords.x - 1, tile.coords.y) < 0;
+
+			Debug.Log("Tile main object:" + tile.mainObject);
+
+			Transform root = tile.mainObject.transform;
+			if (tile == inTile || tile == outTile)
+				root = root.GetChild(0);
+
+			for(int i=0; i<dirs.Length; i++)
+			{
+				if (dirs[i])
+					root.GetChild(i).gameObject.SetActive(true);
+				else
+					root.GetChild(i).gameObject.SetActive(false);
+
+			}
+
+        }
+
+		GameObject InstantiateObject(GameObject prefab, Vector2 coords, int rotationType = 0)
         {
             var go = Instantiate(prefab);
 			// Apply rotation
 			go.transform.localEulerAngles = Vector3.up * rotationType * 90;
 			// Move to position
 			go.transform.position = new Vector3(coords.x, 0, coords.y) * CellSize;
+
+			return go;
         }
 
 		void LoadFromResources()

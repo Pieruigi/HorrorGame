@@ -736,7 +736,7 @@ MonoBehaviour:
     weight: 10
     count: 0
     prefabs: []
-  floorPrefab: {fileID: 2734360422071286277, guid: f48027b184eeaf4468e997df9c85c086,
+  floorPrefab: {fileID: 2734360422071286277, guid: adbfb47ea87cff249a7f9d1383e009e7,
     type: 3}
   inPrefab: {fileID: 1938168778050639748, guid: ea942ae51755a484484cbfb9dc26be83,
     type: 3}

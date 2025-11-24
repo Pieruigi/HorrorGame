@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf850ce5b6ab094782e3397e385742e, type: 3}
   m_Name: Floor
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2734360422071286277, guid: f48027b184eeaf4468e997df9c85c086, type: 3}
+  prefab: {fileID: 2734360422071286277, guid: adbfb47ea87cff249a7f9d1383e009e7, type: 3}
