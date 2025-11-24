@@ -134,8 +134,8 @@ namespace TMM
 		void Update()
 		{
 #if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.Z))
-				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			// if (Input.GetKeyDown(KeyCode.Z))
+			// 	SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
 #endif
 		}
