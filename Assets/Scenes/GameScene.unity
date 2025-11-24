@@ -684,10 +684,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4b324713259d0f46a4b477fd800c2fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallHelperPrefab: {fileID: 6419829726046342541, guid: 744b5b92d7c1cdc4e8b3c8ca668d501c,
-    type: 3}
-  floorHelperPrefab: {fileID: 2734360422071286277, guid: f48027b184eeaf4468e997df9c85c086,
-    type: 3}
+  wallHelperPrefab: {fileID: 0}
+  floorHelperPrefab: {fileID: 0}
   inHelperPrefab: {fileID: 0}
   outHelperPrefab: {fileID: 0}
   borderHelperPrefab: {fileID: 0}
@@ -738,7 +736,12 @@ MonoBehaviour:
     weight: 10
     count: 0
     prefabs: []
-  floorPrefab: {fileID: 0}
+  floorPrefab: {fileID: 2734360422071286277, guid: f48027b184eeaf4468e997df9c85c086,
+    type: 3}
+  inPrefab: {fileID: 1938168778050639748, guid: ea942ae51755a484484cbfb9dc26be83,
+    type: 3}
+  outPrefab: {fileID: 7020030011680214690, guid: 0218a242797320b47805ff3f52d1029c,
+    type: 3}
 --- !u!1 &1766260161
 GameObject:
   m_ObjectHideFlags: 0

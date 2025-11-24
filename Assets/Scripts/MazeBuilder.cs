@@ -90,7 +90,11 @@ namespace TMM
 		[SerializeField]
 		GameObject floorPrefab;
 
-		
+		[SerializeField]
+		GameObject inPrefab;
+
+		[SerializeField]
+		GameObject outPrefab;
 
 		int wallMax = 14;
 
@@ -139,16 +143,47 @@ namespace TMM
 		void InstantiateWallsAndFloors()
 		{
 #if !USE_HELPER
-			foreach(Tile t in tiles)
+			// Instantiate floor
+			foreach (Tile t in tiles)
 			{
+
+				if (t.type == 0)
+				{
+					if (t != inTile && t != outTile)
+                    {
+                        InstantiateObject(floorPrefab, t.coords);
+                    }
+                    else
+                    {
+						if (t == inTile)
+							InstantiateObject(inPrefab, t.coords);
+						else
+							InstantiateObject(outPrefab, t.coords);
+                    }
+					
+				}
 				
-                if(t.type == 0 && t != inTile && t != outTile)
-               	{
-					CreateFloorTile(t.coords);
-                }
-            }
+			}
+
+			// Instantiate wall blocks
+			foreach (var b in blocks)
+			{
+				// Instantiate object
+				InstantiateObject(b.data.prefabs[Random.Range(0, b.data.prefabs.Count)], b.origin.coords, b.rotationType);
+			}
+
+			
 #endif
 		}
+		
+		void InstantiateObject(GameObject prefab, Vector2 coords, int rotationType = 0)
+        {
+            var go = Instantiate(prefab);
+			// Apply rotation
+			go.transform.localEulerAngles = Vector3.up * rotationType * 90;
+			// Move to position
+			go.transform.position = new Vector3(coords.x, 0, coords.y) * CellSize;
+        }
 
 		void LoadFromResources()
 		{
@@ -248,6 +283,7 @@ namespace TMM
 #endif
 				wbd.count = 0;
 				wbd.tiles = new List<Vector2>();
+				wbd.prefabs = b.prefabs;
 
 				foreach (var tile in b.tiles)
 				{
@@ -301,7 +337,7 @@ namespace TMM
 			var t = tiles.Where(t => tileCoords.Contains(t.coords)).ToList();
 
 			// Create new block and add to list
-			blocks.Add(new WallBlock() { data = data, origin = tiles[0], rotationType = rotationType, tiles = t });
+			blocks.Add(new WallBlock() { data = data, origin = t[0], rotationType = rotationType, tiles = t });
         }
 
 		Tile GetClosestBorderToTheOrigin()

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6dfd4a3c3e6cdc498698e61d2b75432, type: 3}
-  m_Name: WallBlock4
+  m_Name: WallBlock_F
   m_EditorClassIdentifier: 
   prefabs:
-  - {fileID: 5812151446746823285, guid: c641a80dbe35dc048bddaea33926fcda, type: 3}
+  - {fileID: 604484012592811348, guid: 6b9186c8744cffd4c870c413038b8b5c, type: 3}
   createFlippedVariant: 0
   min: 1
   weight: 10

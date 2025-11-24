@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabs:
   - {fileID: 8099696001655236529, guid: 87a0d26918512f24badfdaf07abcda44, type: 3}
-  createFlippedVariant: 1
+  createFlippedVariant: 0
   min: 1
   weight: 10
