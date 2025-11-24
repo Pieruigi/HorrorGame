@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6dfd4a3c3e6cdc498698e61d2b75432, type: 3}
+  m_Name: WallBlock3
+  m_EditorClassIdentifier: 
+  prefabs:
+  - {fileID: 1922774674835948731, guid: 59159e9a6e6dbc147a5585060d0b9733, type: 3}
+  createFlippedVariant: 0
+  min: 1
+  weight: 10

@@ -650,7 +650,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1457909763}
   - component: {fileID: 1457909765}
-  - component: {fileID: 1457909764}
   m_Layer: 0
   m_Name: Builder
   m_TagString: Untagged
@@ -673,49 +672,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1457909764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1457909762}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ed5f585b67357b4c831f3a727992bb9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  floorPrefab: {fileID: 3996190567127872303, guid: 6014e93875694d04bb51d00761220476,
-    type: 3}
-  blockPrefabs:
-  - prefab: {fileID: 5298359175102782654, guid: 6831426b0e7793c408dfd8ec5830ceff,
-      type: 3}
-    min: 3
-    max: 5
-    count: 0
-  - prefab: {fileID: 6361972858653113366, guid: fecd93452d3035e4e973462a7523a471,
-      type: 3}
-    min: 4
-    max: -1
-    count: 0
-  - prefab: {fileID: 3662608029582023302, guid: 55df81c1abe7e474fa138d5f4f2e555c,
-      type: 3}
-    min: 4
-    max: -1
-    count: 0
-  - prefab: {fileID: 2549536984519569643, guid: e43c4e91d9b433746acf537262769dd8,
-      type: 3}
-    min: 2
-    max: 4
-    count: 0
-  - prefab: {fileID: 1836408234667240632, guid: 3d3858282f54a4a4496a9cc60e062dae,
-      type: 3}
-    min: 1
-    max: 2
-    count: 0
-  blocks: []
-  floors: []
-  cellSize: 2
 --- !u!114 &1457909765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -728,16 +684,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4b324713259d0f46a4b477fd800c2fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wallPrefab: {fileID: 3161725957375498167, guid: 209d6d6bdf52a7e4d9619b185c657f98,
+  wallHelperPrefab: {fileID: 6419829726046342541, guid: 744b5b92d7c1cdc4e8b3c8ca668d501c,
     type: 3}
-  floorPrefab: {fileID: 3996190567127872303, guid: 6014e93875694d04bb51d00761220476,
+  floorHelperPrefab: {fileID: 2734360422071286277, guid: f48027b184eeaf4468e997df9c85c086,
     type: 3}
-  entrancePrefab: {fileID: 8474395747892840388, guid: e090a8b95369e8041909b38a3678adaa,
-    type: 3}
-  exitPrefab: {fileID: 6337492655042021990, guid: 8d990e7ed1ae7ec4bab07685e8696379,
-    type: 3}
-  borderPrefab: {fileID: 613710988119220956, guid: 048deeb65ef799f44a18559092a352f0,
-    type: 3}
+  inHelperPrefab: {fileID: 0}
+  outHelperPrefab: {fileID: 0}
+  borderHelperPrefab: {fileID: 0}
   availableBlocks:
   - tiles:
     - {x: 0, y: 0}
@@ -748,6 +701,7 @@ MonoBehaviour:
     min: 1
     weight: 10
     count: 0
+    prefabs: []
   - tiles:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
@@ -755,6 +709,7 @@ MonoBehaviour:
     min: 1
     weight: 10
     count: 0
+    prefabs: []
   - tiles:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
@@ -763,6 +718,7 @@ MonoBehaviour:
     min: 1
     weight: 10
     count: 0
+    prefabs: []
   - tiles:
     - {x: 0, y: 0}
     - {x: 1, y: 0}
@@ -771,6 +727,7 @@ MonoBehaviour:
     min: 1
     weight: 10
     count: 0
+    prefabs: []
   - tiles:
     - {x: 0, y: 0}
     - {x: 0, y: 1}
@@ -780,6 +737,8 @@ MonoBehaviour:
     min: 1
     weight: 10
     count: 0
+    prefabs: []
+  floorPrefab: {fileID: 0}
 --- !u!1 &1766260161
 GameObject:
   m_ObjectHideFlags: 0

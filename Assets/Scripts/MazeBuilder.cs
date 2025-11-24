@@ -1,10 +1,12 @@
-#define USE_HELPERS
+//#define USE_HELPERS
 #define USE_WEIGHT
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using StarterAssets;
+using TMM.Scriptables;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem.Android;
@@ -15,6 +17,8 @@ namespace TMM
 {
 	public class MazeBuilder : MonoBehaviour
 	{
+		public const float CellSize = 2;
+
 		[System.Serializable]
 		class WallBlockData
 		{
@@ -33,7 +37,7 @@ namespace TMM
 
 			public int count;
 
-
+			public List<GameObject> prefabs = new List<GameObject>();
 
 
 		}
@@ -66,24 +70,27 @@ namespace TMM
 		
 
 		[SerializeField]
-		GameObject wallPrefab;
+		GameObject wallHelperPrefab;
 
 		[SerializeField]
-		GameObject floorPrefab;
+		GameObject floorHelperPrefab;
 
 		[SerializeField]
-		GameObject entrancePrefab;
+		GameObject inHelperPrefab;
 
 		[SerializeField]
-		GameObject exitPrefab;
+		GameObject outHelperPrefab;
 
 		[SerializeField]
-		GameObject borderPrefab;
+		GameObject borderHelperPrefab;
 
 		[SerializeField]
 		List<WallBlockData> availableBlocks = new List<WallBlockData>();
 
-		float cellSize = 2;
+		[SerializeField]
+		GameObject floorPrefab;
+
+		
 
 		int wallMax = 14;
 
@@ -95,11 +102,15 @@ namespace TMM
 		List<WallBlock> blocks = new List<WallBlock>();
 
 		Tile inTile, outTile;
+
+		
 		
 
 		// Start is called before the first frame update
 		void Start()
 		{
+			LoadFromResources();
+
 			CreateFlippedVariants();
 
 			ChooseBlocks();
@@ -110,6 +121,8 @@ namespace TMM
 
 			CloseBorders();
 
+			InstantiateWallsAndFloors();
+
 		
 	    }
 
@@ -119,8 +132,53 @@ namespace TMM
 #if UNITY_EDITOR
 			if (Input.GetKeyDown(KeyCode.Z))
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
 #endif
 		}
+
+		void InstantiateWallsAndFloors()
+		{
+#if !USE_HELPER
+			foreach(Tile t in tiles)
+			{
+				
+                if(t.type == 0 && t != inTile && t != outTile)
+               	{
+					CreateFloorTile(t.coords);
+                }
+            }
+#endif
+		}
+
+		void LoadFromResources()
+		{
+			string theme = "Default";
+
+			// Load floors
+			var floors = Resources.LoadAll<FloorAsset>($"{FloorAsset.ResourceFolder}/{theme}");
+			floorPrefab = floors[0].Prefab;
+
+			// // Load wall blocks
+			var blocks= Resources.LoadAll<WallBlockAsset>($"{WallBlockAsset.ResourceFolder}/{theme}");
+			Debug.Log($"Found {blocks.Count()} wall blocks");
+
+			// Clear the available block list
+			availableBlocks.Clear();
+			// Fill the list
+			foreach(var block in blocks)
+            {
+				WallBlockData wbd = new WallBlockData();
+				wbd.createFlippedVariant = block.CreateFlippedVariant;
+				wbd.min = block.Min;
+				wbd.weight = block.Weight;
+				wbd.count = 0;
+				wbd.prefabs = block.Prefabs.ToList();
+				wbd.tiles = block.GetTiles();
+				availableBlocks.Add(wbd);
+            }
+
+			
+        }
 
 		void CloseBorders()
 		{
@@ -136,8 +194,8 @@ namespace TMM
 				if (dirs[0] || dirs[1] || dirs[2] || dirs[3])
 				{
 #if USE_HELPERS
-					var go = Instantiate(borderPrefab);
-					go.transform.position = new Vector3(tile.coords.x, 0, tile.coords.y) * cellSize;
+					var go = Instantiate(borderHelperPrefab);
+					go.transform.position = new Vector3(tile.coords.x, 0, tile.coords.y) * CellSize;
 					for(int i=0; i<dirs.Length; i++)
                     {
 						if (!dirs[i])
@@ -161,14 +219,14 @@ namespace TMM
 
 			outTile = candidates[Random.Range(0, candidates.Count)];
 
-			FindFirstObjectByType<FirstPersonController>().transform.root.position = new Vector3(inTile.coords.x, 0, inTile.coords.y) * cellSize;
+			FindFirstObjectByType<FirstPersonController>().transform.root.position = new Vector3(inTile.coords.x, 0, inTile.coords.y) * CellSize;
 
 
 #if USE_HELPERS
-			var obj = Instantiate(entrancePrefab);
-			obj.transform.position = new Vector3(inTile.coords.x, 0, inTile.coords.y)  * cellSize;
-			obj = Instantiate(exitPrefab);
-			obj.transform.position = new Vector3(outTile.coords.x, 0, outTile.coords.y) * cellSize;
+			var obj = Instantiate(inHelperPrefab);
+			obj.transform.position = new Vector3(inTile.coords.x, 0, inTile.coords.y)  * CellSize;
+			obj = Instantiate(outHelperPrefab);
+			obj.transform.position = new Vector3(outTile.coords.x, 0, outTile.coords.y) * CellSize;
 #endif
 
 		}
@@ -361,36 +419,7 @@ namespace TMM
 							}
 
 							if (!done) break;
-							
-
-							// switch (borderType)
-							// {
-							// 	case 0:
-							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x - 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y - 1) < 0 && GetTile(placedTile.x - 1, placedTile.y - 2) == 0)
-							// 			done = false;
-							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x + 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y - 1) < 0 && GetTile(placedTile.x + 1, placedTile.y - 2) == 0)
-							// 			done = false;
-							// 		break;
-							// 	case 1:
-							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y + 1) < 0 && GetTile(placedTile.x - 2, placedTile.y + 1) == 0)
-							// 			done = false;
-							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y - 1) < 0 && GetTile(placedTile.x - 2, placedTile.y - 1) == 0)
-							// 			done = false;
-							// 		break;
-							// 	case 2:
-							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x - 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y + 1) < 0 && GetTile(placedTile.x - 1, placedTile.y + 2) == 0)
-							// 			done = false;
-							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x + 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y + 1) < 0 && GetTile(placedTile.x + 1, placedTile.y + 2) == 0)
-							// 			done = false;
-							// 		break;
-							// 	case 3:
-							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y + 1) < 0 && GetTile(placedTile.x + 2, placedTile.y + 1) == 0)
-							// 			done = false;
-							// 		if (!rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y - 1) < 0 && GetTile(placedTile.x + 2, placedTile.y - 1) == 0)
-							// 			done = false;
-							// 		break;
-							// }
-
+						
 							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x - 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y - 1) < 0 && GetTile(placedTile.x - 1, placedTile.y - 2) == 0)
 								done = false;
 							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x + 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y - 1) < 0 && GetTile(placedTile.x + 1, placedTile.y - 2) == 0)
@@ -459,20 +488,30 @@ namespace TMM
 		}
 
 		void AddTile(Vector2 coords, int type)
-        {
-            if (!tiles.Exists(t => t.coords == coords && t.type == type))
+		{
+			if (!tiles.Exists(t => t.coords == coords && t.type == type))
 			{
 				tiles.Add(new Tile() { coords = coords, type = type });
 #if USE_HELPERS
 				CreateHelperTile(coords, type);
 #endif
 			}
-        }
+		}
 		
-		void CreateHelperTile(Vector2 coords, int type)
+		void CreateFloorTile(Vector2 coords)
         {
-			GameObject tile = Instantiate(type == 0 ? floorPrefab : wallPrefab);
-			Vector3 pos = new Vector3(coords.x, 0, coords.y) * cellSize;
+            GameObject prefab = floorPrefab;
+			GameObject tile = Instantiate(prefab);
+			Vector3 pos = new Vector3(coords.x, 0, coords.y) * CellSize;
+			tile.transform.position = pos;
+        }
+
+		void CreateHelperTile(Vector2 coords, int type)
+		{
+
+			GameObject tile = Instantiate(type == 0 ? floorHelperPrefab : wallHelperPrefab);
+
+			Vector3 pos = new Vector3(coords.x, 0, coords.y) * CellSize;
 			tile.transform.position = pos;
         }
 
