@@ -1,5 +1,6 @@
 using DG.Tweening;
 using StarterAssets;
+using TMM.UI;
 using UnityEngine;
 using UnityEngine.Rendering.Universal.Internal;
 
@@ -14,17 +15,31 @@ namespace TMM
 		[SerializeField]
 		Transform playerTarget;
 
-		float attempts = 10;
+		[SerializeField]
+		bool activateDot;
+
+		//float attempts = 10;
+
+		float timeLeft = 3000;
+
 
 		FirstPersonController player;
 
 		//Transform cameraRoot;
 
 		bool activated = false;
+		public bool IsActive
+        {
+            get{ return activated; }
+        }
 
 		float moveTime = .25f;
 
-		protected abstract void DoUpdate();
+		bool beaten = false;
+
+		Vector3 lastPlayerPosition;
+		Quaternion lastPlayerRotation;
+
 
 		protected virtual void Awake()
         {
@@ -39,7 +54,7 @@ namespace TMM
 	    }
 
 		// Update is called once per frame
-		protected void Update()
+		protected virtual void Update()
 		{
 #if UNITY_EDITOR
 			if (Input.GetKeyDown(KeyCode.Z))
@@ -51,45 +66,67 @@ namespace TMM
 			}
 #endif
 			if (activated)
-				DoUpdate();
+			{
+				timeLeft -= Time.deltaTime;
+                if (timeLeft < 0)
+                {
+					timeLeft = 0;
+					Deactivate();
+					return;
+                }
 
+				//DoUpdate();
+            }
 		}
 
 		public virtual void Activate()
 		{
-			if (activated || attempts <= 0) return;
+			if (activated || timeLeft <= 0 || beaten) return;
 
-			activated = true;
+			// Kill any possible running tween
+			player.transform.DOKill();
 
 			// Stop player from moving
 			player.InputDisabled = true;
 
+			// Store last player position and rotation
+			lastPlayerPosition = player.transform.position;
+			lastPlayerRotation = player.transform.rotation;
+
 			// Move the controller to the target position
-			player.transform.DOMove(playerTarget.position, moveTime);
-			player.transform.DORotateQuaternion(playerTarget.rotation, moveTime);
+			Sequence seq = DOTween.Sequence();
+			seq.Append(player.transform.DOMove(playerTarget.position, moveTime));
+			seq.Join(player.transform.DORotateQuaternion(playerTarget.rotation, moveTime));
+			seq.OnComplete(()=> { activated = true; if (activateDot) DotCanvas.Instance.Show(); });
 		}
 
 		public virtual void Deactivate()
 		{
 			if (!activated) return;
 
+			// Kill any possible running tween
+			player.transform.DOKill();
+
 			activated = false;
-			// Player input enabke
-			player.InputDisabled = false;
+
+			if (activateDot) DotCanvas.Instance.Hide();
+
+			Sequence seq = DOTween.Sequence();
+			seq.Append(player.transform.DOMove(lastPlayerPosition, moveTime));
+			seq.Join(player.transform.DORotateQuaternion(lastPlayerRotation, moveTime));
+			seq.OnComplete(()=> { player.InputDisabled = false; });
+
 		}
 
-		protected void DecreaseAttempts()
+		/// <summary>
+        /// Call by the children
+        /// </summary>
+		protected void ReportBeaten()
 		{
-			attempts--;
-			if (attempts < 0) attempts = 0;
+			beaten = true;
+			Deactivate();
 
-			// if (activated)
-			// 	Deactivate();
-		}
-
-		protected bool CheckAttempts()
-		{
-			return attempts > 0;
+			OnMiniGameBeaten?.Invoke(this);
 		}
 		
 	}

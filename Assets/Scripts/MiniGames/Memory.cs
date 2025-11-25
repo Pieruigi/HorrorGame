@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using Unity.Burst.Intrinsics;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TMM
 {
@@ -12,6 +15,15 @@ namespace TMM
 		List<GameObject> tiles;
 
 		Vector3[] originalPositions;
+
+
+		GameObject shakingTile;
+
+		GameObject[] selectedTiles = new GameObject[2];
+
+		float raycastDistance = 10;
+
+		bool checkingTiles = false;
 
         protected override void Awake()
         {
@@ -32,22 +44,109 @@ namespace TMM
             }
         }
 
-        protected override void Start()
+		protected override void Update()
 		{
-			base.Start();
+			base.Update();
 
+			// Raycast from camera
+			var mask = LayerMask.GetMask(new string[] { "Interactable" });
+			RaycastHit hit;
+			if (IsActive)
+			{
+				if (!checkingTiles && Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, raycastDistance, mask))
+				{
+					MemoryTile tile = hit.collider.GetComponent<MemoryTile>();
 
+					if (tile)
+					{
+						if (shakingTile)
+                        {
+							shakingTile.GetComponent<MemoryTile>().Shake(false);
+							shakingTile = null;
+                        }
+							
 
-			// Shuffle
+                        if (!tile.IsSelected)
+                        {
+                        	shakingTile = tile.gameObject;
+							tile.Shake(true);    
+                        }
+						
+					}
+					else
+					{
+						if (shakingTile)
+                        {
+							shakingTile.GetComponent<MemoryTile>().Shake(false);
+							shakingTile = null;
+                        }
+							
+						
+					}
+				}
+				else
+				{
+					if (shakingTile)
+                    {
+						shakingTile.GetComponent<MemoryTile>().Shake(false);
+						shakingTile = null;
+                    }
+						
 
+					
+				}
+
+			}
+			else
+			{
+				if (shakingTile)
+                {
+					shakingTile.GetComponent<MemoryTile>().Shake(false);
+					shakingTile = null;
+                }
+					
+
+			}
+
+			// If there is a shaking 
+			if (shakingTile)
+			{
+				if (Input.GetMouseButtonDown(0))
+				{
+					if (!selectedTiles[0])
+						selectedTiles[0] = shakingTile;
+					else
+						selectedTiles[1] = shakingTile;
+
+					shakingTile.GetComponent<MemoryTile>().Select(true);
+					shakingTile = null;
+				}
+			}
+
+			if (selectedTiles[0] && selectedTiles[1] && !checkingTiles)
+			{
+				StartCoroutine(CheckTiles());
+			}
 		}
 
+		IEnumerator CheckTiles()
+        {
+			checkingTiles = true;
 
-		protected override void DoUpdate()
-		{
+			yield return new WaitForSeconds(.5f);
 
-		}
-		
+			if (selectedTiles[0].name != selectedTiles[1].name)
+			{
+				selectedTiles[0].GetComponent<MemoryTile>().Select(false);
+				selectedTiles[1].GetComponent<MemoryTile>().Select(false);
+				yield return new WaitForSeconds(.25f);
+			}
+
+			selectedTiles[0] = null;
+			selectedTiles[1] = null;
+
+			checkingTiles = false;
+        }
 		
 	}
 }
