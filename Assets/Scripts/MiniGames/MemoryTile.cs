@@ -33,6 +33,7 @@ namespace TMM
 
 		public void Shake(bool value)
 		{
+			
 			Debug.Log("Shake " + gameObject.name);
 			if (value == shaking) return;
 			if (value && selected) return;
@@ -44,7 +45,7 @@ namespace TMM
 			if (value)
 				model.transform.DOShakeRotation(.25f).OnComplete(() => { model.transform.rotation = Quaternion.identity; }).SetLoops(-1);
 			else
-				model.transform.rotation = Quaternion.identity;
+				model.transform.localRotation = Quaternion.identity;
 
 
 		}
@@ -54,10 +55,11 @@ namespace TMM
 			if (selected == value) return;
 
 			model.transform.DOKill();
+
 			selected = value;
 			if (selected)
 			{
-				//Shake(false);
+				Shake(false);
 				// Rotate
 				shaking = false;
 				model.transform.DOLocalRotate(Vector3.up * 180, .25f);

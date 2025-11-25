@@ -130,7 +130,7 @@ namespace TMM
 		}
 
 		IEnumerator CheckTiles()
-        {
+		{
 			checkingTiles = true;
 
 			yield return new WaitForSeconds(.5f);
@@ -146,6 +146,14 @@ namespace TMM
 			selectedTiles[1] = null;
 
 			checkingTiles = false;
+
+			if (IsBeaten())
+				ReportBeaten();
+		}
+		
+		bool IsBeaten()
+        {
+			return tiles.Count(t => !t.GetComponent<MemoryTile>().IsSelected) == 0;
         }
 		
 	}
