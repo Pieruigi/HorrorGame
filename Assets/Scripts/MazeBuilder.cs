@@ -207,7 +207,7 @@ namespace TMM
             bool[] dirs = new bool[4];
 			dirs[0] = tile != outTile && GetTile(tile.coords.x, tile.coords.y + 1) < 0;
 			dirs[1] = GetTile(tile.coords.x + 1, tile.coords.y) < 0;
-			dirs[2] = tile != inTile && GetTile(tile.coords.x, tile.coords.y - 1) < 0;
+			dirs[2] = /*tile != inTile && */GetTile(tile.coords.x, tile.coords.y - 1) < 0;
 			dirs[3] = GetTile(tile.coords.x - 1, tile.coords.y) < 0;
 
 			Debug.Log("Tile main object:" + tile.mainObject);
@@ -307,7 +307,7 @@ namespace TMM
 
 			outTile = candidates[Random.Range(0, candidates.Count)];
 
-			FindFirstObjectByType<FirstPersonController>().transform.root.position = new Vector3(inTile.coords.x, 0, inTile.coords.y) * CellSize;
+			FindFirstObjectByType<FirstPersonController>().transform.root.position = new Vector3(inTile.coords.x, 5f, inTile.coords.y) * CellSize;
 
 
 #if USE_HELPERS

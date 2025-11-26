@@ -248,6 +248,13 @@ namespace StarterAssets
 				_input.move = Vector3.zero;
 			}
 
+            if (!Grounded)
+            {
+                _input.crouch = false;
+				_input.sprint = false;
+				_input.move = Vector3.zero;
+            }
+
 			// set target speed based on move speed, sprint speed and if sprint is pressed
 			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 			if (_input.crouch) targetSpeed = CrouchSpeed;
@@ -298,7 +305,8 @@ namespace StarterAssets
 			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
 			// To fix a strange behaviour on edge collision
-			transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+			if(Grounded)
+				transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 		}
 
 		private void JumpAndGravity()

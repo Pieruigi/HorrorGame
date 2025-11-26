@@ -72,12 +72,12 @@ namespace TMM.AI
 
 		protected virtual void EnterPatrolState()
 		{
-			throw new NotImplementedException();
+			if (agent.isStopped) agent.isStopped = false;
 		}
 
 		protected virtual void UpdatePatrolState()
 		{
-
+			
 		}
 		
 		protected virtual void UpdateChaseState()
