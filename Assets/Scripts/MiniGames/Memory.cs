@@ -133,7 +133,7 @@ namespace TMM
 		{
 			checkingTiles = true;
 
-			yield return new WaitForSeconds(.5f);
+			yield return new WaitForSeconds(1f);
 
 			if (selectedTiles[0].name != selectedTiles[1].name)
 			{
