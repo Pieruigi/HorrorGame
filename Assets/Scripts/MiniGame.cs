@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using StarterAssets;
 using TMM.UI;
@@ -17,6 +18,9 @@ namespace TMM
 
 		[SerializeField]
 		bool activateDot;
+
+		[SerializeField]
+		DeviceInteractor deviceInteractor;
 
 		//float attempts = 10;
 
@@ -57,31 +61,60 @@ namespace TMM
 		protected virtual void Update()
 		{
 #if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.Z))
-			{
-				if (!activated)
-					Activate();
-				else
-					Deactivate();
-			}
+			// if (Input.GetKeyDown(KeyCode.Z))
+			// {
+			// 	if (!activated)
+			// 		Activate();
+			// 	else
+			// 		Deactivate();
+			// }
 #endif
 			if (activated)
 			{
-				timeLeft -= Time.deltaTime;
-                if (timeLeft < 0)
+				if(Input.GetKeyDown(KeyCode.Escape))
                 {
-					timeLeft = 0;
-					Deactivate();
+                    Deactivate();
 					return;
                 }
 
+				timeLeft -= Time.deltaTime;
+				if (timeLeft < 0)
+				{
+					timeLeft = 0;
+					Deactivate();
+					return;
+				}
+
 				//DoUpdate();
-            }
+			}
+           
 		}
 
-		public virtual void Activate()
+		void OnEnable()
+		{
+			DeviceInteractor.OnInteraction += HandleOnDeviceInteraction;
+		}
+
+        void OnDisable()
+        {
+            DeviceInteractor.OnInteraction -= HandleOnDeviceInteraction;
+        }
+
+        private void HandleOnDeviceInteraction(DeviceInteractor deviceInteractor)
+		{
+			if (this.deviceInteractor != deviceInteractor) return;
+
+            if(timeLeft>0)
+           		Activate();
+            
+        }
+
+        public virtual void Activate()
 		{
 			if (activated || timeLeft <= 0 || beaten) return;
+
+			// Deactivate the device interactor
+			deviceInteractor.SetEnable(false);
 
 			// Kill any possible running tween
 			player.transform.DOKill();
@@ -97,12 +130,15 @@ namespace TMM
 			Sequence seq = DOTween.Sequence();
 			seq.Append(player.transform.DOMove(playerTarget.position, moveTime));
 			seq.Join(player.transform.DORotateQuaternion(playerTarget.rotation, moveTime));
-			seq.OnComplete(()=> { activated = true; if (activateDot) DotCanvas.Instance.Show(); });
+			seq.OnComplete(() => { activated = true; if (activateDot) DotCanvas.Instance.Show(); });
 		}
 
 		public virtual void Deactivate()
 		{
 			if (!activated) return;
+
+			// Deactivate the device interactor back
+			deviceInteractor.SetEnable(true);
 
 			// Kill any possible running tween
 			player.transform.DOKill();

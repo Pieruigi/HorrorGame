@@ -16,11 +16,11 @@ namespace TMM
 
 		Vector3[] originalPositions;
 
-
 		GameObject shakingTile;
 
 		GameObject[] selectedTiles = new GameObject[2];
 
+		[SerializeField]
 		float raycastDistance = 10;
 
 		bool checkingTiles = false;

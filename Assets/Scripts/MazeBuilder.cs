@@ -107,8 +107,7 @@ namespace TMM
 
 		Tile inTile, outTile;
 
-		
-		
+		Tile miniGameTile;
 
 		// Start is called before the first frame update
 		void Start()
@@ -118,6 +117,8 @@ namespace TMM
 			CreateFlippedVariants();
 
 			ChooseBlocks();
+
+			ChooseMiniGame(); // Choosing mini game after any other block, we can directly add it to the available blocks list
 
 			CreateMaze();
 
@@ -139,6 +140,19 @@ namespace TMM
 
 #endif
 		}
+
+		void ChooseMiniGame()
+		{
+			int level = 1;
+			var miniGame = MiniGameManager.Instance.ChooseMiniGame(level);
+
+			WallBlockData wbd = new WallBlockData();
+			wbd.prefabs = miniGame.Prefabs.ToList();
+			wbd.count = 1;
+			wbd.createFlippedVariant = false;
+			wbd.tiles = miniGame.GetTiles();
+			
+        }
 
 		void InstantiateWallsAndFloors()
 		{

@@ -28,12 +28,14 @@ namespace TMM
 
 		void OnTriggerEnter(Collider other)
 		{
-			OnEnter?.Invoke(other);
+			if(other.CompareTag("Player"))
+				OnEnter?.Invoke(other);
 		}
 
 		void OnTriggerExit(Collider other)
 		{
-			OnExit?.Invoke(other);
+			if(other.CompareTag("Player"))
+				OnExit?.Invoke(other);
 		}
 		
 		public void SetEnabled(bool value)
