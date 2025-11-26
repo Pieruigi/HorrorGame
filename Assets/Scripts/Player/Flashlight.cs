@@ -70,7 +70,7 @@ namespace TMM
 			return available;
         }
 
-		void SetOn(bool value)
+		public void SetOn(bool value)
 		{
 			if (!available) return;
 
@@ -79,6 +79,11 @@ namespace TMM
 			animator.SetBool("LightOn", isOn);
 
 		}
+
+		public bool IsOn()
+        {
+			return isOn;
+        }
 		
 		IEnumerator TurnLightOnOff()
 		{

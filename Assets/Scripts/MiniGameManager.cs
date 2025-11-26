@@ -7,6 +7,7 @@ namespace TMM
 {
 	public class MiniGameManager : SingletonPersistent<MiniGameManager>
 	{
+		[System.Serializable]
 		public class SpawnedMiniGame
         {
 			public MiniGameAsset asset;
@@ -57,8 +58,8 @@ namespace TMM
 
 			var smg = spawnedMiniGames.Find(m => m.asset == chosen);
 			if (smg == null)
-				spawnedMiniGames.Add(new SpawnedMiniGame(chosen));
-
+                spawnedMiniGames.Add(smg = new SpawnedMiniGame(chosen));
+           
 			smg.count++;
 
 			return chosen;

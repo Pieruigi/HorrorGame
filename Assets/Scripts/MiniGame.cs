@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using DG.Tweening.Core.Easing;
 using StarterAssets;
 using TMM.UI;
 using UnityEngine;
@@ -44,6 +45,10 @@ namespace TMM
 		Vector3 lastPlayerPosition;
 		Quaternion lastPlayerRotation;
 
+		Flashlight flashlight;
+
+		bool activateFlashlightOnExit = false;
+
 
 		protected virtual void Awake()
         {
@@ -55,6 +60,7 @@ namespace TMM
 	    {
 			player = FindFirstObjectByType<FirstPersonController>();
 			//cameraRoot = player.GetComponent<CameraShake>().transform;
+			flashlight = player.transform.parent.GetComponentInChildren<Flashlight>();
 	    }
 
 		// Update is called once per frame
@@ -113,6 +119,13 @@ namespace TMM
 		{
 			if (activated || timeLeft <= 0 || beaten) return;
 
+			if (flashlight.IsOn())
+            {
+				flashlight.SetOn(false);
+				activateFlashlightOnExit = true;
+            }
+				
+
 			// Deactivate the device interactor
 			deviceInteractor.SetEnable(false);
 
@@ -150,7 +163,15 @@ namespace TMM
 			Sequence seq = DOTween.Sequence();
 			seq.Append(player.transform.DOMove(lastPlayerPosition, moveTime));
 			seq.Join(player.transform.DORotateQuaternion(lastPlayerRotation, moveTime));
-			seq.OnComplete(()=> { player.InputDisabled = false; });
+			seq.OnComplete(() =>
+			{
+				player.InputDisabled = false;
+				if (activateFlashlightOnExit)
+				{
+					activateFlashlightOnExit = false; 
+					flashlight.SetOn(true); 
+				} 
+			});
 
 		}
 

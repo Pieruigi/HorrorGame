@@ -135,8 +135,8 @@ namespace TMM
 		void Update()
 		{
 #if UNITY_EDITOR
-			// if (Input.GetKeyDown(KeyCode.Z))
-			// 	SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+			if (Input.GetKeyDown(KeyCode.Z))
+				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
 #endif
 		}
@@ -151,7 +151,8 @@ namespace TMM
 			wbd.count = 1;
 			wbd.createFlippedVariant = false;
 			wbd.tiles = miniGame.GetTiles();
-			
+
+			availableBlocks.Add(wbd);
         }
 
 		void InstantiateWallsAndFloors()
@@ -378,6 +379,8 @@ namespace TMM
 		{
 			// Get tiles
 			var t = tiles.Where(t => tileCoords.Contains(t.coords)).ToList();
+
+			Debug.Log($"WallBlock Prefab:{data.prefabs[0].name}, t.count:{t.Count}");
 
 			// Create new block and add to list
 			blocks.Add(new WallBlock() { data = data, origin = t[0], rotationType = rotationType, tiles = t });
