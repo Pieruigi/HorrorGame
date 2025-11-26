@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using StarterAssets;
 using TMM.Scriptables;
+using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Rendering;
@@ -128,6 +129,8 @@ namespace TMM
 
 			InstantiateWallsAndFloors();
 
+			BuildNavMesh();
+
 		
 	    }
 
@@ -140,6 +143,12 @@ namespace TMM
 
 #endif
 		}
+
+		void BuildNavMesh()
+        {
+			var nms = tiles.Find(t => t == inTile).mainObject.GetComponentInChildren<NavMeshSurface>();
+			nms.BuildNavMesh();
+        }
 
 		void ChooseMiniGame()
 		{
