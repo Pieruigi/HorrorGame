@@ -156,6 +156,8 @@ MonoBehaviour:
   sightRange: 8
   sightAngle: 45
   hearRange: 0
+  attackRange: 2
+  attackAngle: 60
   idleTimer: 3
   searchTimer: 5
 --- !u!1 &5816212457090555889

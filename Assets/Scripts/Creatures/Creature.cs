@@ -12,7 +12,7 @@ namespace TMM.AI
 	/// Search: is looking for something in a specific area of the maze
 	/// Chase: chasing you
     /// </summary>
-	public enum CreatureState { Idle, Patrol, Search, Chase }
+	public enum CreatureState { Idle, Patrol, Search, Chase, Attack }
 
 	public class Creature : MonoBehaviour
 	{
@@ -20,7 +20,6 @@ namespace TMM.AI
 		public static StateChangedDelegate OnStateChanged;
 
 		[SerializeField]
-		[Range(0,10)]
 		float sightRange;
 
 		[SerializeField]
@@ -29,6 +28,14 @@ namespace TMM.AI
 
 		[SerializeField]
 		float hearRange;
+
+		[SerializeField]
+		float attackRange;
+
+		[SerializeField]
+		[Range(0,180)]
+		float attackAngle;
+
 
 		[SerializeField]
 		float idleTimer = 3;
@@ -112,6 +119,9 @@ namespace TMM.AI
 				case CreatureState.Search:
 					EnterSearchState();
 					break;
+				case CreatureState.Attack:
+					EnterAttackState();
+					break;
 			}
 
 			OnStateChanged?.Invoke(this);
@@ -123,13 +133,19 @@ namespace TMM.AI
 			lastHasPath = false;
         }
 
-		protected virtual void EnterIdleState()
+		protected virtual void EnterAttackState()
         {
+			ResetPath();
+			player.GetComponent<PlayerDeath>().Die(gameObject);
+        }
+
+		protected virtual void EnterIdleState()
+		{
 			ResetPath();
 			float ratio = idleTimer * .25f;
 			currentTimer = Random.Range(idleTimer - ratio, idleTimer + ratio);
-			
-        }
+
+		}
 
 		protected virtual void EnterChaseState()
 		{
@@ -235,10 +251,17 @@ namespace TMM.AI
 
 		protected virtual void UpdateChaseState()
 		{
-            if (!IsPlayerSpotted())
-            {
+			if (!IsPlayerSpotted())
+			{
 				StopAllCoroutines();
 				SetState(CreatureState.Search);
+				return;
+			}
+
+            if (CanAttackPlayer())
+            {
+				SetState(CreatureState.Attack);
+				return;
             }
 		}
 		
@@ -253,9 +276,9 @@ namespace TMM.AI
             }
 
 		}
-		
-	
-		
+
+
+
 		bool IsPlayerSpotted()
 		{
 			// Get player position
@@ -272,7 +295,21 @@ namespace TMM.AI
 			var angle = Vector3.Angle(transform.forward, pDir);
 			if (angle > sightAngle)
 				return false;
-			
+
+
+			return true;
+		}
+		
+		bool CanAttackPlayer()
+		{
+			// Check distance
+			if (Vector3.Distance(player.transform.position, transform.position) > attackRange)
+				return false;
+
+			// Compute direction
+			var pDir = player.transform.position - transform.position;
+			if (Vector3.Angle(transform.forward, pDir) > attackAngle)
+				return false;
 
 			return true;
         }

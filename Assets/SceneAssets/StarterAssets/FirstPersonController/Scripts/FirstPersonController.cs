@@ -98,6 +98,10 @@ namespace StarterAssets
 
 		CinemachineVirtualCamera _virtualCamera;
 
+		bool isDead = false;
+
+
+
 		public bool IsRunning
 		{
 			get { return Grounded && !_input.crouch && _input.sprint; }
@@ -174,6 +178,10 @@ namespace StarterAssets
 
 		private void CameraRotation()
 		{
+			if(isDead)
+            {
+				_input.look = Vector2.zero;
+            }
 			// if there is an input
 			if (_input.look.sqrMagnitude >= _threshold)
 			{
@@ -241,7 +249,7 @@ namespace StarterAssets
 		{
 
 
-			if (InputDisabled)
+			if (InputDisabled || isDead)
 			{
 				_input.crouch = false;
 				_input.sprint = false;
@@ -364,6 +372,16 @@ namespace StarterAssets
 			return Mathf.Clamp(lfAngle, lfMin, lfMax);
 		}
 
+		public void Die()
+		{
+			isDead = true;
+		}
+		
+		public float GetSpeed()
+        {
+			return _speed;
+        }
+
 		private void OnDrawGizmosSelected()
 		{
 			Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
@@ -375,5 +393,7 @@ namespace StarterAssets
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
+
+
 	}
 }
