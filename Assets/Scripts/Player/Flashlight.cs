@@ -13,6 +13,15 @@ namespace TMM
 		[SerializeField]
 		bool available = false;
 
+		[SerializeField]
+		AudioSource audioSource;
+
+		[SerializeField]
+		AudioClip onClip;
+
+		[SerializeField]
+		AudioClip offClip;
+
 		bool isOn = false;
 
 
@@ -87,9 +96,16 @@ namespace TMM
 		
 		IEnumerator TurnLightOnOff()
 		{
+			if (audioSource)
+            {
+				audioSource.clip = isOn ? onClip : offClip;
+				audioSource.Play();
+            }
+
 			if(!isOn)
 				yield return new WaitForSeconds(.5f);
 			_light.gameObject.SetActive(isOn);
+            
         }
 	}
 }

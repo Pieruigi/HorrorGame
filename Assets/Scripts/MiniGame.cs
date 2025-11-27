@@ -99,11 +99,23 @@ namespace TMM
 		void OnEnable()
 		{
 			DeviceInteractor.OnInteraction += HandleOnDeviceInteraction;
+			PlayerDeath.OnPlayerDead += HandleOnPlayerDead;
 		}
 
         void OnDisable()
         {
-            DeviceInteractor.OnInteraction -= HandleOnDeviceInteraction;
+			DeviceInteractor.OnInteraction -= HandleOnDeviceInteraction;
+			PlayerDeath.OnPlayerDead -= HandleOnPlayerDead;
+        }
+
+        private void HandleOnPlayerDead()
+		{
+			// Kill any running tween
+			player.transform.DOKill();
+
+			activated = false;
+
+			DotCanvas.Instance.Hide();
         }
 
         private void HandleOnDeviceInteraction(DeviceInteractor deviceInteractor)

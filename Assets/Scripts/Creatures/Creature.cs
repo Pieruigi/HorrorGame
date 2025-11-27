@@ -296,6 +296,15 @@ namespace TMM.AI
 			if (angle > sightAngle)
 				return false;
 
+			// Raycast from monster to player
+			RaycastHit hit;
+			var origin = transform.position + Vector3.up;
+			if(Physics.Raycast(origin, pDir, out hit, sightRange))
+            {
+				if (hit.collider.gameObject != player)
+					return false;
+            }
+
 
 			return true;
 		}

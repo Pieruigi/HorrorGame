@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using StarterAssets;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TMM
 {
 	public class PlayerDeath : MonoBehaviour
 	{
+		public static UnityAction OnPlayerDead;
+
 	    // Start is called before the first frame update
 	    void Start()
 	    {
@@ -23,6 +26,8 @@ namespace TMM
         {
 			Debug.Log("YOU ARE DEAD.................................");
 			GetComponent<FirstPersonController>().Die();
+
+			OnPlayerDead?.Invoke();
         }
 	}
 }
