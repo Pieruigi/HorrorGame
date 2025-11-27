@@ -153,9 +153,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8590dc03a3dd88449b073bf5722a109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightRange: 5
-  sightAngle: 30
-  idleTime: 3
+  sightRange: 8
+  sightAngle: 45
+  hearRange: 0
+  idleTimer: 3
+  searchTimer: 5
 --- !u!1 &5816212457090555889
 GameObject:
   m_ObjectHideFlags: 0

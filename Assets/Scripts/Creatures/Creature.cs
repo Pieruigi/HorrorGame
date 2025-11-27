@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using StarterAssets;
 using UnityEngine;
@@ -26,11 +27,16 @@ namespace TMM.AI
 		[Range(0,180)]
 		float sightAngle;
 
-		// [SerializeField]
-		// float hearRange;
+		[SerializeField]
+		float hearRange;
 
 		[SerializeField]
-		float idleTime = 3;
+		float idleTimer = 3;
+		float currentTimer;
+
+		[SerializeField]
+		float searchTimer = 2;
+		
 
 		NavMeshAgent agent;
 
@@ -38,9 +44,13 @@ namespace TMM.AI
 
 		bool lastHasPath = false;
 
-		float currentIdleTime;
+		
+
+		
 
 		GameObject player;
+
+
 
 		
         protected virtual void Awake()
@@ -116,14 +126,20 @@ namespace TMM.AI
 		protected virtual void EnterIdleState()
         {
 			ResetPath();
-			float ratio = idleTime * .25f;
-			currentIdleTime = Random.Range(idleTime - ratio, idleTime + ratio);
+			float ratio = idleTimer * .25f;
+			currentTimer = Random.Range(idleTimer - ratio, idleTimer + ratio);
 			
         }
 
 		protected virtual void EnterChaseState()
 		{
+			ResetPath();
+			if (agent.isStopped) agent.isStopped = false;
+			// Kill any previous coroutine
+			StopAllCoroutines();
 
+			// Start chasing player
+			StartCoroutine(DoChasePlayer());			
 		}
 
 		protected virtual void EnterPatrolState()
@@ -133,21 +149,64 @@ namespace TMM.AI
 		}
 
 		protected virtual void EnterSearchState()
-        {
-            if (agent.isStopped) agent.isStopped = false;
+		{
+			if (agent.isStopped) agent.isStopped = false;
+			currentTimer = searchTimer;
+
+			StopAllCoroutines();
+			StartCoroutine(DoSearchForPlayer());
+        }
+
+		IEnumerator DoChasePlayer()
+		{
+			while (true)
+			{
+				// Set player position as destination
+				agent.SetDestination(player.transform.position);
+
+				yield return new WaitForSeconds(.5f);
+			}
+
+		}
+		
+		IEnumerator DoSearchForPlayer()
+		{
+			float time = .5f;
+			while (currentTimer > 0)
+			{
+				agent.SetDestination(player.transform.position);
+
+				yield return new WaitForSeconds(time);
+				currentTimer -= time;
+			}
+
+			SetState(CreatureState.Idle);		
+
         }
 
 		protected virtual void UpdateIdleState()
-        {
-			currentIdleTime -= Time.deltaTime;
-			if(currentIdleTime < 0)
-            {
+		{
+			if (IsPlayerSpotted())
+			{
+				SetState(CreatureState.Chase);
+				return;
+			}
+
+			currentTimer -= Time.deltaTime;
+			if (currentTimer < 0)
+			{
 				SetState(CreatureState.Patrol);
-            }
-        }
+			}
+		}
 
 		protected virtual void UpdatePatrolState()
 		{
+            if (IsPlayerSpotted())
+            {
+				SetState(CreatureState.Chase);
+				return;
+            }
+
 			if (!lastHasPath && (!agent.hasPath || agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.pathStatus == NavMeshPathStatus.PathPartial))
 			{
 				// Try getting a new path
@@ -171,18 +230,31 @@ namespace TMM.AI
 
 
 		}
-		
+
 
 
 		protected virtual void UpdateChaseState()
 		{
-
+            if (!IsPlayerSpotted())
+            {
+				StopAllCoroutines();
+				SetState(CreatureState.Search);
+            }
 		}
+		
+		
 
 		protected virtual void UpdateSearchState()
 		{
+            if (IsPlayerSpotted())
+            {
+				StopAllCoroutines();
+				SetState(CreatureState.Chase);
+            }
 
 		}
+		
+	
 		
 		bool IsPlayerSpotted()
 		{
