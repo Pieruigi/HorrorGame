@@ -506,6 +506,8 @@ MonoBehaviour:
     type: 3}
   outPrefab: {fileID: 7020030011680214690, guid: 0218a242797320b47805ff3f52d1029c,
     type: 3}
+  monsterPrefab: {fileID: 5131694905864375828, guid: 95cce269d938fba4789fda4db544e442,
+    type: 3}
 --- !u!1001 &1714494780
 PrefabInstance:
   m_ObjectHideFlags: 0

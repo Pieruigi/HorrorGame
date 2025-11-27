@@ -10,13 +10,15 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem.Android;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.WSA;
 
 namespace TMM
 {
-	public class MazeBuilder : MonoBehaviour
+	public class MazeBuilder : Singleton<MazeBuilder>
 	{
 		public const float CellSize = 2;
 
@@ -97,6 +99,9 @@ namespace TMM
 		[SerializeField]
 		GameObject outPrefab;
 
+		[SerializeField]
+		GameObject monsterPrefab;
+
 		int wallMax = 14;
 
 		List<Tile> tiles = new List<Tile>();
@@ -131,6 +136,8 @@ namespace TMM
 
 			BuildNavMesh();
 
+			SpawnMonster();
+
 		
 	    }
 
@@ -143,6 +150,28 @@ namespace TMM
 
 #endif
 		}
+
+
+		void SpawnMonster()
+		{
+			// Choose a floor tile (type = 0) which is at a minimum distance the palayer spawn point
+			float minDistance = 10f / CellSize;
+			List<Tile> candidates = tiles.Where(t => t.type == 0 && Vector3.Distance(inTile.coords, t.coords) > minDistance).ToList();
+			if (candidates.Count == 0) // Just to be sure
+				candidates = tiles.Where(t => t.type == 0 && Vector3.Distance(inTile.coords, t.coords) > minDistance / 2f).ToList();
+
+			// Get a random point
+			var spawnTile = candidates[Random.Range(0, candidates.Count)];
+			Debug.Log($"SpawnTile name:{spawnTile.mainObject.name} type:{spawnTile.type}");
+
+
+			// Instantiate the monster gameobject
+			var monster = Instantiate(monsterPrefab);
+			monster.GetComponent<NavMeshAgent>().enabled = false;
+			monster.transform.position = new Vector3(spawnTile.coords.x, 0, spawnTile.coords.y) * CellSize;
+			monster.GetComponent<NavMeshAgent>().enabled = true;
+			
+        }
 
 		void BuildNavMesh()
         {
@@ -166,7 +195,7 @@ namespace TMM
 
 		void InstantiateWallsAndFloors()
 		{
-#if !USE_HELPER
+
 			// Instantiate floor
 			foreach (Tile t in tiles)
 			{
@@ -199,7 +228,7 @@ namespace TMM
 			}
 
 
-#endif
+
 		}
 		
 		void CheckBorders(Tile tile)
@@ -268,33 +297,33 @@ namespace TMM
 			
         }
 
-		void CloseBorders()
-		{
-            // Loop through each floor and check borders
-			foreach(var tile in tiles)
-			{
-				bool[] dirs = new bool[4];
-				dirs[0] = outTile != tile && GetTile(tile.coords.x, tile.coords.y + 1) < 0;
-				dirs[1] = GetTile(tile.coords.x + 1, tile.coords.y) < 0;
-				dirs[2] = inTile != tile && GetTile(tile.coords.x, tile.coords.y - 1) < 0;
-				dirs[3] = GetTile(tile.coords.x - 1, tile.coords.y) < 0;
+// 		void CloseBorders()
+// 		{
+//             // Loop through each floor and check borders
+// 			foreach(var tile in tiles)
+// 			{
+// 				bool[] dirs = new bool[4];
+// 				dirs[0] = outTile != tile && GetTile(tile.coords.x, tile.coords.y + 1) < 0;
+// 				dirs[1] = GetTile(tile.coords.x + 1, tile.coords.y) < 0;
+// 				dirs[2] = inTile != tile && GetTile(tile.coords.x, tile.coords.y - 1) < 0;
+// 				dirs[3] = GetTile(tile.coords.x - 1, tile.coords.y) < 0;
 
-				if (dirs[0] || dirs[1] || dirs[2] || dirs[3])
-				{
-#if USE_HELPERS
-					var go = Instantiate(borderHelperPrefab);
-					go.transform.position = new Vector3(tile.coords.x, 0, tile.coords.y) * CellSize;
-					for(int i=0; i<dirs.Length; i++)
-                    {
-						if (!dirs[i])
-							go.transform.GetChild(i).gameObject.SetActive(false);
+// 				if (dirs[0] || dirs[1] || dirs[2] || dirs[3])
+// 				{
+// #if USE_HELPERS
+// 					var go = Instantiate(borderHelperPrefab);
+// 					go.transform.position = new Vector3(tile.coords.x, 0, tile.coords.y) * CellSize;
+// 					for(int i=0; i<dirs.Length; i++)
+//                     {
+// 						if (!dirs[i])
+// 							go.transform.GetChild(i).gameObject.SetActive(false);
 
-                    }
-#endif
+//                     }
+// #endif
 
-				}
-            }
-        }
+// 				}
+//             }
+//         }
 
 		void AddInAndOut()
 		{
@@ -309,13 +338,6 @@ namespace TMM
 
 			FindFirstObjectByType<FirstPersonController>().transform.root.position = new Vector3(inTile.coords.x, 5f, inTile.coords.y) * CellSize;
 
-
-#if USE_HELPERS
-			var obj = Instantiate(inHelperPrefab);
-			obj.transform.position = new Vector3(inTile.coords.x, 0, inTile.coords.y)  * CellSize;
-			obj = Instantiate(outHelperPrefab);
-			obj.transform.position = new Vector3(outTile.coords.x, 0, outTile.coords.y) * CellSize;
-#endif
 
 		}
 
@@ -431,15 +453,7 @@ namespace TMM
 			borders[2] = tiles.Where(t => GetTile(t.coords.x, t.coords.y - 1) < 0).OrderBy(t=>t.coords.y).ToList(); // South
 			borders[3] = tiles.Where(t => GetTile(t.coords.x - 1, t.coords.y) < 0).OrderBy(t=>t.coords.x).ToList(); // West
 
-			// var closestTile = GetClosestBorderToTheOrigin();
-			// List<int> availableBorderTypes = new List<int>();
-			// for (int i = 0; i < 4; i++)
-			// {
-			// 	if (!borders[i].Contains(closestTile)) borders[i].Clear();
-			// 	else availableBorderTypes.Add(i);
-
-			// }
-
+	
 			//int borderType = availableBorderTypes[Random.Range(0, availableBorderTypes.Count)];// 3; // Top
 			int borderType = nextBorderDirection;
 			nextBorderDirection = (nextBorderDirection + 1) % 4;
@@ -583,9 +597,6 @@ namespace TMM
 			if (!tiles.Exists(t => t.coords == coords && t.type == type))
 			{
 				tiles.Add(new Tile() { coords = coords, type = type });
-#if USE_HELPERS
-				CreateHelperTile(coords, type);
-#endif
 			}
 		}
 		
@@ -705,7 +716,7 @@ namespace TMM
 				for (int i = 0; i < wb.weight; i++)
 					tmp.Add(wb);
 			}
-			
+
 			int left = wallMax - count;
 			for (int i = 0; i < left; i++)
 			{
@@ -716,7 +727,7 @@ namespace TMM
 
 				// Increase the counter
 				wbd.count++;
-            }
+			}
 #else
 			// Minumum
 			int count = 0;
@@ -754,5 +765,15 @@ namespace TMM
 
 
 		}
+		
+		public List<Vector3> GetWalkableTilePositions()
+        {
+			List<Vector3> ret = new List<Vector3>();
+			var l = tiles.Where(t => t.type == 0);
+			foreach (var t in l)
+				ret.Add(new Vector3(t.coords.x, 0, t.coords.y) * CellSize);
+
+			return ret;
+        }
 	}
 }
