@@ -15,11 +15,22 @@ namespace TMM.UI
 		[SerializeField]
 		Color lowColor;
 
+		[SerializeField]
+		AudioSource beepAudioSource;
+
+		[SerializeField]
+		AudioSource errorAudioSource;
+		
+
 		MiniGame miniGame;
 
 		TMP_Text textField;
 
 		bool lowFx = false;
+
+		float lastTimeLeft = 0;
+
+		
 
 
 
@@ -29,6 +40,9 @@ namespace TMM.UI
 			miniGame = GetComponentInParent<MiniGame>();
 			textField = GetComponent<TMP_Text>();
 			textField.color = normalColor;
+
+			Debug.Log("FLOOR . " + Mathf.Ceil(5.03f));
+			Debug.Log("FLOOR . " + Mathf.Ceil(4.96f));
         }
 
         // Start is called before the first frame update
@@ -49,29 +63,40 @@ namespace TMM.UI
 
 			if (timeLeft > 0)
 			{
-				textField.text = timeLeft.ToString("0");
+				textField.text = Mathf.CeilToInt(timeLeft).ToString("000");
 
-				if (timeLeft < 4)
+				if (timeLeft < 5)
 				{
 					if (!lowFx)
 					{
 						lowFx = true;
 						StartLowFx();
 					}
-				}
-                else
-                {
-                    if (lowFx)
+
+					if(Mathf.Ceil(timeLeft) < Mathf.Ceil(lastTimeLeft))
                     {
+						beepAudioSource.Play();
+                    }
+				}
+				else
+				{
+					if (lowFx)
+					{
 						lowFx = false;
 						StopLowFx();
-                    }
-                }
+					}
+				}
+
 			}
 			else
 			{
-				textField.text = "ERR";
+				textField.text = $"ERR {Mathf.CeilToInt(miniGame.GetCooldownLeft()).ToString("00")}";
+
+				if (lastTimeLeft > 0)
+					errorAudioSource.Play();
 			}
+
+			lastTimeLeft = timeLeft;
 		}
 
 		void StartLowFx()
@@ -79,6 +104,7 @@ namespace TMM.UI
 			textField.DOKill();
 			textField.color = lowColor;
 			//textField.DOFade()
+			
 		}
 		
 		void StopLowFx()

@@ -1,20 +1,13 @@
 //#define USE_HELPERS
 #define USE_WEIGHT
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using StarterAssets;
 using TMM.Scriptables;
 using Unity.AI.Navigation;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.Android;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
-using UnityEngine.WSA;
 
 namespace TMM
 {
@@ -336,7 +329,13 @@ namespace TMM
 
 			outTile = candidates[Random.Range(0, candidates.Count)];
 
-			FindFirstObjectByType<FirstPersonController>().transform.root.position = new Vector3(inTile.coords.x, 5f, inTile.coords.y) * CellSize;
+			var fpc = FindFirstObjectByType<FirstPersonController>();
+			fpc.transform.root.position = new Vector3(inTile.coords.x, 5f, inTile.coords.y) * CellSize;
+			fpc.transform.root.rotation = Quaternion.identity;
+			fpc.GetComponent<CharacterController>().enabled = false;
+			fpc.transform.localPosition = Vector3.zero;
+			fpc.transform.localRotation = Quaternion.identity;
+			fpc.GetComponent<CharacterController>().enabled = true;
 
 
 		}

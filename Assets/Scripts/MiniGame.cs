@@ -86,7 +86,7 @@ namespace TMM
 #endif
 			if (activated)
 			{
-				if (Input.GetKeyDown(KeyCode.Escape))
+				if (Input.GetMouseButtonDown(1))
 				{
 					Deactivate();
 					return;
@@ -210,8 +210,8 @@ namespace TMM
 		}
 
 		/// <summary>
-        /// Call by the children
-        /// </summary>
+		/// Call by the children
+		/// </summary>
 		protected void ReportBeaten()
 		{
 			beaten = true;
@@ -219,6 +219,11 @@ namespace TMM
 
 			OnMiniGameBeaten?.Invoke(this);
 		}
+		
+		public float GetCooldownLeft()
+        {
+			return Mathf.Max(0, recheargeTime - recheargeElapsed);
+        }
 		
 	}
 }

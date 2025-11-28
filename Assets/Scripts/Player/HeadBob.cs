@@ -39,8 +39,7 @@ namespace TMM
             // Get horizontal velocity (ignore vertical movement)
             Vector3 velocity = new Vector3(controller.velocity.x, 0, controller.velocity.z);
             float speed = fpController.GetSpeed();// velocity.magnitude;
-            Debug.Log($"SPEEED:{speed}");
-
+            
             // Check if the player is moving on the ground
             bool isMoving = speed > 0.1f;// && controller.isGrounded;
 

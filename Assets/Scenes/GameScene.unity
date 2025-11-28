@@ -826,22 +826,22 @@ PrefabInstance:
     - target: {fileID: 3581449599145171720, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 358.55756
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3581449599145171720, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3581449599145171720, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -261.5551
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3581449599145171720, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.616177
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3581449599145171720, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
@@ -851,7 +851,7 @@ PrefabInstance:
     - target: {fileID: 3581449599145171720, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.78760767
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3581449599145171720, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
@@ -866,32 +866,17 @@ PrefabInstance:
     - target: {fileID: 3581449599145171720, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -103.925
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3581449599145171720, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6186359771314070099, guid: cca75ef0d88b24749aca6e34f84a6cfb,
+    - target: {fileID: 7014045929869491708, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
-      propertyPath: m_SlopeLimit
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 6186359771314070105, guid: cca75ef0d88b24749aca6e34f84a6cfb,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6186359771314070110, guid: cca75ef0d88b24749aca6e34f84a6cfb,
-        type: 3}
-      propertyPath: GroundedRadius
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 6186359771314070110, guid: cca75ef0d88b24749aca6e34f84a6cfb,
-        type: 3}
-      propertyPath: GroundLayers.m_Bits
-      value: 128
+      propertyPath: m_LocalPosition.y
+      value: 1.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

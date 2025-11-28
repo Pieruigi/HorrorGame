@@ -3,7 +3,17 @@ guid: d847f496a566c8342a5f4da86717aae1
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: crt_screen_mp_1
+    second: {fileID: 2100000, guid: 3a136685b0fae0d45b69b517b556a24a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tvs_mp_1
+    second: {fileID: 2100000, guid: a186e89b1132fe94486be0a8bfa5a011, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

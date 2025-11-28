@@ -27,7 +27,7 @@ namespace TMM
 			if (other.CompareTag("Player"))
 			{
 				tile.SetActive(false);
-				LoadNextLevelDelayed();
+				StartCoroutine(LoadNextLevelDelayed());
 			}
 		}
 		
