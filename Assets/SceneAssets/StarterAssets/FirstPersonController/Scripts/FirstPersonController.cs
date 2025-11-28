@@ -314,7 +314,7 @@ namespace StarterAssets
 
 			// To fix a strange behaviour on edge collision
 			if(Grounded)
-				transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+			 	transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 		}
 
 		private void JumpAndGravity()

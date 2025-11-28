@@ -147,7 +147,8 @@ namespace TMM
 			checkingTiles = false;
 
 			if (IsBeaten())
-				ReportBeaten();
+	            ReportBeaten();
+    			
 		}
 		
 		bool IsBeaten()

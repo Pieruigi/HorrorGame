@@ -1630,6 +1630,7 @@ MonoBehaviour:
   playerTarget: {fileID: 2421400283890746591}
   activateDot: 1
   deviceInteractor: {fileID: 1565901225728153566}
+  timer: 45
   tiles:
   - {fileID: 5595675615413480575}
   - {fileID: 1230822847246972814}
