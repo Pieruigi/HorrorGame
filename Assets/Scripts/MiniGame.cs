@@ -24,8 +24,14 @@ namespace TMM
 		DeviceInteractor deviceInteractor;
 
 		//float attempts = 10;
+		[SerializeField]
+		float timer = 30;
 
-		float timeLeft = 3000;
+		float timeLeft = 30;
+		public float TimeLeft
+        {
+            get{ return timeLeft; }
+        }
 
 
 		FirstPersonController player;
@@ -49,10 +55,13 @@ namespace TMM
 
 		bool activateFlashlightOnExit = false;
 
+		float recheargeTime = 20;
+		float recheargeElapsed = 0;
+
 
 		protected virtual void Awake()
         {
-            
+			timeLeft = timer;
         }
 
 	    // Start is called before the first frame update
@@ -77,22 +86,35 @@ namespace TMM
 #endif
 			if (activated)
 			{
-				if(Input.GetKeyDown(KeyCode.Escape))
-                {
-                    Deactivate();
+				if (Input.GetKeyDown(KeyCode.Escape))
+				{
+					Deactivate();
 					return;
-                }
+				}
 
 				timeLeft -= Time.deltaTime;
 				if (timeLeft < 0)
 				{
 					timeLeft = 0;
+					recheargeElapsed = 0;
 					Deactivate();
 					return;
 				}
 
 				//DoUpdate();
 			}
+            else
+			{
+				if(timeLeft == 0)
+                {
+					recheargeElapsed += Time.deltaTime;
+					if(recheargeElapsed > recheargeTime)
+					{
+						timeLeft = timer;	
+					}    
+                }
+				
+            }
            
 		}
 

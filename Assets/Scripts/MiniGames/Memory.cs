@@ -133,10 +133,9 @@ namespace TMM
 		{
 			checkingTiles = true;
 
-			yield return new WaitForSeconds(1f);
-
 			if (selectedTiles[0].name != selectedTiles[1].name)
 			{
+				yield return new WaitForSeconds(1f);
 				selectedTiles[0].GetComponent<MemoryTile>().Select(false);
 				selectedTiles[1].GetComponent<MemoryTile>().Select(false);
 				yield return new WaitForSeconds(.25f);

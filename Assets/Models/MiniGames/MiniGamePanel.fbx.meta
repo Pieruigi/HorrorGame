@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8d85bbeaca8addd48b9de5dfe0ce3031
+guid: 032d4ecd45971064eb1ac8a39631c923
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,8 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: elevator_screen_1
-    second: {fileID: 2100000, guid: c93f52c52adb7c1449bc0f30a6ad3ba7, type: 2}
+      name: MiniGamePanel
+    second: {fileID: 2100000, guid: bfd7b2c7996593947926a67b301ffed9, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
