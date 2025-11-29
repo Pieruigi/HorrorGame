@@ -48,7 +48,7 @@ namespace TMM
 		void LateUpdate()
 		{
 			UpdateAnimatorSpeed();
-
+			Debug.Log("Animator.speed:" + animator.speed);
 		}
 		
 		private void HandleOnStateChanged(Creature creature, CreatureState oldState, CreatureState newState)
@@ -57,7 +57,7 @@ namespace TMM
             switch (newState)
             {
 				case CreatureState.Idle:
-					animator.speed = 1;
+					animator.SetFloat("SpeedMul", 1);
 					animator.SetTrigger("Idle");
 					break;
 				case CreatureState.Patrol:
@@ -70,7 +70,7 @@ namespace TMM
 					}
 					if(newState == CreatureState.Patrol)
                     {
-						animator.speed = 1;
+						animator.SetFloat("SpeedMul", 1);
                     }
 					break;
             }
@@ -82,7 +82,9 @@ namespace TMM
             {
 				case CreatureState.Chase:
 				case CreatureState.Search:
-					animator.speed = creature.RunSpeed / creature.WalkSpeed;
+					//animator.speed = creature.RunSpeed / creature.WalkSpeed;
+					animator.SetFloat("SpeedMul", creature.RunSpeed / creature.WalkSpeed);
+					
 					break;
 		    }
         }
