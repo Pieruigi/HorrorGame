@@ -1,5 +1,7 @@
-﻿using Cinemachine;
+﻿using System;
+using Cinemachine;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -26,6 +28,24 @@ namespace StarterAssets
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
 		public float CrouchSpeed = 2.0f;
+
+		[SerializeField]
+		float staminaMax = 1.0f;
+		public float MaxStamina
+        {
+            get{ return staminaMax; }
+        }
+		float stamina;
+		public float Stamina
+        {
+            get{ return stamina; }
+        }
+
+		float staminaRechargeSpeed = .5f;
+		float staminaDepleteSpeed = .25f;
+
+		float staminaRecheargeDelayMax = 1f;
+		float staminaRecheargeDelay;
 
 		
 
@@ -135,6 +155,8 @@ namespace StarterAssets
 				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 			}
 
+			stamina = staminaMax;
+
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 		}
@@ -163,6 +185,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			CrouchCheck();
+			CheckStamina();
 			Move();
 			
 		}
@@ -208,10 +231,10 @@ namespace StarterAssets
 		void CrouchCheck()
 		{
 			var height = CameraRoot.localPosition.y;
-			if(InputDisabled) _input.crouch = false;
+			if (InputDisabled) _input.crouch = false;
 			if (_input.crouch && CanCrouch)
 			{
-				Debug.Log("TEST - Crouching....");
+				
 				if (height > CrouchHeight)
 				{
 					var heightDiff = Mathf.Abs(CrouchHeight - _cameraRootHeightDefault);
@@ -228,9 +251,9 @@ namespace StarterAssets
 
 				}
 			}
-            else
-            {
-                if(height < _cameraRootHeightDefault)
+			else
+			{
+				if (height < _cameraRootHeightDefault)
 				{
 					var heightDiff = Mathf.Abs(CrouchHeight - _cameraRootHeightDefault);
 					var speed = heightDiff / CrouchTime;
@@ -243,11 +266,39 @@ namespace StarterAssets
 					var pHeight = Mathf.MoveTowards(_controller.height, _playerHeight, speed * Time.deltaTime);
 					if (pHeight > _playerHeight) pHeight = _playerHeight;
 					_controller.height = pHeight;
+				}
+			}
+		}
+
+		
+		private void CheckStamina()
+        {
+			if (_input.sprint)
+			{
+				// Check stamina
+				if (stamina > 0)
+				{
+					staminaRecheargeDelay = staminaRecheargeDelayMax;
+					stamina -= staminaDepleteSpeed * Time.deltaTime;
+					if (stamina < 0) stamina = 0;
+				}
+				else
+				{
+					_input.sprint = false;
+				}
+			}
+			
+			if(stamina < staminaMax)
+            {
+				staminaRecheargeDelay -= Time.deltaTime;
+				if(staminaRecheargeDelay < 0)
+                {
+					stamina += staminaRechargeSpeed * Time.deltaTime;
+					if (stamina > staminaMax) stamina = staminaMax;	
                 }
             }
         }
 
-		
 		private void Move()
 		{
 

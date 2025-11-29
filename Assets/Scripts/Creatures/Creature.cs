@@ -16,8 +16,22 @@ namespace TMM.AI
 
 	public class Creature : MonoBehaviour
 	{
-		public delegate void StateChangedDelegate(Creature creature);
+		public delegate void StateChangedDelegate(Creature creature, CreatureState oldState, CreatureState newState);
 		public static StateChangedDelegate OnStateChanged;
+
+		[SerializeField]
+		float walkSpeed = 2.5f;
+		public float WalkSpeed
+        {
+            get{ return walkSpeed; }
+        }
+
+		[SerializeField]
+		float runSpeed = 3.5f;
+		public float RunSpeed
+        {
+            get{ return runSpeed; }
+        }
 
 		[SerializeField]
 		float sightRange;
@@ -48,6 +62,7 @@ namespace TMM.AI
 		NavMeshAgent agent;
 
 		CreatureState state = CreatureState.Idle;
+
 
 		bool lastHasPath = false;
 
@@ -102,9 +117,11 @@ namespace TMM.AI
 			lastHasPath = agent.hasPath && agent.pathStatus != NavMeshPathStatus.PathInvalid && agent.pathStatus != NavMeshPathStatus.PathPartial;
         }
 
-		public virtual void SetState(CreatureState state)
+		public virtual void SetState(CreatureState newState)
 		{
-			this.state = state;
+			if (state == newState) return;
+			var oldState = state;
+			state = newState;
 			switch (state)
 			{
 				case CreatureState.Idle:
@@ -124,7 +141,7 @@ namespace TMM.AI
 					break;
 			}
 
-			OnStateChanged?.Invoke(this);
+			OnStateChanged?.Invoke(this, oldState, newState);
 		}
 
 		void ResetPath()
@@ -144,6 +161,7 @@ namespace TMM.AI
 			ResetPath();
 			float ratio = idleTimer * .25f;
 			currentTimer = Random.Range(idleTimer - ratio, idleTimer + ratio);
+			agent.speed = walkSpeed;
 
 		}
 
@@ -151,6 +169,7 @@ namespace TMM.AI
 		{
 			ResetPath();
 			if (agent.isStopped) agent.isStopped = false;
+			agent.speed = runSpeed;
 			// Kill any previous coroutine
 			StopAllCoroutines();
 
@@ -161,12 +180,14 @@ namespace TMM.AI
 		protected virtual void EnterPatrolState()
 		{
 			ResetPath();
+			agent.speed = walkSpeed;
 			if (agent.isStopped) agent.isStopped = false;
 		}
 
 		protected virtual void EnterSearchState()
 		{
 			if (agent.isStopped) agent.isStopped = false;
+			agent.speed = runSpeed;
 			currentTimer = searchTimer;
 
 			StopAllCoroutines();
