@@ -48,7 +48,6 @@ namespace TMM
 		void LateUpdate()
 		{
 			UpdateAnimatorSpeed();
-			Debug.Log("Animator.speed:" + animator.speed);
 		}
 		
 		private void HandleOnStateChanged(Creature creature, CreatureState oldState, CreatureState newState)

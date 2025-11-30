@@ -29,6 +29,17 @@ namespace StarterAssets
 		public float SpeedChangeRate = 10.0f;
 		public float CrouchSpeed = 2.0f;
 
+		float walkNoiseRange = 6;
+
+		float runNoiseRange = 10;
+
+		float noiseRange;
+		public float NoiseRange
+        {
+            get{ return noiseRange; }
+        }
+
+
 		[SerializeField]
 		float staminaMax = 1.0f;
 		public float MaxStamina
@@ -42,7 +53,7 @@ namespace StarterAssets
         }
 
 		float staminaRechargeSpeed = .5f;
-		float staminaDepleteSpeed = .25f;
+		float staminaDepleteSpeed = .4f;
 
 		float staminaRecheargeDelayMax = 1f;
 		float staminaRecheargeDelay;
@@ -94,6 +105,7 @@ namespace StarterAssets
 
 		// player
 		private float _speed;
+
 		private float _rotationVelocity;
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
@@ -187,13 +199,25 @@ namespace StarterAssets
 			CrouchCheck();
 			CheckStamina();
 			Move();
-			
+			ComputeNoiseRange();
 		}
 
 		private void LateUpdate()
 		{
 			CameraRotation();
 		}
+
+		void ComputeNoiseRange()
+        {
+			if (_speed == 0)
+			{
+				noiseRange = 0;
+			}
+            else
+            {
+				noiseRange = IsRunning ? runNoiseRange : walkNoiseRange;
+            }
+        }
 
 		private void GroundedCheck()
 		{
@@ -367,8 +391,10 @@ namespace StarterAssets
 			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
 			// To fix a strange behaviour on edge collision
-			if(Grounded)
-			 	transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+			if (Grounded)
+				transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+				
+			
 		}
 
 		private void JumpAndGravity()

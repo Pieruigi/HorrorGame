@@ -157,9 +157,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 2.5
   runSpeed: 3.5
-  sightRange: 8
+  sightRange: 16
   sightAngle: 45
-  hearRange: 0
+  hearMultiplier: 1
+  smellRange: 4
   attackRange: 2
   attackAngle: 60
   idleTimer: 3

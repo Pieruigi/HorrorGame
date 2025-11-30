@@ -41,7 +41,11 @@ namespace TMM.AI
 		float sightAngle;
 
 		[SerializeField]
-		float hearRange;
+		[Range(0,1)]
+		float hearMultiplier;
+
+		[SerializeField]
+		float smellRange;
 
 		[SerializeField]
 		float attackRange;
@@ -302,11 +306,28 @@ namespace TMM.AI
 
 		bool IsPlayerSpotted()
 		{
+			
 			// Get player position
 			var playerPosition = player.transform.position;
 
-			// Get sight
+			// Get direction
 			var pDir = playerPosition - transform.position;
+
+			// First we check the smell
+			if (pDir.magnitude < smellRange)
+			{
+				Debug.Log("Creature smelled you");
+				return true;
+            }
+				
+
+			// Then we check the noise
+			if (pDir.magnitude < player.GetComponent<FirstPersonController>().NoiseRange * hearMultiplier)
+            {
+				Debug.Log("Creature heard you");
+				return true;
+            }
+				
 
 			// Check distance 
 			if (pDir.magnitude > sightRange)
@@ -326,7 +347,7 @@ namespace TMM.AI
 					return false;
             }
 
-
+			Debug.Log("Creature saw you");
 			return true;
 		}
 		
@@ -340,6 +361,8 @@ namespace TMM.AI
 			var pDir = player.transform.position - transform.position;
 			if (Vector3.Angle(transform.forward, pDir) > attackAngle)
 				return false;
+
+
 
 			return true;
         }
