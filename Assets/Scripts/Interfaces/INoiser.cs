@@ -8,7 +8,7 @@ namespace TMM.Interfaces
 	{
 		float GetNoiseRange();
 
-		Vector3 GetTargetDistance(Vector3 target);
+		float GetTargetDistance(Vector3 target);
         
 	}
 }

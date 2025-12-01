@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using DG.Tweening;
+using TMM.Interfaces;
 using TMPro;
 using UnityEngine;
 
 namespace TMM.UI
 {
-	public class MiniGameTimer : MonoBehaviour
+	public class MiniGameTimer : MonoBehaviour, INoiser
 	{
 		[SerializeField]
 		Color normalColor;
@@ -30,8 +31,10 @@ namespace TMM.UI
 
 		float lastTimeLeft = 0;
 
-		
 
+		float noiseRangeOnError = 40;
+
+		float noiseRange = 0;
 
 
 
@@ -40,9 +43,6 @@ namespace TMM.UI
 			miniGame = GetComponentInParent<MiniGame>();
 			textField = GetComponent<TMP_Text>();
 			textField.color = normalColor;
-
-			Debug.Log("FLOOR . " + Mathf.Ceil(5.03f));
-			Debug.Log("FLOOR . " + Mathf.Ceil(4.96f));
         }
 
         // Start is called before the first frame update
@@ -93,11 +93,22 @@ namespace TMM.UI
 				textField.text = $"ERR {Mathf.CeilToInt(miniGame.GetCooldownLeft()).ToString("00")}";
 
 				if (lastTimeLeft > 0)
+                {
 					errorAudioSource.Play();
+					StartCoroutine(MakeNoise());
+                }
+					
 			}
 
 			lastTimeLeft = timeLeft;
 		}
+
+		IEnumerator MakeNoise()
+        {
+			noiseRange = noiseRangeOnError;
+			yield return new WaitForSeconds(1f);
+			noiseRange = 0;
+        }
 
 		void StartLowFx()
 		{
@@ -106,11 +117,21 @@ namespace TMM.UI
 			//textField.DOFade()
 			
 		}
-		
+
 		void StopLowFx()
-        {
+		{
 			textField.DOKill();
 			textField.color = normalColor;
+		}
+
+        public float GetNoiseRange()
+        {
+			return noiseRange;
+        }
+
+        public float GetTargetDistance(Vector3 target)
+        {
+			return Vector3.Distance(transform.position, target);
         }
     }
 }

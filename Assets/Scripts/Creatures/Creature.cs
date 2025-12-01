@@ -85,6 +85,9 @@ namespace TMM.AI
 
 		List<INoiser> iNoisers = new List<INoiser>();
 
+		Vector3 forcedDestination;
+		bool useForcedDestination;
+
 
 
 		protected virtual void Awake()
@@ -104,6 +107,11 @@ namespace TMM.AI
 		// Update is called once per frame
 		protected virtual void Update()
 		{
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.X))
+				ForcePatrol(player.transform.position);
+#endif
+
 			UpdateState();
 
 			UpdateLastHasPath();
@@ -209,6 +217,15 @@ namespace TMM.AI
 			StartCoroutine(DoSearchForPlayer());
 		}
 
+		protected virtual void EnterForceDestination()
+        {
+			if (agent.isStopped) agent.isStopped = false;
+			agent.speed = runSpeed;
+
+			StopAllCoroutines();
+			agent.SetDestination(forcedDestination);
+        }
+
 		IEnumerator DoChasePlayer()
 		{
 			while (true)
@@ -264,11 +281,22 @@ namespace TMM.AI
 				// Try getting a new path
 				float minDist = 10;
 				// Get all walkable positions
-				var list = MazeBuilder.Instance.GetWalkableTilePositions().Where(t => Vector3.Distance(transform.position, t) > minDist).ToList();
+				List<Vector3> list = new List<Vector3>();
+				if (useForcedDestination)
+				{
+					useForcedDestination = false;
+					list.Add(forcedDestination);
+				}
+				else
+				{
+                	list = MazeBuilder.Instance.GetWalkableTilePositions().Where(t => Vector3.Distance(transform.position, t) > minDist).ToList();    
+                }
+				
 				// Get a random position
 				var dest = list[Random.Range(0, list.Count)];
 				// Set destination
 				agent.SetDestination(dest);
+				Debug.Log("Monster set destination");
 
 				return;
 			}
@@ -313,6 +341,20 @@ namespace TMM.AI
 		}
 
 
+		protected virtual void UpdateForceDestination()
+		{
+			if (IsPlayerSpotted())
+			{
+				SetState(CreatureState.Chase);
+				return;
+			}
+
+            if (lastHasPath && !agent.hasPath)
+			{
+				SetState(CreatureState.Idle);
+			}
+        }
+
 
 		bool IsPlayerSpotted()
 		{
@@ -334,9 +376,9 @@ namespace TMM.AI
 
 
 			// Then we check the noise
-			// Get the closest noiser
-			var noisers = iNoisers.OrderBy(n => n.GetTargetDistance(transform.position)).ToList();
-			if (pDir.magnitude < noisers[0].GetNoiseRange() * hearMultiplier)
+			// Get the closest noiser (since other noisers could hide the player noise, we check what's the most noisy object)
+			var noisers = iNoisers.OrderBy(n => n.GetTargetDistance(transform.position) - n.GetNoiseRange()).ToList();
+			if (noisers[0] == player.GetComponent<INoiser>() && pDir.magnitude < noisers[0].GetNoiseRange() * hearMultiplier)
 			{
 				Debug.Log("Creature heard you");
 				OnPlayerSpotted?.Invoke(this, true);
@@ -346,20 +388,20 @@ namespace TMM.AI
 
 			// Check distance 
 			if (pDir.magnitude > sightRange)
-            {
+			{
 				OnPlayerSpotted?.Invoke(this, false);
 				return false;
-            }
-				
+			}
+
 
 			// Check angle
 			var angle = Vector3.Angle(transform.forward, pDir);
 			if (angle > sightAngle)
 			{
 				OnPlayerSpotted?.Invoke(this, false);
-                return false;
-            }
-				
+				return false;
+			}
+
 
 			// Raycast from monster to player
 			RaycastHit hit;
@@ -367,11 +409,11 @@ namespace TMM.AI
 			if (Physics.Raycast(origin, pDir, out hit, sightRange))
 			{
 				if (hit.collider.gameObject != player)
-                {
+				{
 					OnPlayerSpotted?.Invoke(this, false);
 					return false;
-                }
-					
+				}
+
 			}
 
 			Debug.Log("Creature saw you");
@@ -395,6 +437,23 @@ namespace TMM.AI
 			return true;
 		}
 
+
+		public void ForcePatrol(Vector3 destination)
+        {
+			if (state != CreatureState.Patrol && state != CreatureState.Idle) return;
+
+			// If idle we must tell the patrol update routine to use the given destination
+			if (state == CreatureState.Idle)
+			{
+				forcedDestination = destination;
+				useForcedDestination = true;
+				SetState(CreatureState.Patrol);
+			}
+            else // If patrol state just switch the destination to the given one
+            {
+                agent.SetDestination(destination);
+            }
+        }
 
 
 	}

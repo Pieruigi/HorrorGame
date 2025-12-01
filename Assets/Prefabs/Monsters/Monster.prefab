@@ -164,7 +164,7 @@ MonoBehaviour:
   smellRange: 4
   attackRange: 1
   attackAngle: 60
-  idleTimer: 5000
+  idleTimer: 5
   searchTimer: 5
 --- !u!1 &5816212457090555889
 GameObject:
