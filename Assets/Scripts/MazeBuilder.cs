@@ -95,7 +95,7 @@ namespace TMM
 		[SerializeField]
 		GameObject monsterPrefab;
 
-		int wallMax = 14;
+		int wallMax = 17; // 14
 
 		List<Tile> tiles = new List<Tile>();
 

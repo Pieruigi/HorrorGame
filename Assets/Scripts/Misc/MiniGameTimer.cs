@@ -54,7 +54,10 @@ namespace TMM.UI
 		// Update is called once per frame
 		void Update()
 		{
-
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.X))
+				StartCoroutine(MakeNoise());
+#endif
 		}
 
 		void LateUpdate()
@@ -104,9 +107,10 @@ namespace TMM.UI
 		}
 
 		IEnumerator MakeNoise()
-        {
+		{
+			Debug.Log("Timer noise");
 			noiseRange = noiseRangeOnError;
-			yield return new WaitForSeconds(1f);
+			yield return new WaitForSeconds(10f);
 			noiseRange = 0;
         }
 
@@ -131,7 +135,7 @@ namespace TMM.UI
 
         public float GetTargetDistance(Vector3 target)
         {
-			return Vector3.Distance(transform.position, target);
+			return Vector3.Distance(errorAudioSource.transform.position, target);
         }
     }
 }

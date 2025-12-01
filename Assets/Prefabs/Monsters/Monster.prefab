@@ -162,7 +162,7 @@ MonoBehaviour:
   sightAngle: 45
   hearMultiplier: 1
   smellRange: 4
-  attackRange: 1
+  attackRange: 1.5
   attackAngle: 60
   idleTimer: 5
   searchTimer: 5

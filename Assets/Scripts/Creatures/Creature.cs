@@ -83,10 +83,14 @@ namespace TMM.AI
 
 		GameObject player;
 
-		List<INoiser> iNoisers = new List<INoiser>();
+		List<INoiser> noisers = new List<INoiser>();
 
 		Vector3 forcedDestination;
 		bool useForcedDestination;
+
+		Transform target;
+
+		Flashlight flashlight;
 
 
 
@@ -100,17 +104,17 @@ namespace TMM.AI
 		{
 			SetState(CreatureState.Patrol);
 			player = FindFirstObjectByType<FirstPersonController>().gameObject;
-			iNoisers.Add(player.GetComponent<FirstPersonController>());
+
+			noisers = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<INoiser>().ToList();
+			flashlight = player.transform.parent.GetComponentInChildren<Flashlight>();
+
 		}
 
 
 		// Update is called once per frame
 		protected virtual void Update()
 		{
-#if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.X))
-				ForcePatrol(player.transform.position);
-#endif
+
 
 			UpdateState();
 
@@ -197,7 +201,7 @@ namespace TMM.AI
 			StopAllCoroutines();
 
 			// Start chasing player
-			StartCoroutine(DoChasePlayer());
+			StartCoroutine(DoChaseTarget());
 		}
 
 		protected virtual void EnterPatrolState()
@@ -226,12 +230,12 @@ namespace TMM.AI
 			agent.SetDestination(forcedDestination);
         }
 
-		IEnumerator DoChasePlayer()
+		IEnumerator DoChaseTarget()
 		{
 			while (true)
 			{
 				// Set player position as destination
-				agent.SetDestination(player.transform.position);
+				agent.SetDestination(target.position);
 
 				yield return new WaitForSeconds(.5f);
 			}
@@ -255,7 +259,7 @@ namespace TMM.AI
 
 		protected virtual void UpdateIdleState()
 		{
-			if (IsPlayerSpotted())
+			if (IsTargetSpotted())
 			{
 				SetState(CreatureState.Chase);
 				return;
@@ -270,7 +274,7 @@ namespace TMM.AI
 
 		protected virtual void UpdatePatrolState()
 		{
-			if (IsPlayerSpotted())
+			if (IsTargetSpotted())
 			{
 				SetState(CreatureState.Chase);
 				return;
@@ -314,7 +318,7 @@ namespace TMM.AI
 
 		protected virtual void UpdateChaseState()
 		{
-			if (!IsPlayerSpotted())
+			if (!IsTargetSpotted())
 			{
 				StopAllCoroutines();
 				SetState(CreatureState.Search);
@@ -332,7 +336,7 @@ namespace TMM.AI
 
 		protected virtual void UpdateSearchState()
 		{
-			if (IsPlayerSpotted())
+			if (IsTargetSpotted())
 			{
 				StopAllCoroutines();
 				SetState(CreatureState.Chase);
@@ -343,7 +347,7 @@ namespace TMM.AI
 
 		protected virtual void UpdateForceDestination()
 		{
-			if (IsPlayerSpotted())
+			if (IsTargetSpotted())
 			{
 				SetState(CreatureState.Chase);
 				return;
@@ -356,7 +360,8 @@ namespace TMM.AI
         }
 
 
-		bool IsPlayerSpotted()
+
+		bool IsTargetSpotted()
 		{
 
 			// Get player position
@@ -369,6 +374,7 @@ namespace TMM.AI
 			if (pDir.magnitude < smellRange)
 			{
 				Debug.Log("Creature smelled you");
+				target = player.transform;
 				OnPlayerSpotted?.Invoke(this, true);
 				return true;
 			}
@@ -377,17 +383,21 @@ namespace TMM.AI
 
 			// Then we check the noise
 			// Get the closest noiser (since other noisers could hide the player noise, we check what's the most noisy object)
-			var noisers = iNoisers.OrderBy(n => n.GetTargetDistance(transform.position) - n.GetNoiseRange()).ToList();
-			if (noisers[0] == player.GetComponent<INoiser>() && pDir.magnitude < noisers[0].GetNoiseRange() * hearMultiplier)
+			var _noisers = noisers.OrderBy(n => n.GetTargetDistance(transform.position) - n.GetNoiseRange()).ToList();
+			Debug.Log("Noisers[0]:" + (_noisers[0] as MonoBehaviour).gameObject.name);
+			if (/*noisers[0] == player.GetComponent<INoiser>() && */pDir.magnitude < _noisers[0].GetNoiseRange() * hearMultiplier)
 			{
 				Debug.Log("Creature heard you");
+				//target = player.transform;
+				target = (_noisers[0] as MonoBehaviour).transform;
 				OnPlayerSpotted?.Invoke(this, true);
 				return true;
 			}
 
 
 			// Check distance 
-			if (pDir.magnitude > sightRange)
+			var range = (flashlight.IsOn() ? 1.5f : 1) * sightRange;
+			if (pDir.magnitude > range)
 			{
 				OnPlayerSpotted?.Invoke(this, false);
 				return false;
@@ -406,7 +416,7 @@ namespace TMM.AI
 			// Raycast from monster to player
 			RaycastHit hit;
 			var origin = transform.position + Vector3.up;
-			if (Physics.Raycast(origin, pDir, out hit, sightRange))
+			if (Physics.Raycast(origin, pDir, out hit, range))
 			{
 				if (hit.collider.gameObject != player)
 				{
@@ -417,6 +427,7 @@ namespace TMM.AI
 			}
 
 			Debug.Log("Creature saw you");
+			target = player.transform;
 			OnPlayerSpotted?.Invoke(this, true);
 			return true;
 		}
