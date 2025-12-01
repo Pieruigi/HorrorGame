@@ -78,7 +78,6 @@ namespace TMM.UI
 			if (visible)
 			{
 				var size = fillImage.rectTransform.sizeDelta;
-				Debug.Log("PlayerStamina:" + player.Stamina);
 				fillImage.rectTransform.sizeDelta = new Vector2(maxWidth * player.Stamina / player.MaxStamina, size.y);
 
 				

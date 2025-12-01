@@ -1,5 +1,6 @@
 ﻿using System;
 using Cinemachine;
+using TMM.Interfaces;
 using TMPro;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
 	[RequireComponent(typeof(PlayerInput))]
 #endif
-	public class FirstPersonController : MonoBehaviour
+	public class FirstPersonController : MonoBehaviour, INoiser
 	{
 
 		public const float InteractionDistance = 1.5f;
@@ -34,10 +35,7 @@ namespace StarterAssets
 		float runNoiseRange = 10;
 
 		float noiseRange;
-		public float NoiseRange
-        {
-            get{ return noiseRange; }
-        }
+
 
 
 		[SerializeField]
@@ -209,7 +207,7 @@ namespace StarterAssets
 
 		void ComputeNoiseRange()
         {
-			if (_speed == 0)
+			if (_speed < 0.01f)
 			{
 				noiseRange = 0;
 			}
@@ -456,10 +454,20 @@ namespace StarterAssets
 		{
 			isDead = true;
 		}
-		
+
 		public float GetSpeed()
-        {
+		{
 			return _speed;
+		}
+
+		public float GetNoiseRange()
+		{
+			return noiseRange;
+		}
+		
+		public float GetTargetDistance(Vector3 target)
+        {
+			return Vector3.Distance(target, transform.position);
         }
 
 		private void OnDrawGizmosSelected()

@@ -155,9 +155,7 @@ namespace TMM
 
 			// Get a random point
 			var spawnTile = candidates[Random.Range(0, candidates.Count)];
-			Debug.Log($"SpawnTile name:{spawnTile.mainObject.name} type:{spawnTile.type}");
-
-
+		
 			// Instantiate the monster gameobject
 			var monster = Instantiate(monsterPrefab);
 			monster.GetComponent<NavMeshAgent>().enabled = false;
@@ -232,7 +230,6 @@ namespace TMM
 			dirs[2] = /*tile != inTile && */GetTile(tile.coords.x, tile.coords.y - 1) < 0;
 			dirs[3] = GetTile(tile.coords.x - 1, tile.coords.y) < 0;
 
-			Debug.Log("Tile main object:" + tile.mainObject);
 
 			Transform root = tile.mainObject.transform;
 			if (tile == inTile || tile == outTile)
@@ -270,8 +267,7 @@ namespace TMM
 
 			// // Load wall blocks
 			var blocks= Resources.LoadAll<WallBlockAsset>($"{WallBlockAsset.ResourceFolder}/{theme}");
-			Debug.Log($"Found {blocks.Count()} wall blocks");
-
+			
 			// Clear the available block list
 			availableBlocks.Clear();
 			// Fill the list
@@ -290,33 +286,7 @@ namespace TMM
 			
         }
 
-// 		void CloseBorders()
-// 		{
-//             // Loop through each floor and check borders
-// 			foreach(var tile in tiles)
-// 			{
-// 				bool[] dirs = new bool[4];
-// 				dirs[0] = outTile != tile && GetTile(tile.coords.x, tile.coords.y + 1) < 0;
-// 				dirs[1] = GetTile(tile.coords.x + 1, tile.coords.y) < 0;
-// 				dirs[2] = inTile != tile && GetTile(tile.coords.x, tile.coords.y - 1) < 0;
-// 				dirs[3] = GetTile(tile.coords.x - 1, tile.coords.y) < 0;
 
-// 				if (dirs[0] || dirs[1] || dirs[2] || dirs[3])
-// 				{
-// #if USE_HELPERS
-// 					var go = Instantiate(borderHelperPrefab);
-// 					go.transform.position = new Vector3(tile.coords.x, 0, tile.coords.y) * CellSize;
-// 					for(int i=0; i<dirs.Length; i++)
-//                     {
-// 						if (!dirs[i])
-// 							go.transform.GetChild(i).gameObject.SetActive(false);
-
-//                     }
-// #endif
-
-// 				}
-//             }
-//         }
 
 		void AddInAndOut()
 		{
@@ -342,7 +312,7 @@ namespace TMM
 
 		void CreateFlippedVariants()
 		{
-			Debug.Log("TO ADD Start");
+		
 			List<WallBlockData> toAdd = new List<WallBlockData>();
 			foreach (var b in availableBlocks)
 			{
@@ -368,7 +338,7 @@ namespace TMM
 
 				toAdd.Add(wbd); 
 			}
-			Debug.Log("TO ADD " + toAdd.Count);
+			
 			availableBlocks.AddRange(toAdd);
         }
 
@@ -409,8 +379,6 @@ namespace TMM
 		{
 			// Get tiles
 			var t = tiles.Where(t => tileCoords.Contains(t.coords)).ToList();
-
-			Debug.Log($"WallBlock Prefab:{data.prefabs[0].name}, t.count:{t.Count}");
 
 			// Create new block and add to list
 			blocks.Add(new WallBlock() { data = data, origin = t[0], rotationType = rotationType, tiles = t });

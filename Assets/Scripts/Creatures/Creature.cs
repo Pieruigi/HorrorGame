@@ -1,6 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using StarterAssets;
+using TMM.Interfaces;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,29 +22,32 @@ namespace TMM.AI
 		public delegate void StateChangedDelegate(Creature creature, CreatureState oldState, CreatureState newState);
 		public static StateChangedDelegate OnStateChanged;
 
+		public delegate void PlayerSpottedDelegate(Creature creature, bool spotted);
+		public static PlayerSpottedDelegate OnPlayerSpotted;
+
 		[SerializeField]
 		float walkSpeed = 2.5f;
 		public float WalkSpeed
-        {
-            get{ return walkSpeed; }
-        }
+		{
+			get { return walkSpeed; }
+		}
 
 		[SerializeField]
 		float runSpeed = 3.5f;
 		public float RunSpeed
-        {
-            get{ return runSpeed; }
-        }
+		{
+			get { return runSpeed; }
+		}
 
 		[SerializeField]
 		float sightRange;
 
 		[SerializeField]
-		[Range(0,180)]
+		[Range(0, 180)]
 		float sightAngle;
 
 		[SerializeField]
-		[Range(0,1)]
+		[Range(0, 1)]
 		float hearMultiplier;
 
 		[SerializeField]
@@ -51,7 +57,7 @@ namespace TMM.AI
 		float attackRange;
 
 		[SerializeField]
-		[Range(0,180)]
+		[Range(0, 180)]
 		float attackAngle;
 
 
@@ -61,7 +67,8 @@ namespace TMM.AI
 
 		[SerializeField]
 		float searchTimer = 2;
-		
+
+
 
 		NavMeshAgent agent;
 
@@ -70,26 +77,28 @@ namespace TMM.AI
 
 		bool lastHasPath = false;
 
-		
 
-		
+
+
 
 		GameObject player;
 
+		List<INoiser> iNoisers = new List<INoiser>();
 
 
-		
-        protected virtual void Awake()
-        {
+
+		protected virtual void Awake()
+		{
 			agent = GetComponent<NavMeshAgent>();
-			
-        }
+
+		}
 
 		protected virtual void Start()
-        {
+		{
 			SetState(CreatureState.Patrol);
 			player = FindFirstObjectByType<FirstPersonController>().gameObject;
-        }
+			iNoisers.Add(player.GetComponent<FirstPersonController>());
+		}
 
 
 		// Update is called once per frame
@@ -98,11 +107,13 @@ namespace TMM.AI
 			UpdateState();
 
 			UpdateLastHasPath();
+
+
 		}
 
-        void UpdateState()
-        {
-            switch (state)
+		void UpdateState()
+		{
+			switch (state)
 			{
 				case CreatureState.Idle:
 					UpdateIdleState();
@@ -113,13 +124,13 @@ namespace TMM.AI
 				case CreatureState.Chase:
 					UpdateChaseState();
 					break;
-            }
-        }
+			}
+		}
 
 		void UpdateLastHasPath()
-        {
+		{
 			lastHasPath = agent.hasPath && agent.pathStatus != NavMeshPathStatus.PathInvalid && agent.pathStatus != NavMeshPathStatus.PathPartial;
-        }
+		}
 
 		public virtual void SetState(CreatureState newState)
 		{
@@ -149,16 +160,16 @@ namespace TMM.AI
 		}
 
 		void ResetPath()
-        {
+		{
 			agent.ResetPath();
 			lastHasPath = false;
-        }
+		}
 
 		protected virtual void EnterAttackState()
-        {
+		{
 			ResetPath();
 			player.GetComponent<PlayerDeath>().Die(gameObject);
-        }
+		}
 
 		protected virtual void EnterIdleState()
 		{
@@ -178,7 +189,7 @@ namespace TMM.AI
 			StopAllCoroutines();
 
 			// Start chasing player
-			StartCoroutine(DoChasePlayer());			
+			StartCoroutine(DoChasePlayer());
 		}
 
 		protected virtual void EnterPatrolState()
@@ -196,7 +207,7 @@ namespace TMM.AI
 
 			StopAllCoroutines();
 			StartCoroutine(DoSearchForPlayer());
-        }
+		}
 
 		IEnumerator DoChasePlayer()
 		{
@@ -209,7 +220,7 @@ namespace TMM.AI
 			}
 
 		}
-		
+
 		IEnumerator DoSearchForPlayer()
 		{
 			float time = .5f;
@@ -221,9 +232,9 @@ namespace TMM.AI
 				currentTimer -= time;
 			}
 
-			SetState(CreatureState.Idle);		
+			SetState(CreatureState.Idle);
 
-        }
+		}
 
 		protected virtual void UpdateIdleState()
 		{
@@ -242,11 +253,11 @@ namespace TMM.AI
 
 		protected virtual void UpdatePatrolState()
 		{
-            if (IsPlayerSpotted())
-            {
+			if (IsPlayerSpotted())
+			{
 				SetState(CreatureState.Chase);
 				return;
-            }
+			}
 
 			if (!lastHasPath && (!agent.hasPath || agent.pathStatus == NavMeshPathStatus.PathInvalid || agent.pathStatus == NavMeshPathStatus.PathPartial))
 			{
@@ -265,7 +276,6 @@ namespace TMM.AI
 
 			if (lastHasPath && !agent.hasPath)
 			{
-				Debug.Log("Destination reached");
 				SetState(CreatureState.Idle);
 			}
 
@@ -283,22 +293,22 @@ namespace TMM.AI
 				return;
 			}
 
-            if (CanAttackPlayer())
-            {
+			if (CanAttackPlayer())
+			{
 				SetState(CreatureState.Attack);
 				return;
-            }
+			}
 		}
-		
-		
+
+
 
 		protected virtual void UpdateSearchState()
 		{
-            if (IsPlayerSpotted())
-            {
+			if (IsPlayerSpotted())
+			{
 				StopAllCoroutines();
 				SetState(CreatureState.Chase);
-            }
+			}
 
 		}
 
@@ -306,7 +316,7 @@ namespace TMM.AI
 
 		bool IsPlayerSpotted()
 		{
-			
+
 			// Get player position
 			var playerPosition = player.transform.position;
 
@@ -317,40 +327,58 @@ namespace TMM.AI
 			if (pDir.magnitude < smellRange)
 			{
 				Debug.Log("Creature smelled you");
+				OnPlayerSpotted?.Invoke(this, true);
 				return true;
-            }
-				
+			}
+
+
 
 			// Then we check the noise
-			if (pDir.magnitude < player.GetComponent<FirstPersonController>().NoiseRange * hearMultiplier)
-            {
+			// Get the closest noiser
+			var noisers = iNoisers.OrderBy(n => n.GetTargetDistance(transform.position)).ToList();
+			if (pDir.magnitude < noisers[0].GetNoiseRange() * hearMultiplier)
+			{
 				Debug.Log("Creature heard you");
+				OnPlayerSpotted?.Invoke(this, true);
 				return true;
-            }
-				
+			}
+
 
 			// Check distance 
 			if (pDir.magnitude > sightRange)
+            {
+				OnPlayerSpotted?.Invoke(this, false);
 				return false;
+            }
+				
 
 			// Check angle
 			var angle = Vector3.Angle(transform.forward, pDir);
 			if (angle > sightAngle)
-				return false;
+			{
+				OnPlayerSpotted?.Invoke(this, false);
+                return false;
+            }
+				
 
 			// Raycast from monster to player
 			RaycastHit hit;
 			var origin = transform.position + Vector3.up;
-			if(Physics.Raycast(origin, pDir, out hit, sightRange))
-            {
+			if (Physics.Raycast(origin, pDir, out hit, sightRange))
+			{
 				if (hit.collider.gameObject != player)
+                {
+					OnPlayerSpotted?.Invoke(this, false);
 					return false;
-            }
+                }
+					
+			}
 
 			Debug.Log("Creature saw you");
+			OnPlayerSpotted?.Invoke(this, true);
 			return true;
 		}
-		
+
 		bool CanAttackPlayer()
 		{
 			// Check distance
@@ -365,6 +393,9 @@ namespace TMM.AI
 
 
 			return true;
-        }
-    }
+		}
+
+
+
+	}
 }
