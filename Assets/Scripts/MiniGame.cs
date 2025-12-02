@@ -27,6 +27,9 @@ namespace TMM
 		[SerializeField]
 		float timer = 30;
 
+		[SerializeField]
+		AudioSource beatenAudioSource;
+		
 		float timeLeft = 30;
 		public float TimeLeft
         {
@@ -118,13 +121,13 @@ namespace TMM
            
 		}
 
-		void OnEnable()
+		protected virtual void OnEnable()
 		{
 			DeviceInteractor.OnInteraction += HandleOnDeviceInteraction;
 			PlayerDeath.OnPlayerDead += HandleOnPlayerDead;
 		}
 
-        void OnDisable()
+        protected virtual void OnDisable()
         {
 			DeviceInteractor.OnInteraction -= HandleOnDeviceInteraction;
 			PlayerDeath.OnPlayerDead -= HandleOnPlayerDead;
@@ -216,6 +219,8 @@ namespace TMM
 		{
 			beaten = true;
 			Deactivate();
+
+			beatenAudioSource.Play();
 
 			OnMiniGameBeaten?.Invoke(this);
 		}

@@ -10,19 +10,24 @@ namespace TMM
 		[SerializeField]
 		GameObject model;
 
+	
+
 		bool shaking = false;
 
 		bool selected = false;
 		public bool IsSelected
-        {
-            get{ return selected; }
-        }
+		{
+			get { return selected; }
+		}
+
+		Memory memory;
 
 		
+
 		// Start is called before the first frame update
 		void Start()
 	    {
-	        
+			memory = transform.root.GetComponentInChildren<Memory>();
 	    }
 
 		// Update is called once per frame
@@ -70,7 +75,14 @@ namespace TMM
 				model.transform.DOLocalRotate(Vector3.zero, .25f);
 			}
 
+			PlaySwoosh();
+
 		}
+		
+		void PlaySwoosh()
+        {
+			memory.PlaySwoosh();
+        }
 		
 
 		

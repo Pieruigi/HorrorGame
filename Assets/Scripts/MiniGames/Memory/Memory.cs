@@ -14,6 +14,12 @@ namespace TMM
 		[SerializeField]
 		List<GameObject> tiles;
 
+			[SerializeField]
+		AudioSource swooshAudioSource;
+
+		[SerializeField]
+		List<AudioClip> swooshClips;
+
 		Vector3[] originalPositions;
 
 		GameObject shakingTile;
@@ -150,10 +156,16 @@ namespace TMM
 	            ReportBeaten();
     			
 		}
-		
+
 		bool IsBeaten()
-        {
+		{
 			return tiles.Count(t => !t.GetComponent<MemoryTile>().IsSelected) == 0;
+		}
+		
+		public void PlaySwoosh()
+        {
+			swooshAudioSource.clip = swooshClips[Random.Range(0, swooshClips.Count)];
+			swooshAudioSource.Play();
         }
 		
 	}

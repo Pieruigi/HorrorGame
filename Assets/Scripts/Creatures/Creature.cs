@@ -98,6 +98,11 @@ namespace TMM.AI
 		{
 			agent = GetComponent<NavMeshAgent>();
 
+#if UNITY_EDITOR
+			walkSpeed *= 0.75f; // Max 1.75
+			runSpeed *= 0.75f; // Max 1.75
+#endif
+
 		}
 
 		protected virtual void Start()

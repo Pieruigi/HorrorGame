@@ -191,7 +191,11 @@ namespace StarterAssets
 
 		private void Update()
 		{
-			
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.P))
+				Time.timeScale = Time.timeScale == 1 ? 0 : 1;
+#endif
+
 			JumpAndGravity();
 			GroundedCheck();
 			CrouchCheck();

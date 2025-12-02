@@ -21,7 +21,9 @@ namespace TMM.UI
 
 		[SerializeField]
 		AudioSource errorAudioSource;
-		
+
+		[SerializeField]
+		AudioSource alarmAudioSource;
 
 		MiniGame miniGame;
 
@@ -66,6 +68,13 @@ namespace TMM.UI
 
 			if (timeLeft > 0)
 			{
+				// Check and reset alarm if needed
+				if(noiseRange > 0)
+                {
+					noiseRange = 0;
+					alarmAudioSource.Stop();
+                }
+
 				textField.text = Mathf.CeilToInt(timeLeft).ToString("000");
 
 				if (timeLeft < 5)
@@ -108,10 +117,14 @@ namespace TMM.UI
 
 		IEnumerator MakeNoise()
 		{
-			Debug.Log("Timer noise");
-			noiseRange = noiseRangeOnError;
-			yield return new WaitForSeconds(10f);
-			noiseRange = 0;
+			yield return new WaitForSeconds(1f);
+			if(miniGame.TimeLeft <= 0)
+            {
+				Debug.Log("Timer noise");
+				noiseRange = noiseRangeOnError;
+				alarmAudioSource.Play();
+	        }
+			
         }
 
 		void StartLowFx()
