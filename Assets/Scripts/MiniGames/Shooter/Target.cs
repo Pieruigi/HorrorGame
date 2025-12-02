@@ -29,7 +29,7 @@ namespace TMM
 			var origin = transform.localPosition.y;
 			float target;
 			if (origin == 0)
-				target = 0.12f;
+				target = 0.16f;
 			else
 				target = 0f;
 			transform.DOLocalMoveY(target, .5f).SetLoops(-1, LoopType.Yoyo);

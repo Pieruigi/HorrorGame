@@ -20,27 +20,17 @@ namespace TMM
 		[SerializeField]
 		List<GameObject> targetListB = new List<GameObject>();
 
-		[SerializeField]
-		List<GameObject> targetListC = new List<GameObject>();
-
-		[SerializeField]
-		List<GameObject> targetListD = new List<GameObject>();
-
+	
 		[SerializeField]
 		CommonTrigger listA_Trigger;
 
 		[SerializeField]
 		CommonTrigger listB_Trigger;
 
-		[SerializeField]
-		CommonTrigger listC_Trigger;
-
-		[SerializeField]
-		CommonTrigger listD_Trigger;
 
 		float targetDistance = .5f;
 
-		float targetSpeed = .4f;
+		float targetSpeed = .8f;
 
 		bool active = false;
 
@@ -53,9 +43,7 @@ namespace TMM
 			targetDistance = Mathf.Abs(targetListA[0].transform.localPosition.z - targetListA[1].transform.localPosition.z);
 			count = targetListA.Count;
 			count += targetListB.Count;
-			count += targetListC.Count;
-			count += targetListD.Count;
-
+	
 			// Adjust target height
 			AdjustTargetHeight();
 		}
@@ -89,8 +77,7 @@ namespace TMM
 
 				targetListA[i].transform.localPosition += Vector3.up * .075f;
 				targetListB[i].transform.localPosition += Vector3.up * .075f;
-				targetListC[i].transform.localPosition += Vector3.up * .075f;
-				targetListD[i].transform.localPosition += Vector3.up * .075f;
+		
             }
         }
 
@@ -120,44 +107,20 @@ namespace TMM
 
 			}
 
-			if (trigger == listC_Trigger && targetListC.Exists(t => t == collider.gameObject))
-			{
-				// Get last target
-				var last = targetListC.FindLast(_ => true);
-				// Move this one behind the last
-				collider.transform.position = last.transform.position - last.transform.forward * targetDistance;
-				targetListC.Remove(collider.gameObject);
-				targetListC.Add(collider.gameObject);
-
-			}
-
-			if (trigger == listD_Trigger && targetListD.Exists(t => t == collider.gameObject))
-			{
-				// Get last target
-				var last = targetListD.FindLast(_ => true);
-				// Move this one behind the last
-				collider.transform.position = last.transform.position - last.transform.forward * targetDistance;
-				targetListD.Remove(collider.gameObject);
-				targetListD.Add(collider.gameObject);
-
-			}
+	
 		}
 		
 		
 
-		public override void Activate()
+		public override void DoChildActivation()
 		{
-			base.Activate();
-
 			active = true;
 
 			gun.Activate(true);
 		}
 
-		public override void Deactivate()
+		public override void DoChildDeactivation()
 		{
-			base.Deactivate();
-
 			active = false;
 
 			gun.Activate(false);
@@ -170,11 +133,7 @@ namespace TMM
 
 			foreach (var target in targetListB)
 				target.transform.position += target.transform.forward * targetSpeed * Time.deltaTime;
-			foreach (var target in targetListC)
-				target.transform.position += target.transform.forward * targetSpeed * Time.deltaTime;
 
-			foreach (var target in targetListD)
-				target.transform.position += target.transform.forward * targetSpeed * Time.deltaTime;
 		}
 
 		public void ReportTargetHit(GameObject target)

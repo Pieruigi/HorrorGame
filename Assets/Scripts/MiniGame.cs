@@ -48,6 +48,7 @@ namespace TMM
         }
 
 		float moveTime = .25f;
+		
 
 		bool beaten = false;
 
@@ -152,7 +153,7 @@ namespace TMM
             
         }
 
-        public virtual void Activate()
+        public void Activate()
 		{
 			if (activated || timeLeft <= 0 || beaten) return;
 
@@ -181,9 +182,11 @@ namespace TMM
 			seq.Append(player.transform.DOMove(playerTarget.position, moveTime));
 			seq.Join(player.transform.DORotateQuaternion(playerTarget.rotation, moveTime));
 			seq.OnComplete(() => { activated = true; if (activateDot) DotCanvas.Instance.Show(); });
+
+			DoChildActivation();
 		}
 
-		public virtual void Deactivate()
+		public void Deactivate()
 		{
 			if (!activated) return;
 
@@ -205,10 +208,22 @@ namespace TMM
 				player.InputDisabled = false;
 				if (activateFlashlightOnExit)
 				{
-					activateFlashlightOnExit = false; 
-					flashlight.SetOn(true); 
-				} 
+					activateFlashlightOnExit = false;
+					flashlight.SetOn(true);
+				}
 			});
+
+			DoChildDeactivation();
+
+		}
+
+		public virtual void DoChildActivation()
+		{
+
+		}
+		
+		public virtual void DoChildDeactivation()
+		{
 
 		}
 

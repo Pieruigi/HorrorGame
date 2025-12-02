@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace TMM
@@ -13,6 +14,15 @@ namespace TMM
 		Transform bulletTarget;
 
 		[SerializeField]
+		Renderer lightRenderer;
+
+		[SerializeField]
+		Material greenMaterial;
+
+		[SerializeField]
+		Material redMaterial;
+
+		[SerializeField]
 		float rate = 1;
 
 		float cooldown = 0;
@@ -21,9 +31,13 @@ namespace TMM
 
 		Transform parentDefault;
 
+		GameObject gunRoot;
+
         void Awake()
         {
 			parentDefault = transform.parent;
+			gunRoot = transform.GetChild(0).gameObject;
+			gunRoot.SetActive(false);
         }
 
         // Start is called before the first frame update
@@ -38,18 +52,28 @@ namespace TMM
 			if (!active) return;
 
 			if (cooldown > 0)
+            {
 				cooldown -= Time.deltaTime;
+				if (cooldown <= 0)
+					lightRenderer.material = greenMaterial;
+            }
+				
+
+
 
 			if (Input.GetMouseButton(0))
 			{
 				if (cooldown <= 0)
 				{
-					cooldown = rate;
+					cooldown = 1/rate;
 					// Shoot
 					var bullet = Instantiate(bulletPrefab);
 					bullet.GetComponent<Rigidbody>().position = bulletTarget.position;
 					bullet.transform.rotation = bulletTarget.rotation;
 					bullet.GetComponent<Rigidbody>().AddForce(bulletTarget.forward * 20, ForceMode.VelocityChange);
+
+					// Set red light
+					lightRenderer.material = redMaterial;
 					//Physics.IgnoreCollision(GetComponent<Collider>(), bullet.GetComponent<Collider>(), true);
 				}
 			}
@@ -59,18 +83,32 @@ namespace TMM
         {
 			active = value;
 			cooldown = 0.25f;
+			lightRenderer.material = redMaterial;
+
+			float moveTime = .25f;
 
 			if (!value)
 			{
-				transform.parent = parentDefault;
-				transform.localPosition = Vector3.zero;
-				transform.localRotation = Quaternion.identity;
+				transform.DOLocalMoveZ(0, moveTime).OnComplete(() =>
+                {
+                	transform.parent = parentDefault;
+					transform.localPosition = Vector3.zero;
+					transform.localRotation = Quaternion.identity;
+					gunRoot.SetActive(false);
+                });
+
+				
 			}
             else
-            {
+			{
 				transform.parent = Camera.main.transform;
-				transform.localPosition = Vector3.down * .136f + Vector3.forward * .321f;
+				transform.localPosition = Vector3.down * .136f;
 				transform.localRotation = Quaternion.identity;
+				gunRoot.SetActive(true);
+
+				transform.DOLocalMoveZ(.321f, moveTime);
+				//transform.localPosition = Vector3.down * .136f + Vector3.forward * .321f;
+				
             }
         }
 	}
