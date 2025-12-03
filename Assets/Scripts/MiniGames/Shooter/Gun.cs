@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using StarterAssets;
 using UnityEngine;
 
 namespace TMM
@@ -25,6 +26,15 @@ namespace TMM
 		[SerializeField]
 		float rate = 1;
 
+		[SerializeField]
+		AudioSource shotAudioSource;
+
+		[SerializeField]
+		List<AudioClip> shotClips;
+
+		[SerializeField]
+		AudioSource readyAudioSource;
+
 		float cooldown = 0;
 
 		bool active = false;
@@ -32,6 +42,8 @@ namespace TMM
 		Transform parentDefault;
 
 		GameObject gunRoot;
+
+		CameraShake shake;
 
         void Awake()
         {
@@ -43,7 +55,7 @@ namespace TMM
         // Start is called before the first frame update
         void Start()
 	    {
-	        
+			shake = FindFirstObjectByType<FirstPersonController>().GetComponentInChildren<CameraShake>();
 	    }
 
 		// Update is called once per frame
@@ -52,12 +64,16 @@ namespace TMM
 			if (!active) return;
 
 			if (cooldown > 0)
-            {
+			{
 				cooldown -= Time.deltaTime;
 				if (cooldown <= 0)
+                {
 					lightRenderer.material = greenMaterial;
-            }
-				
+					readyAudioSource.Play();
+                }
+					
+			}
+
 
 
 
@@ -65,7 +81,7 @@ namespace TMM
 			{
 				if (cooldown <= 0)
 				{
-					cooldown = 1/rate;
+					cooldown = 1 / rate;
 					// Shoot
 					var bullet = Instantiate(bulletPrefab);
 					bullet.GetComponent<Rigidbody>().position = bulletTarget.position;
@@ -75,9 +91,26 @@ namespace TMM
 					// Set red light
 					lightRenderer.material = redMaterial;
 					//Physics.IgnoreCollision(GetComponent<Collider>(), bullet.GetComponent<Collider>(), true);
+
+					// Play light shake
+					StartCoroutine(ShakeCamera());
+
+					PlayShotAudio();
 				}
 			}
 		}
+
+		IEnumerator ShakeCamera()
+		{
+			yield return new WaitForSeconds(4f * Time.fixedDeltaTime);
+			shake.PlayLightShootShake();
+		}
+		
+		void PlayShotAudio()
+        {
+			shotAudioSource.clip = shotClips[Random.Range(0, shotClips.Count)];
+			shotAudioSource.Play();
+        }
 		
 		public void Activate(bool value)
         {

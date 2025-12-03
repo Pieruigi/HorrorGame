@@ -54,7 +54,7 @@ namespace TMM
 			{
 				Debug.Log("HIT + " + gameObject.name);
 				hit = true;
-				modelRoot.DOLocalRotate(Vector3.forward * 90, .25f).SetEase(Ease.OutBounce);
+				modelRoot.DOLocalRotate(Vector3.up * 90, .25f).SetEase(Ease.OutBounce);
 				shooter.ReportTargetHit(gameObject);
 			}
         }

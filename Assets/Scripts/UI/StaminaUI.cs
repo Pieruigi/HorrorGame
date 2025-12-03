@@ -15,6 +15,12 @@ namespace TMM.UI
 		[SerializeField]
 		Image fillImage;
 
+		[SerializeField]
+		AudioSource gaspAudioSource;
+
+		[SerializeField]
+		List<AudioClip> gaspClips;
+
 		float maxWidth;
 		CanvasGroup canvasGroup;
 		FirstPersonController player;
@@ -48,9 +54,9 @@ namespace TMM.UI
 
 		}
 
-        void LateUpdate()
+		void LateUpdate()
 		{
-          
+
 
 			if (player.Stamina != lastStamina)
 			{
@@ -61,41 +67,51 @@ namespace TMM.UI
 					canvasGroup.alpha = 1;
 				}
 			}
-            else
+			else
 			{
-                if (visible)
-                {
+				if (visible)
+				{
 					elapsed += Time.deltaTime;
-					if(player.Stamina == player.MaxStamina && elapsed > showTime)
+					if (player.Stamina == player.MaxStamina && elapsed > showTime)
 					{
 						visible = false;
 						canvasGroup.alpha = 0;
-					}	    
-                }
-				
-            }
+					}
+				}
+
+			}
 
 			if (visible)
 			{
 				var size = fillImage.rectTransform.sizeDelta;
 				fillImage.rectTransform.sizeDelta = new Vector2(maxWidth * player.Stamina / player.MaxStamina, size.y);
 
-				
+
 				// if (lastStamina > 0 && player.Stamina == 0)
 				// 	canvasGroup.DOFade(0, .1f).SetLoops(-1);
 				// else if (lastStamina == 0 && player.Stamina > 0)
-                // {
+				// {
 				// 	canvasGroup.DOKill();
 				// 	canvasGroup.alpha = 1;
-                // }
-					
+				// }
+
 			}
-			
-			
+
+			if (player.Stamina <= 0 && lastStamina > 0)
+			{
+				PlayGaspAudio();
+			}
+
 
 			lastStamina = player.Stamina;
 
 
+		}
+		
+		void PlayGaspAudio()
+        {
+			gaspAudioSource.clip = gaspClips[Random.Range(0, gaspClips.Count)];
+			gaspAudioSource.Play();
         }
     }
 }

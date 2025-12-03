@@ -733,10 +733,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1808785897799169358, guid: b28adfc4e2ce971409c5aaee1cf1e991,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3933118099955664554, guid: b28adfc4e2ce971409c5aaee1cf1e991,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6468387687461501776, guid: b28adfc4e2ce971409c5aaee1cf1e991,
         type: 3}
       propertyPath: m_Name
       value: ShooterBlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 7026741524542288973, guid: b28adfc4e2ce971409c5aaee1cf1e991,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8261655206311752711, guid: b28adfc4e2ce971409c5aaee1cf1e991,
         type: 3}
