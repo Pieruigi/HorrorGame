@@ -35,6 +35,8 @@ namespace TMM
 
 			public List<GameObject> prefabs = new List<GameObject>();
 
+			public int blockType = 0; // 0: common, 1: minigame
+
 
 		}
 
@@ -49,6 +51,7 @@ namespace TMM
 			public int type; // 0: floor, 1: wall
 
 			public GameObject mainObject;
+			
 		}
 
 		[System.Serializable]
@@ -61,6 +64,8 @@ namespace TMM
 			public List<Tile> tiles; // Keeping track of all tiles belonging to this block
 
 			public Tile origin;
+
+			public GameObject mainObject;
         }
 		
 		
@@ -97,16 +102,17 @@ namespace TMM
 
 		int wallMax = 17; // 14
 
+		[SerializeField]
 		List<Tile> tiles = new List<Tile>();
 
 		int nextBorderDirection = 0;
 
-
+		[SerializeField]
 		List<WallBlock> blocks = new List<WallBlock>();
 
 		Tile inTile, outTile;
 
-		Tile miniGameTile;
+		int minigameBlockIndex;
 
 		// Start is called before the first frame update
 		void Start()
@@ -180,8 +186,11 @@ namespace TMM
 			wbd.count = 1;
 			wbd.createFlippedVariant = false;
 			wbd.tiles = miniGame.GetTiles();
+			wbd.blockType = 1; // Minigame
 
 			availableBlocks.Add(wbd);
+
+			minigameBlockIndex = availableBlocks.Count - 1;
         }
 
 		void InstantiateWallsAndFloors()
@@ -215,7 +224,7 @@ namespace TMM
 			foreach (var b in blocks)
 			{
 				// Instantiate object
-				InstantiateObject(b.data.prefabs[Random.Range(0, b.data.prefabs.Count)], b.origin.coords, b.rotationType);
+				b.mainObject = InstantiateObject(b.data.prefabs[Random.Range(0, b.data.prefabs.Count)], b.origin.coords, b.rotationType);
 			}
 
 
@@ -290,12 +299,19 @@ namespace TMM
 
 		void AddInAndOut()
 		{
+
+
 			// Add the entrance to the south and the exit to the north
 			var candidates = tiles.Where(t => t.type == 0 && GetTile(t.coords + Vector2.down) < 0 && !tiles.Exists(t2 => t2.coords.x == t.coords.x && t2.coords.y < t.coords.y)).ToList();
+			// Remove blocks which are to close to the minigame block
+			var miniGame = blocks.Find(b => b.data.blockType == 1);
+			candidates.RemoveAll(t => Vector3.Distance(t.coords, miniGame.origin.coords) < 8);
 
 			inTile = candidates[Random.Range(0, candidates.Count)];
 
+			// Out tile
 			candidates = tiles.Where(t => t.type == 0 && GetTile(t.coords + Vector2.up) < 0 && !tiles.Exists(t2 => t2.coords.x == t.coords.x && t2.coords.y > t.coords.y)).ToList();
+			candidates.RemoveAll(t => Vector3.Distance(t.coords, miniGame.origin.coords) < 8);
 
 			outTile = candidates[Random.Range(0, candidates.Count)];
 
@@ -364,6 +380,7 @@ namespace TMM
 					AddToWallBlockList(block, tiles, rotType);
 
 					BorderWithFloor(tiles);
+
 				}
                 else
 				{

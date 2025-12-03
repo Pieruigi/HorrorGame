@@ -842,6 +842,8 @@ MonoBehaviour:
     type: 3}
   monsterPrefab: {fileID: 5131694905864375828, guid: 95cce269d938fba4789fda4db544e442,
     type: 3}
+  tiles: []
+  blocks: []
 --- !u!1 &1619981023
 GameObject:
   m_ObjectHideFlags: 0

@@ -101,7 +101,7 @@ namespace TMM
 				// Get last target
 				var last = targetListB.FindLast(_ => true);
 				// Move this one behind the last
-				collider.transform.position = last.transform.position - last.transform.forward * targetDistance;
+				collider.transform.position = last.transform.position + last.transform.forward * targetDistance;
 				targetListB.Remove(collider.gameObject);
 				targetListB.Add(collider.gameObject);
 
@@ -132,7 +132,7 @@ namespace TMM
 				target.transform.position += target.transform.forward * targetSpeed * Time.deltaTime;
 
 			foreach (var target in targetListB)
-				target.transform.position += target.transform.forward * targetSpeed * Time.deltaTime;
+				target.transform.position -= target.transform.forward * targetSpeed * Time.deltaTime;
 
 		}
 
