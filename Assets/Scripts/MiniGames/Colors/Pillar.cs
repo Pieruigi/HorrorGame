@@ -81,6 +81,16 @@ namespace TMM
             audioSource.Play();
         }
 
+        public void StartShaking()
+        {
+
+        }
+        
+        public void StopShaking()
+        {
+            
+        }
+
     }
 
 }

@@ -32,8 +32,6 @@ namespace TMM
 
 		float targetSpeed = .8f;
 
-		bool active = false;
-
 		int count = 0;
 
 		protected override void Awake()
@@ -52,7 +50,7 @@ namespace TMM
 		{
 			base.Update();
 
-			if (!active) return;
+			if (!IsActive) return;
 
 			MoveTargets();
 		}
@@ -114,15 +112,13 @@ namespace TMM
 
 		public override void DoChildActivation()
 		{
-			active = true;
-
+			
 			gun.Activate(true);
 		}
 
 		public override void DoChildDeactivation()
 		{
-			active = false;
-
+			
 			gun.Activate(false);
 		}
 
