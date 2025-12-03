@@ -7,6 +7,12 @@ namespace TMM
 {
 	public class Bullet : MonoBehaviour
 	{
+		[SerializeField]
+		AudioSource thudAudioSource;
+
+		[SerializeField]
+		List<AudioClip> thudClips;
+
 	    // Start is called before the first frame update
 	    void Start()
 	    {
@@ -19,9 +25,9 @@ namespace TMM
 
 		}
 
-        void OnCollisionEnter(Collision collision)
+		void OnCollisionEnter(Collision collision)
 		{
-			
+
 			//GetComponent<Collider>().enabled = false;
 			// ITarget iT = collision.gameObject.GetComponent<ITarget>();
 			// if (iT != null)
@@ -30,12 +36,22 @@ namespace TMM
 			// 	iT.Hit(gameObject);
 
 			// }
-            // else
-            // {
-            //     Debug.Log("HIT - Bullet - " + collision.gameObject);
-            // }
-        	Destroy(gameObject);    
-			
+			// else
+			// {
+			//     Debug.Log("HIT - Bullet - " + collision.gameObject);
+			// }
+
+			GetComponent<Collider>().enabled = false;
+			transform.GetChild(0).gameObject.SetActive(false);
+			PlayThudAudio();
+			Destroy(gameObject, 1);
+
+		}
+		
+		void PlayThudAudio()
+        {
+			thudAudioSource.clip = thudClips[Random.Range(0, thudClips.Count)];
+			thudAudioSource.Play();
         }
     }
 }
