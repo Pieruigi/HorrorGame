@@ -29,6 +29,14 @@ namespace TMM
 
 		[SerializeField]
 		AudioSource beatenAudioSource;
+
+		[SerializeField]
+		Light mainLight;
+
+		public Light MainLight
+        {
+            get{ return mainLight; }
+        }
 		
 		float timeLeft = 30;
 		public float TimeLeft

@@ -50,7 +50,7 @@ namespace TMM
 		{
 			base.Update();
 
-			if (!IsActive) return;
+			//if (!IsActive) return;
 
 			MoveTargets();
 		}

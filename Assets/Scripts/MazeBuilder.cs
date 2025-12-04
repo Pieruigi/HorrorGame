@@ -7,6 +7,8 @@ using TMM.Scriptables;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal.Internal;
 using UnityEngine.SceneManagement;
 
 namespace TMM
@@ -51,6 +53,8 @@ namespace TMM
 			public int type; // 0: floor, 1: wall
 
 			public GameObject mainObject;
+
+			public Light light;
 			
 		}
 
@@ -100,6 +104,9 @@ namespace TMM
 		[SerializeField]
 		GameObject monsterPrefab;
 
+		[SerializeField]
+		GameObject floorLightPrefab;
+
 		int wallMax = 17; // 14
 
 		[SerializeField]
@@ -114,6 +121,9 @@ namespace TMM
 
 		int minigameBlockIndex;
 
+
+
+		
 		// Start is called before the first frame update
 		void Start()
 		{
@@ -133,6 +143,8 @@ namespace TMM
 
 			InstantiateWallsAndFloors();
 
+			AddLights();
+
 			BuildNavMesh();
 
 			SpawnMonster();
@@ -150,6 +162,61 @@ namespace TMM
 #endif
 		}
 
+
+		void AddLights()
+		{
+			// We start by setting the minigame light
+			var wb = blocks.Find(b => b.data.blockType == 1);
+			var ml = wb.mainObject.GetComponentInChildren<MiniGame>().MainLight;
+			if (ml)
+				GetTileToBlockOrigin(wb).light = ml;
+
+			// Add other lights
+			int maxLights = (int)((float)tiles.Count * .05f);
+			int count = 0;
+
+			List<Tile> availables = tiles.Where(t => t.type == 0 && t.light == null).ToList();
+			availables.RemoveAll(t => t == inTile || Vector3.Distance(t.coords, inTile.coords) < 3);
+			availables.RemoveAll(t => t == outTile || Vector3.Distance(t.coords, outTile.coords) < 3);
+		
+
+			while(availables.Count > 0 && count < maxLights)
+			{
+				var tile = availables[Random.Range(0, availables.Count)];
+
+				var light = InstantiateObject(floorLightPrefab, tile.coords);
+
+				tile.light = light.GetComponentInChildren<Light>();
+
+				// Remove current tile and other too closed
+				availables.RemoveAll(t=>t == tile || Vector2.Distance(t.coords, tile.coords) < 3);
+				count++;
+            }
+            
+        }
+
+		Tile GetTileToBlockOrigin(WallBlock block)
+		{
+			var origin = block.origin;
+			Tile ret = null;
+			switch (block.rotationType)
+			{
+				case 0: 
+					ret = tiles.Find(t => t.coords.x == origin.coords.x && t.coords.y == origin.coords.y - 1);
+					break;
+				case 1: 
+					ret = tiles.Find(t => t.coords.x == origin.coords.x - 1 && t.coords.y == origin.coords.y);
+					break;
+				case 2: 
+					ret = tiles.Find(t => t.coords.x == origin.coords.x && t.coords.y == origin.coords.y + 1);
+					break;
+				case 3:
+					ret = tiles.Find(t => t.coords.x == origin.coords.x + 1 && t.coords.y == origin.coords.y);
+					break;
+			}
+
+			return ret;
+        }
 
 		void SpawnMonster()
 		{

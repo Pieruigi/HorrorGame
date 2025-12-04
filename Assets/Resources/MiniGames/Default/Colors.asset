@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e5f89d4da1335941a2434ff8cd60c4d, type: 3}
+  m_Name: Colors
+  m_EditorClassIdentifier: 
+  prefabs:
+  - {fileID: 6256603860697395203, guid: 0f44bd6f5a0a96948abb38732cd04c58, type: 3}
+  createFlippedVariant: 0
+  min: 0
+  weight: 0
+  minLevel: -1
+  maxLevel: -1

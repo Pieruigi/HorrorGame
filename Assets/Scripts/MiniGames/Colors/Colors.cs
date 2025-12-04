@@ -15,6 +15,15 @@ namespace TMM
 		[SerializeField]
 		Transform pillarRoot;
 
+		[SerializeField]
+		AudioSource swooshAudioSource;
+
+		[SerializeField]
+		List<AudioClip> swooshClips;
+
+		[SerializeField]
+		AudioSource lockAudioSource;
+
 		Pillar[] pillars;
 		
 		float pillarDistance = .15f;
@@ -85,12 +94,20 @@ namespace TMM
 						selected.StopShaking();
 						//selected.SetPreshakeRotation(Quaternion.Euler(0, angle, 0));
 					
-						selected.transform.DOLocalRotate(Vector3.up * angle, 0.25f).SetEase(Ease.OutBounce).OnComplete(() => { busy = false;  CheckCompleted(); });
+						selected.transform.DOLocalRotate(Vector3.up * angle, 0.1f).SetEase(Ease.OutBounce).OnComplete(() => { busy = false;  CheckCompleted(); });
 						selected = null;
+
+						PlaySwoosh();
 						
 					}
 				}
 			}
+        }
+
+		void PlaySwoosh()
+        {
+			swooshAudioSource.clip = swooshClips[Random.Range(0, swooshClips.Count)];
+			swooshAudioSource.Play();
         }
 
 		void Create()
@@ -393,6 +410,8 @@ namespace TMM
 						pillars[i].GetBranch(j).Connect();
 				}
 			}
+
+			lockAudioSource.Play();
 		}
 
         public override void DoChildDeactivation()

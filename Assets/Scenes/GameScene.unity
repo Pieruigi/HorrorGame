@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
+  m_AmbientSkyColor: {r: 0.078431375, g: 0.078431375, b: 0.078431375, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -841,6 +841,8 @@ MonoBehaviour:
   outPrefab: {fileID: 7020030011680214690, guid: 0218a242797320b47805ff3f52d1029c,
     type: 3}
   monsterPrefab: {fileID: 5131694905864375828, guid: 95cce269d938fba4789fda4db544e442,
+    type: 3}
+  floorLightPrefab: {fileID: 6811857683177180075, guid: 52549632c7a49bd4d9fbbce30b428cd2,
     type: 3}
   tiles: []
   blocks: []
