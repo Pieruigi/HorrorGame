@@ -56,10 +56,7 @@ namespace TMM.UI
 		// Update is called once per frame
 		void Update()
 		{
-#if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.X))
-				StartCoroutine(MakeNoise());
-#endif
+
 		}
 
 		void LateUpdate()

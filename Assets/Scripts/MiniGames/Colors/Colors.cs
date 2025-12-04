@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TMM
 {
@@ -16,14 +17,14 @@ namespace TMM
 
 		Pillar[] pillars;
 		
-		float pillarDistance = .25f;
+		float pillarDistance = .15f;
 
-        int numOfColumns = 6;
+        int numOfColumns = 9;
         
-        int numOfRows = 4;
+        int numOfRows = 6;
 		int numOfColors = 4;
 
-		float loadFactor = 1f;
+		float loadFactor = .8f;
 
 		bool horizontalSymmetry = false;
 		bool verticalSymmetry = false;
@@ -40,6 +41,8 @@ namespace TMM
 			Create();
 
 			pillarRoot.eulerAngles = Vector3.right * -90;
+			horizontalSymmetry = Random.Range(0, 2) == 0 ? true : false;
+			verticalSymmetry = Random.Range(0, 2) == 0 ? true : false;
 		}
 
 
@@ -47,7 +50,12 @@ namespace TMM
         {
 			base.Update();
 
-            if (IsActive)
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.X))
+				CheckCompleted();
+#endif
+
+			if (IsActive)
 			{
 				if (busy) return;
 
@@ -68,16 +76,21 @@ namespace TMM
 					selected = null;
 				}
 
-                if (selected)
-                {
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        busy = true;
-                        float angle = selected.transform.localEulerAngles.y + 90f;
-                        selected.transform.DOLocalRotate(Vector3.up * angle, 0.25f).SetEase(Ease.OutBounce).OnComplete(() => { busy = false; CheckCompleted(); });
-                    }
-                }
-            }
+				if (selected)
+				{
+					if (Input.GetMouseButtonDown(0))
+					{
+						busy = true;
+						float angle = selected.transform.localEulerAngles.y + 90f;
+						selected.StopShaking();
+						//selected.SetPreshakeRotation(Quaternion.Euler(0, angle, 0));
+					
+						selected.transform.DOLocalRotate(Vector3.up * angle, 0.25f).SetEase(Ease.OutBounce).OnComplete(() => { busy = false;  CheckCompleted(); });
+						selected = null;
+						
+					}
+				}
+			}
         }
 
 		void Create()
@@ -117,6 +130,7 @@ namespace TMM
 				{
 					// Create the game object
 					Pillar pillar = GameObject.Instantiate(pillarPrefab).GetComponent<Pillar>();
+					pillar.name = $"Pillar_{j}_{i}";
 					pillar.transform.parent = pillarRoot;
 					pillar.transform.localPosition = new Vector3(x, 0, z);
 					x += pillarDistance;
@@ -295,48 +309,62 @@ namespace TMM
 
 		public void CheckCompleted()
 		{
-			// Check every pillar
-			for (int i = 0; i < pillars.Length; i++)
+			Debug.Log("Colors check -------------------------------------------------");
+			for(int i=0; i<pillars.Length; i++)
 			{
-				// We are going to check the others
+
+
 				if (pillars[i] == null)
-					continue;
-
-				// Just check right and south branches
-				int row, col;
-				Utility.ArrayIndexToMatrixCoords(i, numOfColumns, out row, out col);
-				for (int j = 0; j < 4; j++)
 				{
-					if (pillars[i].HasBranch(j))
-					{
-						// Get the current connection collider
-						Branch currentBranch = pillars[i].GetBranch(j);
-						SphereCollider coll = currentBranch.GetComponentInChildren<SphereCollider>();
-						// Overlap sphere
-						Vector3 pos = coll.transform.TransformPoint(coll.center);
-						LayerMask mask = LayerMask.GetMask(new string[] { "Interactable" });
-						coll.enabled = false; // Disable current collider
-						Collider[] others = Physics.OverlapSphere(pos, coll.radius, mask);
-						coll.enabled = true;
-
-						foreach (Collider other in others)
-							Debug.Log("Other:" + other.transform.parent.name);
-
-						// We overlap for sure the current connection branch
-						if (others.Length == 0)
-							return;
-
-						// Get the other branch and
-						Branch otherBranch = others[0].GetComponentInParent<Branch>();
-						// Check colors
-						if (currentBranch.ColorId != otherBranch.ColorId)
-							return;
-					}
-
-
+					Debug.Log($"Pillar[{i}] is null");
+					continue;
 				}
-			}
 
+				Branch n = pillars[i].GetBranch(0);
+				Branch e = pillars[i].GetBranch(1);
+				Branch s = pillars[i].GetBranch(2);
+				Branch w = pillars[i].GetBranch(3);
+				Debug.Log($"Pillar[{i}] - N:{(n ? n.ColorId : -1)}, E:{(e ? e.ColorId : -1)}, S:{(s ? s.ColorId : -1)}, W:{(w ? w.ColorId : -1)},");
+
+				for(int j=0; j<4; j++)
+                {
+                    if (pillars[i].HasBranch(j))
+					{
+						Debug.Log($"Checking pillars[{i}].Branch[{j}].ColorId = {pillars[i].GetBranch(j).ColorId}");
+						// Get current branch
+						Branch currentBranch = pillars[i].GetBranch(j);
+
+						// Get collider
+						SphereCollider coll = currentBranch.GetComponentInChildren<SphereCollider>();
+						// Collider origin
+						var pos = coll.transform.position;
+						var radius = coll.radius * coll.transform.lossyScale.x;
+						Debug.Log($"Collision pos:{pos}, radius:{radius}");
+						// Disable current collider to ovoid overlap
+						coll.enabled = false;
+						// Overlap
+						Collider[] others = Physics.OverlapSphere(pos, radius, LayerMask.GetMask(new string[] { "Overlapper"}));
+						// Enable collider back
+						coll.enabled = true;
+						if (others.Length == 0)
+						{
+							Debug.Log("No overlap");
+							return;
+						}
+                        else
+                        {
+							var otherBranch = others[0].GetComponentInParent<Branch>();
+							Debug.Log("OtherBranch parent:" + otherBranch.GetComponentInParent<Pillar>());
+							Debug.Log("Other branch color id:" + otherBranch.ColorId);
+
+							if (otherBranch.ColorId != currentBranch.ColorId) return;
+							
+                        }
+                    }
+                }
+            }
+			Debug.Log("----------------------------------------------------------");
+			
 			Debug.Log("Game Has Completed");
 			// Disable player 
 			//PlayerController.Instance.Disabled = true;
@@ -351,19 +379,30 @@ namespace TMM
 			ReportBeaten();
 
 		}
-		
-		void Connect()
-        {
-            for(int i=0; i<pillars.Length; i++)
-            {
-                if (pillars[i] == null)
-                    continue;
 
-                for(int j=0; j<4; j++)
-                {
-                    if (pillars[i].HasBranch(j))
-                        pillars[i].GetBranch(j).Connect();
-                }
+		void Connect()
+		{
+			for (int i = 0; i < pillars.Length; i++)
+			{
+				if (pillars[i] == null)
+					continue;
+
+				for (int j = 0; j < 4; j++)
+				{
+					if (pillars[i].HasBranch(j))
+						pillars[i].GetBranch(j).Connect();
+				}
+			}
+		}
+
+        public override void DoChildDeactivation()
+        {
+			base.DoChildDeactivation();
+
+            if (selected)
+            {
+				selected.StopShaking();
+				selected = null;
             }
         }
 	}

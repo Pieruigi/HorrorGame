@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace TMM
@@ -13,6 +14,9 @@ namespace TMM
         Material[] materials = new Material[4];
 
         [SerializeField]
+        Transform modelRoot;
+
+        [SerializeField]
         Collider boundary;
         public Collider Boundary
         {
@@ -21,6 +25,7 @@ namespace TMM
 
         AudioSource audioSource;
 
+     
         private void Awake()
         {
             // Get the audio source
@@ -35,6 +40,7 @@ namespace TMM
         {
             // Fill branches
             //branches = GetComponentsInChildren<Branch>();
+            //preshakeRotation = transform.rotation;
         }
 
         // Update is called once per frame
@@ -83,13 +89,18 @@ namespace TMM
 
         public void StartShaking()
         {
-
+            
+            // //transform.DOShakeRotation(.25f).SetLoops(-1, LoopType.Yoyo);
+            modelRoot.DOShakeRotation(.2f, Vector3.up * 10).SetLoops(-1, LoopType.Yoyo);
         }
-        
+
         public void StopShaking()
         {
-            
+            modelRoot.DOKill();
+            modelRoot.localEulerAngles = Vector3.zero;
         }
+        
+        
 
     }
 
