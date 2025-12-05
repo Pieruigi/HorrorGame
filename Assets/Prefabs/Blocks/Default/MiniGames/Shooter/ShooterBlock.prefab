@@ -14135,6 +14135,7 @@ MonoBehaviour:
   timer: 45
   beatenAudioSource: {fileID: 4329958518082025990}
   mainLight: {fileID: 47669101844535950}
+  mainCanvas: {fileID: 8278338250109259516}
   gun: {fileID: 815669230185910364}
   targetListA:
   - {fileID: 3856970886618323062}
@@ -14160,6 +14161,12 @@ MonoBehaviour:
   - {fileID: 2696348838129540029}
   listA_Trigger: {fileID: 6514936717061561639}
   listB_Trigger: {fileID: 5693647309801897674}
+--- !u!223 &8278338250109259516 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 2143486511155439005, guid: f66842e2a5a95fc40a0ff38983a2fa9f,
+    type: 3}
+  m_PrefabInstance: {fileID: 8024747575435881313}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8030030575429381362
 PrefabInstance:
   m_ObjectHideFlags: 0

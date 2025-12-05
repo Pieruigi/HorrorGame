@@ -55,6 +55,13 @@ namespace TMM
 			public GameObject mainObject;
 
 			public Light light;
+
+			public CoinPicker coin;
+
+			public bool AvailableForSpawn()
+            {
+				return coin == null;
+            }
 			
 		}
 
@@ -107,6 +114,9 @@ namespace TMM
 		[SerializeField]
 		GameObject floorLightPrefab;
 
+		[SerializeField]
+		GameObject coinPickerPrefab;
+
 		int wallMax = 17; // 14
 
 		[SerializeField]
@@ -143,6 +153,8 @@ namespace TMM
 
 			InstantiateWallsAndFloors();
 
+			AddCoins();
+
 			AddLights();
 
 			BuildNavMesh();
@@ -162,6 +174,29 @@ namespace TMM
 #endif
 		}
 
+		void AddCoins()
+		{
+            // Get tiles at a minimum given distance from in and out tiles
+			List<Tile> availables = tiles.Where(t => t.type == 0 && t.AvailableForSpawn()).ToList();
+			availables.RemoveAll(t => t == inTile || Vector3.Distance(t.coords, inTile.coords) < 3);
+			availables.RemoveAll(t => t == outTile || Vector3.Distance(t.coords, outTile.coords) < 3);
+
+			int maxCoins = Random.Range(1, 4);
+			int count = 0;
+
+			while(availables.Count > 0 && count < maxCoins)
+			{
+				// get a random tile
+				var tile = availables[Random.Range(0, availables.Count)];
+
+				tile.coin = InstantiateObject(coinPickerPrefab, tile.coords).GetComponent<CoinPicker>();
+
+				availables.RemoveAll(t => t == tile || Vector2.Distance(t.coords, tile.coords) < 3);
+
+				count++;
+            }
+
+        }		
 
 		void AddLights()
 		{
@@ -169,7 +204,7 @@ namespace TMM
 			var wb = blocks.Find(b => b.data.blockType == 1);
 			var ml = wb.mainObject.GetComponentInChildren<MiniGame>().MainLight;
 			if (ml)
-				GetTileToBlockOrigin(wb).light = ml;
+				GetTileTowardsBlockOrigin(wb).light = ml;
 
 			// Add other lights
 			int maxLights = (int)((float)tiles.Count * .05f);
@@ -195,7 +230,7 @@ namespace TMM
             
         }
 
-		Tile GetTileToBlockOrigin(WallBlock block)
+		Tile GetTileTowardsBlockOrigin(WallBlock block)
 		{
 			var origin = block.origin;
 			Tile ret = null;

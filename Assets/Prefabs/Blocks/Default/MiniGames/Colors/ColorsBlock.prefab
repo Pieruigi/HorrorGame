@@ -986,6 +986,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7775971850036899291}
   m_SourcePrefab: {fileID: 100100000, guid: f66842e2a5a95fc40a0ff38983a2fa9f, type: 3}
+--- !u!223 &212754557043612289 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 2143486511155439005, guid: f66842e2a5a95fc40a0ff38983a2fa9f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2255435368120516380}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1267002212646707248 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1070063720658116396, guid: f66842e2a5a95fc40a0ff38983a2fa9f,
@@ -1010,7 +1016,8 @@ MonoBehaviour:
   recharger: {fileID: 2927580809528164227}
   timer: 45
   beatenAudioSource: {fileID: 5478155845828095611}
-  mainLight: {fileID: 0}
+  mainLight: {fileID: 8122260795595689715}
+  mainCanvas: {fileID: 212754557043612289}
   pillarPrefab: {fileID: 2379864552185053030, guid: ed891362a390f744cb44b29dc3136042,
     type: 3}
   pillarRoot: {fileID: 3844268330329168114}
@@ -1061,6 +1068,12 @@ MonoBehaviour:
 --- !u!4 &7401140058287379154 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8789561029543521742, guid: f66842e2a5a95fc40a0ff38983a2fa9f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2255435368120516380}
+  m_PrefabAsset: {fileID: 0}
+--- !u!108 &8122260795595689715 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 8067349551033151983, guid: f66842e2a5a95fc40a0ff38983a2fa9f,
     type: 3}
   m_PrefabInstance: {fileID: 2255435368120516380}
   m_PrefabAsset: {fileID: 0}

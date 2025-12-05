@@ -37,9 +37,12 @@ namespace TMM
 		Light mainLight;
 
 		public Light MainLight
-        {
-            get{ return mainLight; }
-        }
+		{
+			get { return mainLight; }
+		}
+
+		[SerializeField]
+		Canvas mainCanvas;
 		
 		float timeLeft = 30;
 		public float TimeLeft
@@ -77,6 +80,8 @@ namespace TMM
 		protected virtual void Awake()
         {
 			timeLeft = timer;
+			mainCanvas.worldCamera = Camera.main;
+			mainCanvas.planeDistance = .1f;
         }
 
 	    // Start is called before the first frame update

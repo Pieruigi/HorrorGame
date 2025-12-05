@@ -8,9 +8,18 @@ namespace TMM
 {
 	public class Wallet : SingletonPersistent<Wallet>
 	{
-		int balance = 0;
+		public delegate void BalanceUpdatedDelegate(int amount);
+		public static BalanceUpdatedDelegate OnBalanceUpdated;
 
-		void OnEnable()
+
+		int balance = 0;
+		public int Balance
+        {
+            get{ return balance; }
+        }
+
+        
+        void OnEnable()
 		{
 			SceneManager.sceneLoaded += HandleOnSceneLoaded;
 		}
@@ -34,6 +43,7 @@ namespace TMM
         public void AddCoins(int amount)
 		{
 			balance += amount;
+			OnBalanceUpdated?.Invoke(amount);
 		}
 
 		public bool HasEnoughCoins(int amount)
@@ -47,12 +57,14 @@ namespace TMM
 
 			balance -= amount;
 
+			OnBalanceUpdated?.Invoke(-amount);
+
 			return true;
 		}
 		
 		void ClearWallet()
-        {
+		{
 			balance = 0;
-        }
+	    }
 	}
 }

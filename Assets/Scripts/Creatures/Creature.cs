@@ -252,7 +252,8 @@ namespace TMM.AI
 			float time = .5f;
 			while (currentTimer > 0)
 			{
-				if (target == player)
+				
+				if (target == player.transform)
                 {
                     agent.SetDestination(target.position);
                 }
