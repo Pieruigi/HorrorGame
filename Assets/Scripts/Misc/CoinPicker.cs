@@ -41,12 +41,12 @@ namespace TMM
 			// Do some effect
 			PlayFX();
 
-			Destroy(gameObject, 2);
+			Destroy(gameObject, 1);
 		}
 
 		void PlayFX()
 		{
-			model.SetActive(false);
+			GetComponentInChildren<PickableObject>().PickUp();
         }
 
 

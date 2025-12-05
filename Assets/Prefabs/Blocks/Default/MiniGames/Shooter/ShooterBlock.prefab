@@ -2736,7 +2736,7 @@ MonoBehaviour:
   lightRenderer: {fileID: 7563734990074190288}
   greenMaterial: {fileID: 2100000, guid: fa82de8f71252e74fa4b5430c8f71fb2, type: 2}
   redMaterial: {fileID: 2100000, guid: d6fad38a02f846349b4aab26044291db, type: 2}
-  rate: 0.5
+  rate: 0.55
   shotAudioSource: {fileID: 6390081142648301754}
   shotClips:
   - {fileID: 8300000, guid: cb7b6cd6543c7f64db7e2662b41e7af3, type: 3}

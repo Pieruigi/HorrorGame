@@ -33,7 +33,7 @@ namespace TMM
         int numOfRows = 6;
 		int numOfColors = 4;
 
-		float loadFactor = .8f;
+		float loadFactor = .75f;
 
 		bool horizontalSymmetry = false;
 		bool verticalSymmetry = false;

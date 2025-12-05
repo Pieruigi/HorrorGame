@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace TMM
 {
-	public class GameManager : Singleton<GameManager>
+	public class GameManager : SingletonPersistent<GameManager>
 	{
 
 		int gameStage = 1;
@@ -41,7 +41,7 @@ namespace TMM
         {
 			if (arg0.name == "GameScene")
 			{
-
+				
 			}
             else
             {

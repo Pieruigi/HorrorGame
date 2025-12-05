@@ -11,6 +11,11 @@ namespace TMM
 		public delegate void BalanceUpdatedDelegate(int amount);
 		public static BalanceUpdatedDelegate OnBalanceUpdated;
 
+		[SerializeField]
+		AudioSource addCoinAudioSource;
+
+		[SerializeField]
+		AudioSource removeCoinAudioSource;
 
 		int balance = 0;
 		public int Balance
@@ -43,6 +48,7 @@ namespace TMM
         public void AddCoins(int amount)
 		{
 			balance += amount;
+			addCoinAudioSource.Play();
 			OnBalanceUpdated?.Invoke(amount);
 		}
 
@@ -56,6 +62,7 @@ namespace TMM
 			if (balance < amount) return false;
 
 			balance -= amount;
+			removeCoinAudioSource.Play();
 
 			OnBalanceUpdated?.Invoke(-amount);
 

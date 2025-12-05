@@ -49,6 +49,7 @@ MonoBehaviour:
   trigger: {fileID: 1206778220522758263}
   amount: 1
   model: {fileID: 2306358642271498385}
+  audioSource: {fileID: 0}
 --- !u!1 &6826736265846876282
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5219105590746041277
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3607946817521613888}
+  - component: {fileID: 7912009849899271342}
+  m_Layer: 0
+  m_Name: Builder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3607946817521613888
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5219105590746041277}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7912009849899271342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5219105590746041277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4b324713259d0f46a4b477fd800c2fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallHelperPrefab: {fileID: 0}
+  floorHelperPrefab: {fileID: 0}
+  inHelperPrefab: {fileID: 0}
+  outHelperPrefab: {fileID: 0}
+  borderHelperPrefab: {fileID: 0}
+  availableBlocks: []
+  floorPrefab: {fileID: 2734360422071286277, guid: adbfb47ea87cff249a7f9d1383e009e7,
+    type: 3}
+  inPrefab: {fileID: 1938168778050639748, guid: ea942ae51755a484484cbfb9dc26be83,
+    type: 3}
+  outPrefab: {fileID: 7020030011680214690, guid: 0218a242797320b47805ff3f52d1029c,
+    type: 3}
+  monsterPrefab: {fileID: 5131694905864375828, guid: 95cce269d938fba4789fda4db544e442,
+    type: 3}
+  floorLightPrefab: {fileID: 6811857683177180075, guid: 52549632c7a49bd4d9fbbce30b428cd2,
+    type: 3}
+  coinPickerPrefab: {fileID: 4070099716377773868, guid: cab41d0956991b143b3288bfa3fcb88c,
+    type: 3}
+  tiles: []
+  blocks: []
