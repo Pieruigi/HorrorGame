@@ -14098,6 +14098,18 @@ AudioSource:
     type: 3}
   m_PrefabInstance: {fileID: 8024747575435881313}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6391048635404626942 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4029650434032517279, guid: f66842e2a5a95fc40a0ff38983a2fa9f,
+    type: 3}
+  m_PrefabInstance: {fileID: 8024747575435881313}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43c1e3c040815204e9f7b01d18f1b925, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7026741524542288973 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1070063720658116396, guid: f66842e2a5a95fc40a0ff38983a2fa9f,
@@ -14119,6 +14131,7 @@ MonoBehaviour:
   playerTarget: {fileID: 1632390251031201455}
   activateDot: 0
   deviceInteractor: {fileID: 2487906931582178734}
+  recharger: {fileID: 6391048635404626942}
   timer: 45
   beatenAudioSource: {fileID: 4329958518082025990}
   mainLight: {fileID: 47669101844535950}

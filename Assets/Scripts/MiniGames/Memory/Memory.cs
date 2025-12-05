@@ -14,7 +14,7 @@ namespace TMM
 		[SerializeField]
 		List<GameObject> tiles;
 
-			[SerializeField]
+		[SerializeField]
 		AudioSource swooshAudioSource;
 
 		[SerializeField]

@@ -34,6 +34,7 @@ Transform:
   - {fileID: 8789561029543521742}
   - {fileID: 1703756880977163785}
   - {fileID: 8471123778162278086}
+  - {fileID: 1518335030738609342}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5792351173517087380
@@ -51,6 +52,7 @@ MonoBehaviour:
   playerTarget: {fileID: 8789561029543521742}
   activateDot: 1
   deviceInteractor: {fileID: 5610204527270067919}
+  recharger: {fileID: 4029650434032517279}
   timer: 45
   beatenAudioSource: {fileID: 6001815284975718759}
   mainLight: {fileID: 8067349551033151983}
@@ -287,6 +289,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activationTrigger: {fileID: 175952737238387868}
   interactionCollider: {fileID: 6065572535933055352}
+  mouseButton0: 1
+  key: 0
 --- !u!1 &3449467452524147134
 GameObject:
   m_ObjectHideFlags: 0
@@ -1537,6 +1541,54 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &8532707049701942454
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1518335030738609342}
+  - component: {fileID: 4029650434032517279}
+  m_Layer: 3
+  m_Name: Recharger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1518335030738609342
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8532707049701942454}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6788185474490699222}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4029650434032517279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8532707049701942454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43c1e3c040815204e9f7b01d18f1b925, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activationTrigger: {fileID: 175952737238387868}
+  interactionCollider: {fileID: 6065572535933055352}
+  mouseButton0: 0
+  key: 101
 --- !u!1 &9004643155919420972
 GameObject:
   m_ObjectHideFlags: 0

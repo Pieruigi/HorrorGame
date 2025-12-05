@@ -17,6 +17,12 @@ namespace TMM
 		[SerializeField]
 		Collider interactionCollider;
 
+		[SerializeField]
+		bool mouseButton0 = true;
+
+		[SerializeField]
+		KeyCode key = KeyCode.None;
+
 		bool inside = false;
 
 	    // Start is called before the first frame update
@@ -34,7 +40,7 @@ namespace TMM
 				LayerMask mask = LayerMask.GetMask(new string[] { "Interactable" });
 				if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, FirstPersonController.InteractionDistance, mask))
 				{
-				    if (hit.collider == interactionCollider && Input.GetMouseButtonDown(0))
+				    if (hit.collider == interactionCollider && ((mouseButton0 && Input.GetMouseButtonDown(0)) || Input.GetKeyDown(key)))
                     {
 						OnInteraction?.Invoke(this);
                     }

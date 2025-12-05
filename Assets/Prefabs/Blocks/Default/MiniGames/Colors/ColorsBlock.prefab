@@ -1007,6 +1007,7 @@ MonoBehaviour:
   playerTarget: {fileID: 7401140058287379154}
   activateDot: 1
   deviceInteractor: {fileID: 5951394548668465619}
+  recharger: {fileID: 2927580809528164227}
   timer: 45
   beatenAudioSource: {fileID: 5478155845828095611}
   mainLight: {fileID: 0}
@@ -1021,6 +1022,18 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5027d986f4936684181ccd093ff32ff1, type: 3}
   - {fileID: 8300000, guid: 25b728aa943412d45b7d237424fcd6ab, type: 3}
   lockAudioSource: {fileID: 4774131550133994570}
+--- !u!114 &2927580809528164227 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4029650434032517279, guid: f66842e2a5a95fc40a0ff38983a2fa9f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2255435368120516380}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43c1e3c040815204e9f7b01d18f1b925, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4717679202391880394 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6788185474490699222, guid: f66842e2a5a95fc40a0ff38983a2fa9f,

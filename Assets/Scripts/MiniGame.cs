@@ -23,6 +23,9 @@ namespace TMM
 		[SerializeField]
 		DeviceInteractor deviceInteractor;
 
+		[SerializeField]
+		DeviceInteractor recharger;
+
 		//float attempts = 10;
 		[SerializeField]
 		float timer = 30;
@@ -113,20 +116,27 @@ namespace TMM
 					return;
 				}
 
-				//DoUpdate();
-			}
-            else
-			{
-				if(timeLeft == 0)
+                if (Input.GetKeyDown(KeyCode.E))
                 {
-					recheargeElapsed += Time.deltaTime;
-					if(recheargeElapsed > recheargeTime)
-					{
-						timeLeft = timer;	
-					}    
+					if (Wallet.Instance.TryUseCoins(1))
+						Recharge();
                 }
-				
-            }
+			}
+			else
+			{
+				if (timeLeft == 0)
+				{
+					recheargeElapsed += Time.deltaTime;
+					if (recheargeElapsed > recheargeTime)
+					{
+						//timeLeft = timer;	
+						Recharge();
+					}
+				}
+
+			}
+
+           
            
 		}
 
@@ -134,6 +144,7 @@ namespace TMM
 		{
 			DeviceInteractor.OnInteraction += HandleOnDeviceInteraction;
 			PlayerDeath.OnPlayerDead += HandleOnPlayerDead;
+			
 		}
 
         protected virtual void OnDisable()
@@ -154,11 +165,20 @@ namespace TMM
 
         private void HandleOnDeviceInteraction(DeviceInteractor deviceInteractor)
 		{
-			if (this.deviceInteractor != deviceInteractor) return;
+			if (this.deviceInteractor == deviceInteractor && timeLeft > 0)
+            {
+				Activate();
+				return;
+            }
+				
+            if(recharger == deviceInteractor)
+            {
+				if (Wallet.Instance.TryUseCoins(1))
+					Recharge();
 
-            if(timeLeft>0)
-           		Activate();
-            
+				return;
+            }
+			
         }
 
         public void Activate()
@@ -247,11 +267,15 @@ namespace TMM
 
 			OnMiniGameBeaten?.Invoke(this);
 		}
-		
+
 		public float GetCooldownLeft()
-        {
+		{
 			return Mathf.Max(0, recheargeTime - recheargeElapsed);
-        }
+		}
 		
+		public void Recharge()
+        {
+			timeLeft += timer / 3f;
+        }
 	}
 }

@@ -252,7 +252,15 @@ namespace TMM.AI
 			float time = .5f;
 			while (currentTimer > 0)
 			{
-				agent.SetDestination(player.transform.position);
+				if (target == player)
+                {
+                    agent.SetDestination(target.position);
+                }
+		        else
+                {
+					var l = MazeBuilder.Instance.GetWalkableTilePositions().Where(t => Vector3.Distance(transform.position, t) < 10).ToList();
+					agent.SetDestination(l[Random.Range(0, l.Count)]);
+                }
 
 				yield return new WaitForSeconds(time);
 				currentTimer -= time;
@@ -350,19 +358,19 @@ namespace TMM.AI
 		}
 
 
-		protected virtual void UpdateForceDestination()
-		{
-			if (IsTargetSpotted())
-			{
-				SetState(CreatureState.Chase);
-				return;
-			}
+		// protected virtual void UpdateForceDestination()
+		// {
+		// 	if (IsTargetSpotted())
+		// 	{
+		// 		SetState(CreatureState.Chase);
+		// 		return;
+		// 	}
 
-            if (lastHasPath && !agent.hasPath)
-			{
-				SetState(CreatureState.Idle);
-			}
-        }
+        //     if (lastHasPath && !agent.hasPath)
+		// 	{
+		// 		SetState(CreatureState.Idle);
+		// 	}
+        // }
 
 
 

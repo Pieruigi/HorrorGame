@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TMM
 {
@@ -8,8 +10,28 @@ namespace TMM
 	{
 		int balance = 0;
 
+		void OnEnable()
+		{
+			SceneManager.sceneLoaded += HandleOnSceneLoaded;
+		}
 
-		public void AddCoins(int amount)
+        void OnDisable()
+        {
+            SceneManager.sceneLoaded -= HandleOnSceneLoaded;
+        }
+
+        private void HandleOnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+        {
+            if(arg0.name == "GameScene")
+            {
+                if(GameManager.Instance.GameStage == 1)
+                {
+					ClearWallet();
+                }
+            }
+        }
+
+        public void AddCoins(int amount)
 		{
 			balance += amount;
 		}
@@ -28,7 +50,7 @@ namespace TMM
 			return true;
 		}
 		
-		public void ClearWallet()
+		void ClearWallet()
         {
 			balance = 0;
         }
