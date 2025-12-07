@@ -56,7 +56,7 @@ MonoBehaviour:
     type: 3}
   outPrefab: {fileID: 7020030011680214690, guid: 0218a242797320b47805ff3f52d1029c,
     type: 3}
-  monsterPrefab: {fileID: 5131694905864375828, guid: 95cce269d938fba4789fda4db544e442,
+  monsterPrefab: {fileID: 5131694905864375828, guid: 11d9704e66330454da95f534944a2fcf,
     type: 3}
   floorLightPrefab: {fileID: 6811857683177180075, guid: 52549632c7a49bd4d9fbbce30b428cd2,
     type: 3}

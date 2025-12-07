@@ -73,6 +73,10 @@ namespace TMM.AI
 		NavMeshAgent agent;
 
 		CreatureState state = CreatureState.Idle;
+		public CreatureState State
+		{
+			get { return state; }
+		}
 
 
 		bool lastHasPath = false;
@@ -227,13 +231,13 @@ namespace TMM.AI
 		}
 
 		protected virtual void EnterForceDestination()
-        {
+		{
 			if (agent.isStopped) agent.isStopped = false;
 			agent.speed = runSpeed;
 
 			StopAllCoroutines();
 			agent.SetDestination(forcedDestination);
-        }
+		}
 
 		IEnumerator DoChaseTarget()
 		{
@@ -252,16 +256,16 @@ namespace TMM.AI
 			float time = .5f;
 			while (currentTimer > 0)
 			{
-				
+
 				if (target == player.transform)
-                {
-                    agent.SetDestination(target.position);
-                }
-		        else
-                {
+				{
+					agent.SetDestination(target.position);
+				}
+				else
+				{
 					var l = MazeBuilder.Instance.GetWalkableTilePositions().Where(t => Vector3.Distance(transform.position, t) < 10).ToList();
 					agent.SetDestination(l[Random.Range(0, l.Count)]);
-                }
+				}
 
 				yield return new WaitForSeconds(time);
 				currentTimer -= time;
@@ -307,9 +311,9 @@ namespace TMM.AI
 				}
 				else
 				{
-                	list = MazeBuilder.Instance.GetWalkableTilePositions().Where(t => Vector3.Distance(transform.position, t) > minDist).ToList();    
-                }
-				
+					list = MazeBuilder.Instance.GetWalkableTilePositions().Where(t => Vector3.Distance(transform.position, t) > minDist).ToList();
+				}
+
 				// Get a random position
 				var dest = list[Random.Range(0, list.Count)];
 				// Set destination
@@ -367,11 +371,11 @@ namespace TMM.AI
 		// 		return;
 		// 	}
 
-        //     if (lastHasPath && !agent.hasPath)
+		//     if (lastHasPath && !agent.hasPath)
 		// 	{
 		// 		SetState(CreatureState.Idle);
 		// 	}
-        // }
+		// }
 
 
 
@@ -464,7 +468,7 @@ namespace TMM.AI
 
 
 		public void ForcePatrol(Vector3 destination)
-        {
+		{
 			if (state != CreatureState.Patrol && state != CreatureState.Idle) return;
 
 			// If idle we must tell the patrol update routine to use the given destination
@@ -474,12 +478,16 @@ namespace TMM.AI
 				useForcedDestination = true;
 				SetState(CreatureState.Patrol);
 			}
-            else // If patrol state just switch the destination to the given one
-            {
-                agent.SetDestination(destination);
-            }
-        }
+			else // If patrol state just switch the destination to the given one
+			{
+				agent.SetDestination(destination);
+			}
+		}
 
+		public bool IsPlayerTarget()
+        {
+			return target = player.transform;
+        }
 
 	}
 }

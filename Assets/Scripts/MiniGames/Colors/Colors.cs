@@ -59,11 +59,6 @@ namespace TMM
         {
 			base.Update();
 
-#if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.X))
-				CheckCompleted();
-#endif
-
 			if (IsActive)
 			{
 				if (busy) return;
