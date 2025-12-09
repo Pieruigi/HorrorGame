@@ -54,7 +54,7 @@ namespace TMM.Editor
             Selection.activeObject = asset;
         }
 
-         [MenuItem("Assets/Create/DD2/MiniGame")]
+        [MenuItem("Assets/Create/DD2/MiniGame")]
         public static void CreateMiniGameAsset()
         {
             MiniGameAsset asset = ScriptableObject.CreateInstance<MiniGameAsset>();
@@ -75,6 +75,27 @@ namespace TMM.Editor
             Selection.activeObject = asset;
         }
 
+
+        [MenuItem("Assets/Create/DD2/Item")]
+        public static void CreateItemAsset()
+        {
+            ItemAsset asset = ScriptableObject.CreateInstance<ItemAsset>();
+
+            string name = "Item.asset";
+
+            string folder = System.IO.Path.Combine(ResourceFolder, ItemAsset.ResourceFolder);
+
+            if (!System.IO.Directory.Exists(folder))
+                System.IO.Directory.CreateDirectory(folder);
+
+            AssetDatabase.CreateAsset(asset, System.IO.Path.Combine(folder, name));
+
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+
+            Selection.activeObject = asset;
+        }
 
     }
 
