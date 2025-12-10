@@ -96,7 +96,12 @@ namespace TMM
 		protected virtual void Update()
 		{
 #if UNITY_EDITOR
-		
+			
+			if (Input.GetKeyDown(KeyCode.X))
+            {
+				timeLeft = 0;
+            }
+
 #endif
 			if (activated)
 			{

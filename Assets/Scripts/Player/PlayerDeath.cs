@@ -26,6 +26,9 @@ namespace TMM
         {
 			Debug.Log("YOU ARE DEAD.................................");
 			GetComponent<FirstPersonController>().Die();
+			transform.root.GetComponentInChildren<Flashlight>().SetOn(false);
+
+			
 
 			OnPlayerDead?.Invoke();
         }

@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks.Triggers;
+using DG.Tweening;
 using StarterAssets;
 using TMM.Interfaces;
+using TMM.UI;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -69,6 +71,10 @@ namespace TMM.AI
 
 		[SerializeField]
 		float searchTimer = 2;
+
+
+		[SerializeField]
+		Transform playerDeadTarget;
 
 
 
@@ -240,16 +246,39 @@ namespace TMM.AI
 		protected virtual void EnterAttackState()
 		{
 			ResetPath();
+			agent.isStopped = true;
 			player.GetComponent<PlayerDeath>().Die(gameObject);
+
+			player.transform.parent = playerDeadTarget;
+
+			StartCoroutine(PlayJumpScare());
+
+			var seq = DOTween.Sequence();
+			seq.Append(player.transform.DOLocalMove(Vector3.zero, .5f));
+			seq.Join(player.transform.DOLocalRotateQuaternion(Quaternion.identity, .5f));
+			seq.OnComplete(() =>
+			{
+				// Fade and restart	
+				GameManager.Instance.StartNewGame();
+			});
+
+
 		}
 
+		IEnumerator PlayJumpScare()
+		{
+			yield return new WaitForSeconds(.25f);
+			player.transform.root.GetComponentInChildren<CameraShake>().PlayLetterboxJumpScare();
+			GetComponent<CreatureAudio>().PlayPlayerDeath();
+		}
+		
+		
 		protected virtual void EnterIdleState()
 		{
 			ResetPath();
 			float ratio = idleTimer * .25f;
 			currentTimer = Random.Range(idleTimer - ratio, idleTimer + ratio);
 			agent.speed = walkSpeed;
-
 		}
 
 		protected virtual void EnterChaseState()

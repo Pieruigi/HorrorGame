@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMM.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -41,7 +42,7 @@ namespace TMM
         {
 			if (arg0.name == "GameScene")
 			{
-				
+				CameraFade.Instance.FadeIn();
 			}
             else
             {
@@ -53,12 +54,20 @@ namespace TMM
 		{
 			gameStage = 1;
 
-			SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+			StartCoroutine(DoLoadGameScene());
+			//SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+		}
+
+		public void IncreaseGameStage()
+		{
+			gameStage++;
 		}
 		
-		public void IncreaseGameStage()
+		IEnumerator DoLoadGameScene()
         {
-			gameStage++;
+			CameraFade.Instance.FadeOut();
+			yield return new WaitForSeconds(1f);
+			SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
         }
 	}
 }

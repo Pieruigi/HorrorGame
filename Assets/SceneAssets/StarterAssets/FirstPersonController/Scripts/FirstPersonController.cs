@@ -1,5 +1,6 @@
 ﻿using System;
 using Cinemachine;
+using DG.Tweening;
 using TMM.Interfaces;
 using TMPro;
 using UnityEditor.ShaderGraph.Internal;
@@ -199,6 +200,7 @@ namespace StarterAssets
 			if (Input.GetKeyDown(KeyCode.P))
 				Time.timeScale = Time.timeScale == 1 ? 0 : 1;
 #endif
+			if (isDead) return;
 
 			JumpAndGravity();
 			GroundedCheck();
@@ -461,6 +463,8 @@ namespace StarterAssets
 		public void Die()
 		{
 			isDead = true;
+			_cinemachineTargetPitch = 0;
+			CinemachineCameraTarget.transform.DOLocalRotateQuaternion(Quaternion.Euler(_cinemachineTargetPitch, 0.0f, 0.0f), .2f) ;
 		}
 
 		public float GetSpeed()

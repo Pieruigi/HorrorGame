@@ -16,6 +16,9 @@ namespace TMM
 		[SerializeField]
 		AudioSource chaseAudioSource;
 
+		[SerializeField]
+		AudioSource playerDeathAudioSource;
+
 		float laughElapsed = 0;
 
 		float laughTime = 4;
@@ -73,10 +76,15 @@ namespace TMM
             }
 		}
 
-        private void Laugh()
-        {
+		private void Laugh()
+		{
 			laughAudioSource.clip = laughClips[Random.Range(0, laughClips.Count)];
 			laughAudioSource.Play();
+		}
+		
+		public void PlayPlayerDeath()
+        {
+			playerDeathAudioSource.Play();
         }
     }
 }

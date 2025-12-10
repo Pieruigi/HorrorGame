@@ -72,6 +72,10 @@ namespace TMM
 						animator.SetFloat("SpeedMul", 1);
                     }
 					break;
+				case CreatureState.Attack:
+					animator.SetFloat("SpeedMul", 1);
+					animator.SetTrigger("Idle");
+					break;
             }
         }
 
