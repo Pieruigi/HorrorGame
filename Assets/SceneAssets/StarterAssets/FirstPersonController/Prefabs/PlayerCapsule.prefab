@@ -362,7 +362,7 @@ GameObject:
   - component: {fileID: 8616685848737228376}
   - component: {fileID: 6898128124135422108}
   - component: {fileID: 6833651889395823030}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: PlayerCapsule
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -431,6 +431,7 @@ MonoBehaviour:
   RotationSpeed: 1
   SpeedChangeRate: 10
   CrouchSpeed: 2
+  staminaMax: 1
   JumpHeight: 1.2
   Gravity: -15
   JumpTimeout: 0.1
@@ -438,13 +439,13 @@ MonoBehaviour:
   CanJump: 0
   CrouchHeight: 1
   CrouchTime: 0.25
-  CanCrouch: 1
+  CanCrouch: 0
   Grounded: 1
   GroundedOffset: -0.14
-  GroundedRadius: 0.5
+  GroundedRadius: 0.25
   GroundLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 128
   CinemachineCameraTarget: {fileID: 4135013735270702863}
   TopClamp: 89
   BottomClamp: -89
@@ -647,8 +648,8 @@ Light:
   serializedVersion: 11
   m_Type: 2
   m_Color: {r: 1, g: 0.98283017, b: 0.9386792, a: 1}
-  m_Intensity: 0.3
-  m_Range: 4
+  m_Intensity: 0.2
+  m_Range: 3
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10

@@ -14,8 +14,7 @@ namespace TMM.UI
 			base.Awake();
 			canvasGroup.alpha = 0;
 
-			// Set camera
-			GetComponent<Canvas>().worldCamera = Camera.main;
+			
         }
 
         // Start is called before the first frame update

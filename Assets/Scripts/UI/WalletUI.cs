@@ -27,8 +27,6 @@ namespace TMM.UI
 		
         void Awake()
         {
-			GetComponent<Canvas>().worldCamera = Camera.main;
-			GetComponent<Canvas>().planeDistance = .1f;
 			if(!keepVisible)
 				canvasGroup.alpha = 0;
 			

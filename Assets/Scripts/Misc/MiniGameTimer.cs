@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace TMM.UI
 {
-	public class MiniGameTimer : MonoBehaviour, INoiser
+	public class MiniGameTimer : MonoBehaviour
 	{
 		[SerializeField]
 		Color normalColor;
@@ -69,7 +69,8 @@ namespace TMM.UI
 				if(noiseRange > 0)
                 {
 					noiseRange = 0;
-					alarmAudioSource.Stop();
+					//alarmAudioSource.Stop();
+					AlarmManager.Instance.ReportTriggerDeactivated(miniGame.gameObject);
                 }
 
 				textField.text = Mathf.CeilToInt(timeLeft).ToString("000");
@@ -119,7 +120,8 @@ namespace TMM.UI
             {
 				Debug.Log("Timer noise");
 				noiseRange = noiseRangeOnError;
-				alarmAudioSource.Play();
+				//alarmAudioSource.Play();
+				AlarmManager.Instance.ReportTriggerActivated(miniGame.gameObject);
 	        }
 			
         }
@@ -137,15 +139,5 @@ namespace TMM.UI
 			textField.DOKill();
 			textField.color = normalColor;
 		}
-
-        public float GetNoiseRange()
-        {
-			return noiseRange;
-        }
-
-        public float GetTargetDistance(Vector3 target)
-        {
-			return Vector3.Distance(errorAudioSource.transform.position, target);
-        }
     }
 }

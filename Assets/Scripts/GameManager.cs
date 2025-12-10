@@ -56,6 +56,9 @@ namespace TMM
 			SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
 		}
 		
-
+		public void IncreaseGameStage()
+        {
+			gameStage++;
+        }
 	}
 }

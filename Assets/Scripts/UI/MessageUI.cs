@@ -22,9 +22,7 @@ namespace TMM.UI
         protected override void Awake()
 		{
 			base.Awake();
-			Canvas c = GetComponent<Canvas>();
-			c.worldCamera = Camera.main;
-			c.planeDistance = .1f;
+		
 
 			canvasGroup.alpha = 0;
         }

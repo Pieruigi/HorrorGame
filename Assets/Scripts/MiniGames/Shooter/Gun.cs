@@ -115,7 +115,7 @@ namespace TMM
 		public void Activate(bool value)
         {
 			active = value;
-			cooldown = 0.25f;
+			cooldown = 999; //0.25f;
 			lightRenderer.material = redMaterial;
 
 			float moveTime = .25f;
@@ -139,7 +139,7 @@ namespace TMM
 				transform.localRotation = Quaternion.identity;
 				gunRoot.SetActive(true);
 
-				transform.DOLocalMoveZ(.321f, moveTime);
+				transform.DOLocalMoveZ(.321f, moveTime).OnComplete(()=> { cooldown = 1f / rate; });
 				//transform.localPosition = Vector3.down * .136f + Vector3.forward * .321f;
 				
             }

@@ -199,6 +199,7 @@ GameObject:
   - component: {fileID: 4762579317416597451}
   - component: {fileID: 908075623391507180}
   - component: {fileID: 7155867179916230564}
+  - component: {fileID: 4458655397931232777}
   m_Layer: 5
   m_Name: MessageUI
   m_TagString: Untagged
@@ -303,3 +304,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 6412269004025607129}
   messageField: {fileID: 6969295134955667979}
+--- !u!114 &4458655397931232777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7354298851060714109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cdc71c53bd20cd41b27e076723220d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

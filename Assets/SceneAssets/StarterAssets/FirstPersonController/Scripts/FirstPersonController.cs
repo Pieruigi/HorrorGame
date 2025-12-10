@@ -14,7 +14,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
 	[RequireComponent(typeof(PlayerInput))]
 #endif
-	public class FirstPersonController : MonoBehaviour, INoiser
+	public class FirstPersonController : MonoBehaviour
 	{
 
 		public const float InteractionDistance = 1.5f;
@@ -35,6 +35,10 @@ namespace StarterAssets
 		float runNoiseRange = 10;
 
 		float noiseRange;
+		public float NoiseRange
+        {
+			get{ return noiseRange; }
+        }
 
 
 
@@ -464,16 +468,7 @@ namespace StarterAssets
 			return _speed;
 		}
 
-		public float GetNoiseRange()
-		{
-			return noiseRange;
-		}
 		
-		public float GetTargetDistance(Vector3 target)
-        {
-			return Vector3.Distance(target, transform.position);
-        }
-
 		private void OnDrawGizmosSelected()
 		{
 			Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);

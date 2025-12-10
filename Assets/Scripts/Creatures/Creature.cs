@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks.Triggers;
 using StarterAssets;
 using TMM.Interfaces;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -87,14 +89,14 @@ namespace TMM.AI
 
 		GameObject player;
 
-		List<INoiser> noisers = new List<INoiser>();
-
 		Vector3 forcedDestination;
 		bool useForcedDestination;
 
 		Transform target;
 
 		Flashlight flashlight;
+
+		FirstPersonController fpc;
 
 
 
@@ -107,14 +109,15 @@ namespace TMM.AI
 			runSpeed *= 0.75f; // Max 1.75
 #endif
 
+			InitByStage();
+
 		}
 
 		protected virtual void Start()
 		{
 			SetState(CreatureState.Patrol);
 			player = FindFirstObjectByType<FirstPersonController>().gameObject;
-
-			noisers = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<INoiser>().ToList();
+			fpc = player.GetComponent<FirstPersonController>();
 			flashlight = player.transform.parent.GetComponentInChildren<Flashlight>();
 
 		}
@@ -132,6 +135,51 @@ namespace TMM.AI
 
 		}
 
+		void InitByStage()
+		{
+			walkSpeed *= .75f;
+			runSpeed *= 0.75f;
+
+			switch (GameManager.Instance.GameStage)
+            {
+				case 1:
+					break;
+				case 2:
+					walkSpeed *= 1.75f;
+					runSpeed *= 1.75f;
+					break;
+				case 3:
+					walkSpeed *= 2.5f;
+					runSpeed *= 2.5f;
+					break;
+				case 4:
+					walkSpeed *= 3.25f;
+					runSpeed *= 3.25f;
+					break;
+				case 5:
+					walkSpeed *= 4f;
+					runSpeed *= 4f;
+					break;
+				case 6:
+					walkSpeed *= 4.75f;
+					runSpeed *= 4.75f;
+					break;
+				case 7:
+					walkSpeed *= 5.25f;
+					runSpeed *= 5.25f;
+					break;
+				case 8:
+					walkSpeed *= 6f;
+					runSpeed *= 6f;
+					break;
+				default:
+					walkSpeed *= 6f;
+					runSpeed *= 6f;
+					break;
+
+            }
+        }
+
 		void UpdateState()
 		{
 			switch (state)
@@ -144,6 +192,9 @@ namespace TMM.AI
 					break;
 				case CreatureState.Chase:
 					UpdateChaseState();
+					break;
+				case CreatureState.Search:
+					UpdateSearchState();
 					break;
 			}
 		}
@@ -345,6 +396,7 @@ namespace TMM.AI
 
 			if (CanAttackPlayer())
 			{
+				Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 				SetState(CreatureState.Attack);
 				return;
 			}
@@ -354,10 +406,10 @@ namespace TMM.AI
 
 		protected virtual void UpdateSearchState()
 		{
-			if (IsTargetSpotted())
+			if (CanAttackPlayer())
 			{
-				StopAllCoroutines();
-				SetState(CreatureState.Chase);
+				SetState(CreatureState.Attack);
+				return;
 			}
 
 		}
@@ -382,6 +434,15 @@ namespace TMM.AI
 		bool IsTargetSpotted()
 		{
 
+			// If Alarm return true
+			if (AlarmManager.Instance.IsActive())
+			{
+				target = player.transform;
+				OnPlayerSpotted?.Invoke(this, true);
+                return true;
+            }
+				
+
 			// Get player position
 			var playerPosition = player.transform.position;
 
@@ -401,13 +462,12 @@ namespace TMM.AI
 
 			// Then we check the noise
 			// Get the closest noiser (since other noisers could hide the player noise, we check what's the most noisy object)
-			var _noisers = noisers.OrderBy(n => n.GetTargetDistance(transform.position) - n.GetNoiseRange()).ToList();
-			Debug.Log("Noisers[0]:" + (_noisers[0] as MonoBehaviour).gameObject.name);
-			if (/*noisers[0] == player.GetComponent<INoiser>() && */pDir.magnitude < _noisers[0].GetNoiseRange() * hearMultiplier)
+			//var _noisers = noisers.OrderBy(n => n.GetTargetDistance(transform.position) - n.GetNoiseRange()).ToList();
+			if (pDir.magnitude < fpc.NoiseRange * hearMultiplier)
 			{
 				Debug.Log("Creature heard you");
 				//target = player.transform;
-				target = (_noisers[0] as MonoBehaviour).transform;
+				target = player.transform;
 				OnPlayerSpotted?.Invoke(this, true);
 				return true;
 			}
