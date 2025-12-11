@@ -38,8 +38,9 @@ namespace TMM
 			//_PrototypeMessage.Instance.Show();
 
 			//yield return new WaitForSeconds(.1f); // Just to stop the coroutine after the proto message has opened
-			GameManager.Instance.IncreaseGameStage();	
-			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+			// GameManager.Instance.IncreaseGameStage();	
+			// SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+			GameManager.Instance.StartNextStage();
         }
 
     }

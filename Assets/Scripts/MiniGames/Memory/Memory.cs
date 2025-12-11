@@ -1,11 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
-using Unity.Burst.Intrinsics;
-using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace TMM
 {

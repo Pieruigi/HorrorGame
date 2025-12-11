@@ -3,7 +3,6 @@ using Cinemachine;
 using DG.Tweening;
 using TMM.Interfaces;
 using TMPro;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -174,6 +173,8 @@ namespace StarterAssets
 
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
+
+			//InputDisabled = true;
 		}
 
 		private void Start()
@@ -346,7 +347,7 @@ namespace StarterAssets
             {
                 _input.crouch = false;
 				_input.sprint = false;
-				_input.move = Vector3.zero;
+				_input.move = Vector3.zero; //TODO: disable movement when falling down
             }
 
 			// set target speed based on move speed, sprint speed and if sprint is pressed
@@ -399,8 +400,8 @@ namespace StarterAssets
 			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
 			// To fix a strange behaviour on edge collision
-			if (Grounded)
-				transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+			// if (Grounded)
+			// 	transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 				
 			
 		}

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: CRT
   m_EditorClassIdentifier: 
   components:
-  - {fileID: 576815941172598958}
   - {fileID: 2182205748910702091}
+  - {fileID: 576815941172598958}
 --- !u!114 &576815941172598958
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -30,7 +30,7 @@ MonoBehaviour:
   active: 1
   showInSceneView:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   enabled:
     m_OverrideState: 1
     m_Value: 1

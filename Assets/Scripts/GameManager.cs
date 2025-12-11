@@ -50,19 +50,21 @@ namespace TMM
             }
         }
 
-        public void StartNewGame()
+		public void StartNewGame()
 		{
 			gameStage = 1;
 
 			StartCoroutine(DoLoadGameScene());
 			//SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
 		}
-
-		public void IncreaseGameStage()
-		{
-			gameStage++;
-		}
 		
+		public void StartNextStage()
+        {
+			gameStage++;
+
+			StartCoroutine(DoLoadGameScene());
+        }
+
 		IEnumerator DoLoadGameScene()
         {
 			CameraFade.Instance.FadeOut();
