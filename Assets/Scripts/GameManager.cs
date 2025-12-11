@@ -25,7 +25,10 @@ namespace TMM
 		// Update is called once per frame
 		void Update()
 		{
-
+#if !UNITY_WEBGL
+			if (Input.GetKeyDown(KeyCode.Escape))
+				Application.Quit();
+#endif
 		}
 
 		void OnEnable()

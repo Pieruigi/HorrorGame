@@ -15,6 +15,9 @@ namespace TMM.UI
 		[SerializeField]
 		TMP_Text messageField;
 
+		[SerializeField]
+		TMP_Text escField;
+
 		bool visible = false;
 
 		float fadeTime = .1f;
@@ -22,9 +25,13 @@ namespace TMM.UI
         protected override void Awake()
 		{
 			base.Awake();
-		
+
 
 			canvasGroup.alpha = 0;
+			
+#if UNITY_WEBGL
+			escField.text = "";
+#endif
         }
 
         // Start is called before the first frame update
