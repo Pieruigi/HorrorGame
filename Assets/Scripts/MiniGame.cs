@@ -97,10 +97,10 @@ namespace TMM
 		{
 #if UNITY_EDITOR
 			
-			if (Input.GetKeyDown(KeyCode.X))
-            {
-				timeLeft = 0;
-            }
+			// if (Input.GetKeyDown(KeyCode.X))
+            // {
+			// 	timeLeft = 0;
+            // }
 
 #endif
 			if (activated)

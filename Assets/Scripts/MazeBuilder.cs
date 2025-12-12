@@ -287,7 +287,7 @@ namespace TMM
 			
         }
 
-		void BuildNavMesh()
+		public void BuildNavMesh()
         {
 			var nms = tiles.Find(t => t == inTile).mainObject.GetComponentInChildren<NavMeshSurface>();
 			nms.BuildNavMesh();
@@ -402,9 +402,7 @@ namespace TMM
 				else
 					root.GetChild(i).gameObject.SetActive(false);
 
-				// if (ft)
-				// 	ft.SetStepDirection(i, !dirs[i]);
-
+			
 
 			}
 

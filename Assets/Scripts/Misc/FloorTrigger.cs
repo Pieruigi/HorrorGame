@@ -34,6 +34,7 @@ namespace TMM
         void Awake()
         {
 			height = transform.position.y;
+			transform.localPosition = Vector3.up * height;
 			HideStepAll();
 			
         }
@@ -42,13 +43,21 @@ namespace TMM
         void Start()
 	    {
 			characterController = FindFirstObjectByType<CharacterController>();
-			transform.localPosition = Vector3.up * height;
 			ShowSteps();
 	    }
 
 		// Update is called once per frame
 		void Update()
 		{
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.X))
+			{
+					triggered = true;
+					MoveDown();
+					OnTriggered?.Invoke();
+			}
+#endif
+
 			if (!inside || triggered) return;
 
 			var center = characterController.transform.position + characterController.center;
@@ -106,7 +115,8 @@ namespace TMM
 		void MoveDown()
 		{
 			transform.DOKill();
-			transform.DOMoveY(0, .5f).OnComplete(()=> { HideStepAll(); });
+			transform.DOMoveY(0, .5f).OnComplete(() => { HideStepAll(); MazeBuilder.Instance.BuildNavMesh(); });
+			
 		}
 
 		public void ResetTrigger()
@@ -116,7 +126,7 @@ namespace TMM
 			ShowSteps();
 
 			transform.DOKill();
-			transform.DOMoveY(height, .5f).OnComplete(() => { triggered = false; });
+			transform.DOMoveY(height, .5f).OnComplete(() => { triggered = false; MazeBuilder.Instance.BuildNavMesh(); });
 		}
 		
 		public void SetStepDirection(int index, bool visible)
