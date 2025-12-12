@@ -58,6 +58,8 @@ namespace TMM
 
 			public CoinPicker coin;
 
+			public FloorAsset asset; // Only available for triggers
+
 			public bool AvailableForSpawn()
             {
 				return coin == null;
@@ -149,7 +151,7 @@ namespace TMM
 
 			AddInAndOut();
 
-			//CloseBorders();
+			AddFloorTriggers();
 
 			InstantiateWallsAndFloors();
 
@@ -172,6 +174,19 @@ namespace TMM
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
 #endif
+		}
+
+
+		void AddFloorTriggers()
+		{
+			// Get resources
+			var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).ToList();
+			Debug.Log($"FloorTriggers.Count:{all.Count}");
+
+			// Get all floors
+			var floors = tiles.Where(t => t.type == 0).ToList();
+
+			floors[0].asset = all[0];
 		}
 
 		void AddCoins()
@@ -306,7 +321,16 @@ namespace TMM
 				{
 					if (t != inTile && t != outTile)
 					{
-						t.mainObject = InstantiateObject(floorPrefab, t.coords);
+						if (!t.asset)
+						{
+							t.mainObject = InstantiateObject(floorPrefab, t.coords);
+						}
+						else
+						{
+							var obj = InstantiateObject(t.asset.Prefab, t.coords);
+							t.mainObject = obj.transform.GetChild(0).gameObject;
+						}
+						
 					}
 					else
 					{
@@ -317,6 +341,10 @@ namespace TMM
 					}
 
 					CheckBorders(t);
+
+					FloorTrigger ft = t.mainObject.GetComponentInChildren<FloorTrigger>();
+					if(ft)
+						CheckTriggerStepsAndWalls(ft);
 
 				}
 
@@ -332,10 +360,28 @@ namespace TMM
 
 
 		}
-		
+
+		void CheckTriggerStepsAndWalls(FloorTrigger floorTrigger)
+		{
+			// Check walls 
+			for (int i = 0; i < 4; i++)
+			{
+				// For floor triggers we move walls in the floor parent to avoid moving them up and down when player walk on the tile
+				floorTrigger.transform.GetChild(0).parent = floorTrigger.transform.parent;
+			}
+
+			// Steps
+			// Get tile
+			var tile = tiles.First(t => t.mainObject == floorTrigger.gameObject);
+			floorTrigger.SetStepDirection(0, GetTile(tile.coords.x, tile.coords.y + 1) == 0); // North
+			floorTrigger.SetStepDirection(1, GetTile(tile.coords.x+1, tile.coords.y) == 0); // East
+			floorTrigger.SetStepDirection(2, GetTile(tile.coords.x, tile.coords.y - 1) == 0); // South
+			floorTrigger.SetStepDirection(3, GetTile(tile.coords.x-1, tile.coords.y) == 0); // West
+		}
+
 		void CheckBorders(Tile tile)
-        {
-            bool[] dirs = new bool[4];
+		{
+			bool[] dirs = new bool[4];
 			dirs[0] = tile != outTile && GetTile(tile.coords.x, tile.coords.y + 1) < 0;
 			dirs[1] = GetTile(tile.coords.x + 1, tile.coords.y) < 0;
 			dirs[2] = /*tile != inTile && */GetTile(tile.coords.x, tile.coords.y - 1) < 0;
@@ -346,16 +392,26 @@ namespace TMM
 			if (tile == inTile || tile == outTile)
 				root = root.GetChild(0);
 
-			for(int i=0; i<dirs.Length; i++)
+			// FloorTrigger ft = root.GetComponent<FloorTrigger>();
+			// Debug.Log("FT:" + ft);
+
+			for (int i = 0; i < dirs.Length; i++)
 			{
 				if (dirs[i])
 					root.GetChild(i).gameObject.SetActive(true);
 				else
 					root.GetChild(i).gameObject.SetActive(false);
 
+				// if (ft)
+				// 	ft.SetStepDirection(i, !dirs[i]);
+
+
 			}
 
-        }
+			
+				
+
+		}
 
 		GameObject InstantiateObject(GameObject prefab, Vector2 coords, int rotationType = 0)
         {

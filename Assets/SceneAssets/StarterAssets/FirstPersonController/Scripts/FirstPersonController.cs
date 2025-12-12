@@ -347,7 +347,7 @@ namespace StarterAssets
             {
                 _input.crouch = false;
 				_input.sprint = false;
-				_input.move = Vector3.zero; //TODO: disable movement when falling down
+				//_input.move = Vector3.zero; //TODO: disable movement when falling down
             }
 
 			// set target speed based on move speed, sprint speed and if sprint is pressed

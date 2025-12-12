@@ -97,6 +97,27 @@ namespace TMM.Editor
             Selection.activeObject = asset;
         }
 
+         [MenuItem("Assets/Create/DD2/FloorTrigger")]
+        public static void CreateFloorTriggerAsset()
+        {
+            FloorTriggerAsset asset = ScriptableObject.CreateInstance<FloorTriggerAsset>();
+
+            string name = "FloorTrigger.asset";
+
+            string folder = System.IO.Path.Combine(ResourceFolder, FloorTriggerAsset.ResourceFolder);
+
+            if (!System.IO.Directory.Exists(folder))
+                System.IO.Directory.CreateDirectory(folder);
+
+            AssetDatabase.CreateAsset(asset, System.IO.Path.Combine(folder, name));
+
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+
+            Selection.activeObject = asset;
+        }
+
     }
 
    

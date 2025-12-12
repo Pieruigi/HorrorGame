@@ -3438,7 +3438,12 @@ PrefabInstance:
     - target: {fileID: 6186359771314070110, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
       propertyPath: CanJump
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6186359771314070110, guid: cca75ef0d88b24749aca6e34f84a6cfb,
+        type: 3}
+      propertyPath: JumpHeight
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 8550716750324513024, guid: cca75ef0d88b24749aca6e34f84a6cfb,
         type: 3}
