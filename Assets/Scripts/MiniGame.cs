@@ -43,6 +43,8 @@ namespace TMM
 
 		[SerializeField]
 		Canvas mainCanvas;
+
+		GameObject wall;
 		
 		float timeLeft = 30;
 		public float TimeLeft
@@ -76,12 +78,17 @@ namespace TMM
 		float recheargeTime = 20;
 		float recheargeElapsed = 0;
 
+		float wallHeightDefault;
+
+		CanvasGroup ruleCanvasGroup;
+
 
 		protected virtual void Awake()
         {
 			timeLeft = timer;
 			mainCanvas.worldCamera = Camera.main;
 			mainCanvas.planeDistance = .1f;
+			
         }
 
 	    // Start is called before the first frame update
@@ -90,6 +97,10 @@ namespace TMM
 			player = FindFirstObjectByType<FirstPersonController>();
 			//cameraRoot = player.GetComponent<CameraShake>().transform;
 			flashlight = player.transform.parent.GetComponentInChildren<Flashlight>();
+			wall = transform.Find("Wall").gameObject;
+			wallHeightDefault = wall.transform.localPosition.y;
+			ruleCanvasGroup = transform.Find("RuleCanvas").GetComponentInChildren<CanvasGroup>();
+			ruleCanvasGroup.alpha = 0;
 	    }
 
 		// Update is called once per frame
@@ -201,6 +212,8 @@ namespace TMM
 
 			// Kill any possible running tween
 			player.transform.DOKill();
+			wall.transform.DOKill();
+			ruleCanvasGroup.DOKill();
 
 			// Stop player from moving
 			player.InputDisabled = true;
@@ -213,6 +226,8 @@ namespace TMM
 			Sequence seq = DOTween.Sequence();
 			seq.Append(player.transform.DOMove(playerTarget.position, moveTime));
 			seq.Join(player.transform.DORotateQuaternion(playerTarget.rotation, moveTime));
+			seq.Join(wall.transform.DOLocalMoveY(wallHeightDefault * 6f, moveTime));
+			seq.Join(ruleCanvasGroup.DOFade(1, moveTime));
 			seq.OnComplete(() => { activated = true; if (activateDot) DotCanvas.Instance.Show(); });
 
 			DoChildActivation();
@@ -227,6 +242,8 @@ namespace TMM
 
 			// Kill any possible running tween
 			player.transform.DOKill();
+			wall.transform.DOKill();
+			ruleCanvasGroup.DOKill();
 
 			activated = false;
 
@@ -235,6 +252,8 @@ namespace TMM
 			Sequence seq = DOTween.Sequence();
 			seq.Append(player.transform.DOMove(lastPlayerPosition, moveTime));
 			seq.Join(player.transform.DORotateQuaternion(lastPlayerRotation, moveTime));
+			seq.Join(wall.transform.DOLocalMoveY(wallHeightDefault, moveTime));
+			seq.Join(ruleCanvasGroup.DOFade(0, moveTime));
 			seq.OnComplete(() =>
 			{
 				player.InputDisabled = false;
