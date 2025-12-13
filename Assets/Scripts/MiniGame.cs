@@ -81,6 +81,7 @@ namespace TMM
 		float wallHeightDefault;
 
 		CanvasGroup ruleCanvasGroup;
+	
 
 
 		protected virtual void Awake()
@@ -101,6 +102,8 @@ namespace TMM
 			wallHeightDefault = wall.transform.localPosition.y;
 			ruleCanvasGroup = transform.Find("RuleCanvas").GetComponentInChildren<CanvasGroup>();
 			ruleCanvasGroup.alpha = 0;
+			// var rechargeInteractor = transform.Find("RechargeInteractor").gameObject;
+			// recharger.SetInteractionCollider(rechargeInteractor.GetComponent<Collider>());
 	    }
 
 		// Update is called once per frame
@@ -116,7 +119,11 @@ namespace TMM
 #endif
 			if (activated)
 			{
+#if UNITY_EDITOR				
 				if (Input.GetMouseButtonDown(1))
+#else
+				if (Input.GetKeyDown(KeyCode.Escape))
+#endif
 				{
 					Deactivate();
 					return;
@@ -131,11 +138,11 @@ namespace TMM
 					return;
 				}
 
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-					if (Wallet.Instance.TryUseCoins(1))
-						Recharge();
-                }
+                // if (Input.GetKeyDown(KeyCode.E))
+                // {
+				// 	if (Wallet.Instance.TryUseCoins(1))
+				// 		Recharge();
+                // }
 			}
 			else
 			{
@@ -285,6 +292,10 @@ namespace TMM
 		{
 			beaten = true;
 			Deactivate();
+
+			// Deactivate triggers
+			deviceInteractor.SetEnable(false);
+			recharger.SetEnable(false);
 
 			beatenAudioSource.Play();
 

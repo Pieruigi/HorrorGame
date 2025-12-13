@@ -10,6 +10,8 @@ namespace TMM
 {
 	public class MessageManager : Singleton<MessageManager>
 	{
+		[SerializeField]
+		List<string> messages = new List<string>();
 
 
 		void OnEnable()
@@ -32,12 +34,22 @@ namespace TMM
 				}
 			}
 		}
-		
+
 		void SendFlashlightMessage()
-        {
+		{
 			var seq = DOTween.Sequence();
 			seq.AppendInterval(2f);
-			seq.OnComplete(()=> { MessageUI.Instance.ShowMessage("F: flashlight on/off"); });
-        }
+			seq.OnComplete(() => { MessageUI.Instance.ShowMessage("F: flashlight on/off"); });
+		}
+
+		public void ShowCustomMessage(int messageId, bool keepOn = false)
+		{
+			MessageUI.Instance.ShowMessage(messages[messageId], keepOn);
+		}
+		
+		public void HideMessage()
+		{
+			MessageUI.Instance.HideMessage();
+		}
     }
 }

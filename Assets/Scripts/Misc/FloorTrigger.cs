@@ -50,12 +50,12 @@ namespace TMM
 		void Update()
 		{
 #if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.X))
-			{
-					triggered = true;
-					MoveDown();
-					OnTriggered?.Invoke();
-			}
+			// if (Input.GetKeyDown(KeyCode.X))
+			// {
+			// 		triggered = true;
+			// 		MoveDown();
+			// 		OnTriggered?.Invoke();
+			// }
 #endif
 
 			if (!inside || triggered) return;

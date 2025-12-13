@@ -44,3 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce2f65d4229234b43a66833ba0e5585d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  messages:
+  - E - Activate
+  - E - Buy Time

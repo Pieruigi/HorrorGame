@@ -28,7 +28,9 @@ namespace TMM.UI
 
 
 			canvasGroup.alpha = 0;
-			
+
+			escField.gameObject.SetActive(false);
+
 #if UNITY_WEBGL
 			escField.text = "";
 #endif
@@ -45,10 +47,12 @@ namespace TMM.UI
 		{
 
 		}
-		
-		public void ShowMessage(string message)
-        {
+
+		public void ShowMessage(string message, bool keepOn = false)
+		{
 			if (visible) return;
+
+			canvasGroup.DOKill();
 
 			visible = true;
 
@@ -56,11 +60,24 @@ namespace TMM.UI
 
 			var seq = DOTween.Sequence();
 			seq.Append(canvasGroup.DOFade(1, fadeTime));
-			seq.AppendInterval(2f);
-			seq.Append(canvasGroup.DOFade(0, fadeTime));
+			if (!keepOn)
+			{
+				seq.AppendInterval(2f);
+				seq.Append(canvasGroup.DOFade(0, fadeTime));
+			}
 
+		}
+		
+		public void HideMessage()
+		{
+			if (!visible) return;
 
-        }
+			visible = false;
+
+			canvasGroup.DOKill();
+
+			canvasGroup.DOFade(0, fadeTime);
+		}
 
 	}
 }

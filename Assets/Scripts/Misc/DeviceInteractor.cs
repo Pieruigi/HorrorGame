@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using StarterAssets;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace TMM
@@ -23,7 +24,12 @@ namespace TMM
 		[SerializeField]
 		KeyCode key = KeyCode.None;
 
+		[SerializeField]
+		int messageId = -1;
+
 		bool inside = false;
+
+		bool lastShowMessage = false;
 
 	    // Start is called before the first frame update
 	    void Start()
@@ -34,19 +40,36 @@ namespace TMM
 		// Update is called once per frame
 		void Update()
 		{
-            if (inside)
-            {
-            	RaycastHit hit;
+			bool showMessage = false;
+			if (inside)
+			{
+				RaycastHit hit;
 				LayerMask mask = LayerMask.GetMask(new string[] { "Interactable" });
-				if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, FirstPersonController.InteractionDistance, mask))
+				if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, FirstPersonController.InteractionDistance, mask))
 				{
-				    if (hit.collider == interactionCollider && ((mouseButton0 && Input.GetMouseButtonDown(0)) || Input.GetKeyDown(key)))
-                    {
-						OnInteraction?.Invoke(this);
-                    }
-                }    
-            }
+					Debug.Log("AAAAAAAAAAAAAAAA:" + hit.collider.gameObject);
+					if (hit.collider == interactionCollider)
+					{
+						// Show message if any
+						showMessage = true; 
+						// Check interaction
+						if((mouseButton0 && Input.GetMouseButtonDown(0)) || Input.GetKeyDown(key))
+							OnInteraction?.Invoke(this);	
+					}
+					
+				}
+			}
+			
 
+			if(showMessage != lastShowMessage)
+			{
+				if (showMessage)
+					MessageManager.Instance.ShowCustomMessage(messageId, true);
+				else
+					MessageManager.Instance.HideMessage();
+			}
+
+			lastShowMessage = showMessage;
 			
 		}
 
@@ -71,10 +94,15 @@ namespace TMM
 		{
 			inside = false;
 		}
-		
+
 		public void SetEnable(bool value)
-        {
+		{
 			interactionCollider.enabled = value;
-        }
+		}
+		
+		public void SetInteractionCollider(Collider collider)
+		{
+			interactionCollider = collider;
+		}
     }
 }
