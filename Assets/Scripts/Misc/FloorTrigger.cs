@@ -128,10 +128,18 @@ namespace TMM
 			transform.DOKill();
 			transform.DOMoveY(height, .5f).OnComplete(() => { triggered = false; MazeBuilder.Instance.BuildNavMesh(); });
 		}
-		
+
 		public void SetStepDirection(int index, bool visible)
 		{
 			stepDirections[index] = visible;
 		}
+
+		public void SwitchOff()
+		{
+			triggered = true;
+			MoveDown();
+		}
+		
+		
     }
 }

@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TMM
 {
 	public class AlarmManager : Singleton<AlarmManager>
 	{
+		public static UnityAction OnActivated;
+		public static UnityAction OnDeactivated;
+
 		[SerializeField]
 		AudioSource alarmAudioSource;
 
@@ -24,6 +28,7 @@ namespace TMM
 			{
 				active = true;
 				alarmAudioSource.Play();
+				OnActivated?.Invoke();
 			}
 		}
 
@@ -34,6 +39,7 @@ namespace TMM
 			{
 				active = false;
 				alarmAudioSource.Stop();
+				OnDeactivated?.Invoke();
 			}
 		}
 		

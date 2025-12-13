@@ -23,10 +23,24 @@ namespace TMM.Scriptables
 		}
 
 		[SerializeField]
-		int weight = 10;
-		public int Weight
+		int minCount = 1;
+		public int MinCount
 		{
-			get{ return weight; }
+			get{ return minCount; }
 		}
+
+		[SerializeField]
+		int maxCount = 3;
+		public int MaxCount
+		{
+			get{ return maxCount; }
+		}
+
+		// [SerializeField]
+		// int weight = 10;
+		// public int Weight
+		// {
+		// 	get{ return weight; }
+		// }
 	}
 }

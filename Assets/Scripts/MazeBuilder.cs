@@ -2,6 +2,7 @@
 #define USE_WEIGHT
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using StarterAssets;
 using TMM.Scriptables;
 using Unity.AI.Navigation;
@@ -183,10 +184,34 @@ namespace TMM
 			var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).ToList();
 			Debug.Log($"FloorTriggers.Count:{all.Count}");
 
+
+
 			// Get all floors
 			var floors = tiles.Where(t => t.type == 0).ToList();
 
-			floors[0].asset = all[0];
+			// Remove in tile from the list (we don't want to spawn on some trap or alarm)
+			floors.Remove(inTile);
+
+			// Add tiles
+			foreach (var asset in all)
+			{
+				int count = Random.Range(asset.MinCount, asset.MaxCount + 1);
+				while(count > 0 && floors.Count > 0)
+				{
+					// Get a random floor tile
+					var tile = floors[Random.Range(0, floors.Count)];
+					// Set trigger tile 
+					tile.asset = asset;
+					// Remove current tile and closest ones from floor tiles
+					floors.RemoveAll(t => t == tile || Vector3.Distance(t.coords, tile.coords) < 3);
+					// Update count
+					count--;
+				}
+			}
+
+			
+
+			//floors[0].asset = all[0];
 		}
 
 		void AddCoins()

@@ -40,11 +40,25 @@ namespace TMM
 		void OnEnable()
 		{
 			floorTrigger.OnTriggered += HandleOnTriggered;
+			AlarmManager.OnActivated += HandleOnAlarmaActivated;
+			AlarmManager.OnDeactivated += HandleOnAlarmDeactivated;
 		}
 
         void OnDisable()
         {
-            floorTrigger.OnTriggered -= HandleOnTriggered;
+			floorTrigger.OnTriggered -= HandleOnTriggered;
+			AlarmManager.OnActivated -= HandleOnAlarmaActivated;
+			AlarmManager.OnDeactivated -= HandleOnAlarmDeactivated;
+        }
+
+        private void HandleOnAlarmaActivated()
+        {
+			floorTrigger.SwitchOff();
+        }
+
+        private void HandleOnAlarmDeactivated()
+        {
+			floorTrigger.ResetTrigger();
         }
 
         private void HandleOnTriggered()
