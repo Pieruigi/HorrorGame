@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps;
 
 namespace TMM
 {
@@ -31,11 +32,30 @@ namespace TMM
 
 		bool[] stepDirections = new bool[4];
 
+		Material tileMaterial;
+		Material stepMaterial;
+
+		float materialIntensity = 6.5f;
+		
+		
         void Awake()
         {
 			height = transform.position.y;
 			transform.localPosition = Vector3.up * height;
 			HideStepAll();
+
+			// Get tile material
+			var rend = GetComponent<Renderer>();
+			tileMaterial = new Material(rend.material);
+			tileMaterial.SetVector("_BaseColor", new Vector4(1, 1, 1, 1) * materialIntensity);
+			rend.material = tileMaterial;
+
+			// Get step material
+			rend = steps[0].GetComponent<Renderer>();
+			stepMaterial = new Material(rend.material);
+			stepMaterial.SetVector("_BaseColor", new Vector4(1, 1, 1, 1) * materialIntensity);
+			foreach(var step in steps)
+				step.GetComponent<Renderer>().material = stepMaterial;
 			
         }
 
@@ -43,7 +63,11 @@ namespace TMM
         void Start()
 	    {
 			characterController = FindFirstObjectByType<CharacterController>();
+
 			ShowSteps();
+
+
+
 	    }
 
 		// Update is called once per frame
@@ -87,7 +111,7 @@ namespace TMM
         {
 			activationTrigger.OnEnter -= HandleOnEnter;
 			activationTrigger.OnExit -= HandleOnExit;
-        }
+	    }
 
         private void HandleOnEnter(Collider other)
         {
@@ -115,8 +139,12 @@ namespace TMM
 		void MoveDown()
 		{
 			transform.DOKill();
-			transform.DOMoveY(0, .5f).OnComplete(() => { HideStepAll(); MazeBuilder.Instance.BuildNavMesh(); });
-			
+			float time = .5f;
+			var seq = DOTween.Sequence();
+			seq.Append(transform.DOMoveY(0, time));
+			seq.Join(tileMaterial.DOVector(new Vector4(1, 1, 1, 0), "_BaseColor", time));
+			seq.Join(stepMaterial.DOVector(new Vector4(1, 1, 1, 0), "_BaseColor", time));
+			seq.OnComplete(() => { HideStepAll(); MazeBuilder.Instance.BuildNavMesh(); });
 		}
 
 		public void ResetTrigger()
@@ -126,7 +154,12 @@ namespace TMM
 			ShowSteps();
 
 			transform.DOKill();
-			transform.DOMoveY(height, .5f).OnComplete(() => { triggered = false; MazeBuilder.Instance.BuildNavMesh(); });
+			float time = .5f;
+			var seq = DOTween.Sequence();
+			seq.Append(transform.DOMoveY(height, time));
+			seq.Join(tileMaterial.DOVector(new Vector4(1, 1, 1, 1) * materialIntensity, "_BaseColor", time));
+			seq.Join(stepMaterial.DOVector(new Vector4(1, 1, 1, 1) * materialIntensity, "_BaseColor", time));
+			seq.OnComplete(() => { triggered = false; MazeBuilder.Instance.BuildNavMesh(); });
 		}
 
 		public void SetStepDirection(int index, bool visible)
@@ -136,6 +169,7 @@ namespace TMM
 
 		public void SwitchOff()
 		{
+			if (triggered) return;
 			triggered = true;
 			MoveDown();
 		}

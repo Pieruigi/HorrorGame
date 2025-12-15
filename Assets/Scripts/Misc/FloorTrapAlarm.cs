@@ -33,7 +33,7 @@ namespace TMM
 			{
 				activated = false;
 				AlarmManager.Instance.ReportTriggerDeactivated(gameObject);
-				floorTrigger.ResetTrigger();
+				//floorTrigger.ResetTrigger();
 			}
 		}
 
@@ -42,6 +42,7 @@ namespace TMM
 			floorTrigger.OnTriggered += HandleOnTriggered;
 			AlarmManager.OnActivated += HandleOnAlarmaActivated;
 			AlarmManager.OnDeactivated += HandleOnAlarmDeactivated;
+			TriggerTileManager.OnChanged += HandleOnTriggerTileManagerChanged;
 		}
 
         void OnDisable()
@@ -49,6 +50,16 @@ namespace TMM
 			floorTrigger.OnTriggered -= HandleOnTriggered;
 			AlarmManager.OnActivated -= HandleOnAlarmaActivated;
 			AlarmManager.OnDeactivated -= HandleOnAlarmDeactivated;
+			TriggerTileManager.OnChanged -= HandleOnTriggerTileManagerChanged;
+        }
+
+        private void HandleOnTriggerTileManagerChanged()
+        {
+			if (TriggerTileManager.Instance.TriggerTilesDisabled)
+				floorTrigger.SwitchOff();
+			else if (!AlarmManager.Instance.IsActive())
+				floorTrigger.ResetTrigger();
+			
         }
 
         private void HandleOnAlarmaActivated()
@@ -57,7 +68,9 @@ namespace TMM
         }
 
         private void HandleOnAlarmDeactivated()
-        {
+		{
+			if (TriggerTileManager.Instance.TriggerTilesDisabled) return;
+			 
 			floorTrigger.ResetTrigger();
         }
 
