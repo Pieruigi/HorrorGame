@@ -35,7 +35,7 @@ namespace TMM
 		Material tileMaterial;
 		Material stepMaterial;
 
-		float materialIntensity = 6.5f;
+		float materialIntensity = 1f;//6.5f;
 		
 		
         void Awake()

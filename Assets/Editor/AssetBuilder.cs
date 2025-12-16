@@ -97,7 +97,7 @@ namespace TMM.Editor
             Selection.activeObject = asset;
         }
 
-         [MenuItem("Assets/Create/DD2/FloorTrigger")]
+        [MenuItem("Assets/Create/DD2/FloorTrigger")]
         public static void CreateFloorTriggerAsset()
         {
             FloorTriggerAsset asset = ScriptableObject.CreateInstance<FloorTriggerAsset>();
@@ -105,6 +105,48 @@ namespace TMM.Editor
             string name = "FloorTrigger.asset";
 
             string folder = System.IO.Path.Combine(ResourceFolder, FloorTriggerAsset.ResourceFolder);
+
+            if (!System.IO.Directory.Exists(folder))
+                System.IO.Directory.CreateDirectory(folder);
+
+            AssetDatabase.CreateAsset(asset, System.IO.Path.Combine(folder, name));
+
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+
+            Selection.activeObject = asset;
+        }
+
+        [MenuItem("Assets/Create/DD2/VendingMachineBlock")]
+        public static void CreateVendingMachineBlockAsset()
+        {
+            VendingMachineBlockAsset asset = ScriptableObject.CreateInstance<VendingMachineBlockAsset>();
+
+            string name = "VendingMachineBlock.asset";
+
+            string folder = System.IO.Path.Combine(ResourceFolder, VendingMachineBlockAsset.ResourceFolder);
+
+            if (!System.IO.Directory.Exists(folder))
+                System.IO.Directory.CreateDirectory(folder);
+
+            AssetDatabase.CreateAsset(asset, System.IO.Path.Combine(folder, name));
+
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.FocusProjectWindow();
+
+            Selection.activeObject = asset;
+        }
+        
+        [MenuItem("Assets/Create/DD2/NoTriggerTilesBlock")]
+        public static void CreateNoTriggerTilesBlockAsset()
+        {
+            NoTriggerTilesBlockAsset asset = ScriptableObject.CreateInstance<NoTriggerTilesBlockAsset>();
+
+            string name = "NoTriggerTilesBlock.asset";
+
+            string folder = System.IO.Path.Combine(ResourceFolder, NoTriggerTilesBlockAsset.ResourceFolder);
 
             if (!System.IO.Directory.Exists(folder))
                 System.IO.Directory.CreateDirectory(folder);

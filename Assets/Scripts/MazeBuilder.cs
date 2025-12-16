@@ -8,9 +8,11 @@ using TMM.Scriptables;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.Android;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal.Internal;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 namespace TMM
 {
@@ -38,7 +40,7 @@ namespace TMM
 
 			public List<GameObject> prefabs = new List<GameObject>();
 
-			public int blockType = 0; // 0: common, 1: minigame
+			public int blockType = 0; // 0: common, 1: minigame, 2: vending machine
 
 
 		}
@@ -181,10 +183,9 @@ namespace TMM
 		void AddFloorTriggers()
 		{
 			// Get resources
-			var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).ToList();
+			int stage = GameManager.Instance.GameStage;
+			var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).Where(r=>(r.MinStage < 0 || r.MinStage <= stage) && (r.MaxStage < 0 || r.MaxStage >= stage)).ToList();
 			Debug.Log($"FloorTriggers.Count:{all.Count}");
-
-
 
 			// Get all floors
 			var floors = tiles.Where(t => t.type == 0).ToList();
@@ -210,8 +211,6 @@ namespace TMM
 			}
 
 			
-
-			//floors[0].asset = all[0];
 		}
 
 		void AddCoins()
@@ -456,13 +455,13 @@ namespace TMM
 			floorPrefab = floors[0].Prefab;
 
 			// // Load wall blocks
-			var blocks= Resources.LoadAll<WallBlockAsset>($"{WallBlockAsset.ResourceFolder}/{theme}");
-			
+			var blocks = Resources.LoadAll<WallBlockAsset>($"{WallBlockAsset.ResourceFolder}/{theme}");
+
 			// Clear the available block list
 			availableBlocks.Clear();
 			// Fill the list
-			foreach(var block in blocks)
-            {
+			foreach (var block in blocks)
+			{
 				WallBlockData wbd = new WallBlockData();
 				wbd.createFlippedVariant = block.CreateFlippedVariant;
 				wbd.min = block.Min;
@@ -471,10 +470,44 @@ namespace TMM
 				wbd.prefabs = block.Prefabs.ToList();
 				wbd.tiles = block.GetTiles();
 				availableBlocks.Add(wbd);
-            }
+			}
 
+			// Check for no trigger tiles floor block
+			var stage = GameManager.Instance.GameStage;
+			bool hasTriggerTiles = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).ToList().Exists(r => (r.MinStage < 0 || r.MinStage <= stage) && (r.MaxStage < 0 || r.MaxStage >= stage));
+			if (hasTriggerTiles)
+			{
+				var nttb = Resources.LoadAll<NoTriggerTilesBlockAsset>($"{NoTriggerTilesBlockAsset.ResourceFolder}/{theme}");
+				var vb = nttb[0];
+				
+				WallBlockData wbd = new WallBlockData();
+				wbd.createFlippedVariant = false;
+				wbd.min = 1;
+				wbd.weight = 0;
+				wbd.count = 0;
+				wbd.prefabs = new List<GameObject>() { vb.Prefab };
+				wbd.tiles = vb.GetTiles();
+				availableBlocks.Add(wbd);
+				
+			}
 			
-        }
+			
+
+			// // Check for no trigger tiles floor block
+			// var vendBlocks = Resources.LoadAll<VendingMachineBlockAsset>($"{VendingMachineBlockAsset.ResourceFolder}/{theme}");
+			// foreach(var vb in vendBlocks)
+			// {
+			// 	WallBlockData wbd = new WallBlockData();
+			// 	wbd.createFlippedVariant = false;
+			// 	wbd.min = Random.Range(vb.MinCount, vb.MaxCount + 1);
+			// 	wbd.weight = 0;
+			// 	wbd.count = 0;
+			// 	wbd.prefabs = new List<GameObject>() { vb.Prefab };
+			// 	wbd.tiles = vb.GetTiles();
+			// 	availableBlocks.Add(wbd);
+			// }
+
+		}
 
 
 

@@ -106,11 +106,17 @@ namespace TMM
 		{
 			buttonField.color = disabled ? disabledColor : enabledColor;
 		}
-		
+
 		void InitDescription(bool disabled)
 		{
 			descriptionField.color = disabled ? enabledColor : disabledColor;
 		}
+
+		// public void SetType(VendingMachineType type)
+		// {
+		// 	this.type = type;
+		// 	Init();
+		// }
 
 	}
 }
