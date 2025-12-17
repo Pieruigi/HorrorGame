@@ -570,6 +570,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7724522525438651522, guid: 1f053a8e9b368094ca80c911e0bcc657,
         type: 3}
+      propertyPath: pinPrefab
+      value: 
+      objectReference: {fileID: 4465209513618747632, guid: 15edc2a0bc4773245b71be3a9fa44256,
+        type: 3}
+    - target: {fileID: 7724522525438651522, guid: 1f053a8e9b368094ca80c911e0bcc657,
+        type: 3}
       propertyPath: wallPrefab
       value: 
       objectReference: {fileID: 6421191631804042817, guid: 0affd8ed9f278a6479719ce838faa481,

@@ -559,6 +559,8 @@ namespace TMM
 			foreach (var sb in specialBlocks)
 			{
 				candidates.RemoveAll(t => Vector3.Distance(t.coords, sb.origin.coords) < 8);
+				if(candidates.Count == 0)
+					candidates = tiles.Where(t => t.type == 0 && GetTile(t.coords + Vector2.down) < 0 && !tiles.Exists(t2 => t2.coords.x == t.coords.x && t2.coords.y < t.coords.y)).ToList();
 			}
 
 			inTile = candidates[Random.Range(0, candidates.Count)];
@@ -568,6 +570,8 @@ namespace TMM
 			foreach (var sb in specialBlocks)
 			{
 				candidates.RemoveAll(t => Vector3.Distance(t.coords, sb.origin.coords) < 8);
+				if(candidates.Count == 0)
+					candidates = tiles.Where(t => t.type == 0 && GetTile(t.coords + Vector2.up) < 0 && !tiles.Exists(t2 => t2.coords.x == t.coords.x && t2.coords.y > t.coords.y)).ToList();
 			}
 
 			outTile = candidates[Random.Range(0, candidates.Count)];

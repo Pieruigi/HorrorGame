@@ -3,12 +3,24 @@ using System.Collections.Generic;
 using DG.Tweening;
 using StarterAssets;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.UI;
 
 namespace TMM.UI
 {
 	public class MapUI : MonoBehaviour
 	{
+		class PointOfInterest
+		{
+			public enum Type { MiniGame, VendingMachine }
+			
+			public GameObject mapObject;
+
+			public Type type;
+
+			public PinMap pin;
+		}
+
 		[SerializeField]
 		CanvasGroup canvasGroup;
 
@@ -45,10 +57,15 @@ namespace TMM.UI
 
 		float mapRatio;
 
-		List<GameObject> pointsOfInterest = new List<GameObject>();
+		List<PointOfInterest> pointsOfInterest = new List<PointOfInterest>();
 
-		// Start is called before the first frame update
-		void Start()
+	    void Awake()
+        {
+            mapRatio = cellSize / MazeBuilder.CellSize;
+        }
+
+        // Start is called before the first frame update
+        void Start()
 	    {
 			fpc = FindFirstObjectByType<FirstPersonController>();
 			playerStartingPosition = fpc.transform.position;
@@ -74,6 +91,7 @@ namespace TMM.UI
 			UpdatePositionAndRotation();
 
 			UpdatePointsOfInterest();
+			
         }
 
         void OnEnable()
@@ -113,20 +131,67 @@ namespace TMM.UI
 			Debug.Log($"Rect:{playerPos}");
 			foreach(var poi in pointsOfInterest)
 			{
-				var poiPos = (poi.transform as RectTransform).anchoredPosition + rootPos;
+				//if (poi.type != PointOfInterest.Type.MiniGame) continue;
+				var poiPos = (poi.mapObject.transform as RectTransform).anchoredPosition + rootPos;
 
+				
 				var atanPoi = Mathf.Atan(poiPos.y / poiPos.x) * Mathf.Deg2Rad;
 				var angle = atanPoi - yaw;
 				angle *= Mathf.Deg2Rad;
-				var poiX = poiPos.x * Mathf.Cos(angle) + poiPos.y * Mathf.Sin(angle);
-				var poiY = -poiPos.x * Mathf.Sin(angle) + poiPos.y * Mathf.Cos(angle);
+				var poiX = poiPos.x * Mathf.Cos(angle) + poiPos.y * Mathf.Sin(angle); // X relative to player screen
+				var poiY = -poiPos.x * Mathf.Sin(angle) + poiPos.y * Mathf.Cos(angle); // Y relative to player screen
 				Debug.Log($"POI(X,Y):{poiX},{poiY}");
 				
-				Debug.Log($"POI.Rect:{poiPos}");
-				if (Mathf.Abs(poiX) < width/2f && Mathf.Abs(poiY) < height/2f)
+				
+				if (Mathf.Abs(poiX) < width/2f && Mathf.Abs(poiY) < height / 2f)
+				{
 					Debug.Log($"POI is visibile");
+					poi.pin.Hide();
+				}
 				else
-				 	Debug.Log($"POI is NOT visibile");
+				{
+					Debug.Log($"POI is NOT visibile");
+
+					var pin = poi.pin;
+					pin.Show();
+					var h = height / 2f - 20;
+					var w = width / 2f - 20;
+					float x = 0, y = 0;
+					// Check Y
+					if (poiY > h || poiY < -h)
+					{
+						// Horizontal intersection
+						y = poiY > h ? h : -h;
+						x = y * poiX / poiY;
+
+						if(x > w || x < -w)
+						{
+							// Vertical
+							x = x > w ? w : -w;
+							y = x * poiY / poiX;
+						}
+						Debug.Log($"Pin {x}		{y}");
+
+						
+					}
+					else // Check X
+					{
+						if(poiX > w || poiX < -w)
+						{
+							x = poiX > w ? w : -w;
+							y = x * poiY / poiX;
+						}
+					}
+					
+
+					// Move pin out
+					var oldParent = pin.transform.parent;
+					pin.transform.parent = canvasGroup.transform;
+					(pin.transform as RectTransform).anchoredPosition = new Vector2(x, y);
+					pin.transform.parent = oldParent;
+					
+				}
+				 	
 			}
 		}
 
@@ -148,8 +213,35 @@ namespace TMM.UI
 
 		void Create()
 		{
-			mapRatio = cellSize / MazeBuilder.CellSize;
 
+			CheckFloor();
+
+			CheckBlocks();
+
+			CreatePins();
+
+			// Move to starting position
+			MoveToStartingPosition();
+
+		}
+		
+		void CreatePins()
+		{
+			foreach(var poi in pointsOfInterest)
+			{
+				var pin = Instantiate(pinPrefab, mapRoot);
+				poi.pin = pin.GetComponent<PinMap>(); 
+				
+				if (poi.type == PointOfInterest.Type.MiniGame || poi.type == PointOfInterest.Type.VendingMachine)
+					poi.pin.SetGoodPin();
+				else
+					poi.pin.SetBadPin();
+
+			}
+		}
+
+		void CheckFloor()
+		{
 			var builder = MazeBuilder.Instance;
 			// Get the number of tiles
 			int count = builder.TileCount;
@@ -162,52 +254,31 @@ namespace TMM.UI
 				if (builder.IsEnterTile(i))
 					enterTIleIndex = i;
 
-				var blockType = -1;
-				if (builder.IsMiniGameController(i))
-				{
-					blockType = 1;
-				}
 				// Tile type
 				var type = builder.GetTileType(i);
 				// Return if tile is not a floor tile
-				if (type != 0 && blockType < 0) continue;
+				if (type != 0) continue;
 
 				// Get coordinates
 				var coords = builder.GetTileCoords(i);
-				// Get prefab
-				var prefab = floorPrefab;
-				if (blockType == 1)
-					prefab = miniGamePrefab;
 				// Create a new map floor and add to the root
-				var mf = Instantiate(prefab, mapRoot);
+				var mf = Instantiate(floorPrefab, mapRoot);
 				mf.name = $"T-{i.ToString("000")}";
 				mf.transform.localPosition = coords * cellSize;
 				mf.transform.localRotation = Quaternion.identity;
 
 				floors.Add(mf);
 
-				CheckBlocks();
-
-				if (blockType >= 0)
-					pointsOfInterest.Add(mf);
+				CreateWalls(coords, mf.transform);
 
 				
 
 				// Hide floor
 				//mf.GetComponent<Image>().enabled = false;
 
-				if (blockType < 0)
-					CreateWalls(coords, mf.transform);
-
-
 			}
-
-			// Move to starting position
-			MoveToStartingPosition();
-
-
 		}
-		
+
 		void CheckBlocks()
 		{
 			var builder = MazeBuilder.Instance;
@@ -215,35 +286,53 @@ namespace TMM.UI
 			
 			for(int i=0; i<count; i++)
 			{
+				var blockType = builder.GetBlockType(i);
+				if (blockType == 0) continue;
+
 				var coords = builder.GetBlockCoords(i);
 				var rotType = builder.GetBlockRotationType(i);
-				var blockType = builder.GetBlockType(i);
-				var otherCoords = Vector2.down;
+				
+				var otherCoords = coords + Vector2.down;
 				switch (rotType)
 				{
 					case 1:
-						otherCoords = Vector2.left;
+						otherCoords = coords + Vector2.left;
 						break;
 					case 2:
-						otherCoords = Vector2.up;
+						otherCoords = coords + Vector2.up;
 						break;
 					case 3:
-						otherCoords = Vector2.right;
+						otherCoords = coords + Vector2.right;
 						break;
 				}
 
+				var poi = new PointOfInterest();
 				GameObject prefab = null;
 				switch (blockType)
 				{
 					case 1:
+						prefab = miniGamePrefab;
+						poi.type = PointOfInterest.Type.MiniGame;
+						break;
+					case 2:
+						prefab = miniGamePrefab;
+						poi.type = PointOfInterest.Type.VendingMachine;
+						break;
+					default:
 						prefab = miniGamePrefab;
 						break;
 				}
 
 				var mf = Instantiate(prefab, mapRoot);
 				mf.name = $"T-{i.ToString("000")}-{blockType}";
-				mf.transform.localPosition = coords * cellSize;
+				mf.transform.localPosition = otherCoords * cellSize;
 				mf.transform.localRotation = Quaternion.identity;
+
+				
+				poi.mapObject = mf;
+				
+
+				pointsOfInterest.Add(poi);
 			}
 		}
 
@@ -276,12 +365,7 @@ namespace TMM.UI
 						wl.transform.localEulerAngles = Vector3.forward * -90f * j;		
 					}
 		
-					// Get the other type
-					// var otherType = builder.GetTileType(otherIndex);
-					// if (otherType == 0) continue;
-
-					// Create wall
-					//CreateWall(mf.transform, j);
+				
 				}
 		}
 	}
