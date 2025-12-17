@@ -136,9 +136,15 @@ namespace TMM
 
 		int minigameBlockIndex;
 
+		int doubleCreatureStage = 4;
+		int tripleCreatureStage = 7;
+
+		float doubleMultiplier = 1.5f;
+		float tripleMultiplier = 2f;
 
 
-		
+
+
 		// Start is called before the first frame update
 		void Start()
 		{
@@ -294,20 +300,39 @@ namespace TMM
 
 		void SpawnMonster()
 		{
-			// Choose a floor tile (type = 0) which is at a minimum distance the palayer spawn point
-			float minDistance = 10f / CellSize;
-			List<Tile> candidates = tiles.Where(t => t.type == 0 && Vector3.Distance(inTile.coords, t.coords) > minDistance).ToList();
-			if (candidates.Count == 0) // Just to be sure
-				candidates = tiles.Where(t => t.type == 0 && Vector3.Distance(inTile.coords, t.coords) > minDistance / 2f).ToList();
+			
+			int stage = GameManager.Instance.GameStage;
+			int creatureCount = 1;
+			if (stage >= doubleCreatureStage)
+			{
+				creatureCount++;
+			}
+			if(stage >= tripleCreatureStage)
+			{
+				creatureCount++;
+			}
+			
+			for(int i=0; i<creatureCount; i++)
+			{
+				// Choose a floor tile (type = 0) which is at a minimum distance the palayer spawn point
+				float minDistance = 10f / CellSize;
+				List<Tile> candidates = tiles.Where(t => t.type == 0 && Vector3.Distance(inTile.coords, t.coords) > minDistance).ToList();
+				if (candidates.Count == 0) // Just to be sure
+					candidates = tiles.Where(t => t.type == 0 && Vector3.Distance(inTile.coords, t.coords) > minDistance / 2f).ToList();
 
-			// Get a random point
-			var spawnTile = candidates[Random.Range(0, candidates.Count)];
-		
-			// Instantiate the monster gameobject
-			var monster = Instantiate(monsterPrefab);
-			monster.GetComponent<NavMeshAgent>().enabled = false;
-			monster.transform.position = new Vector3(spawnTile.coords.x, 0, spawnTile.coords.y) * CellSize;
-			monster.GetComponent<NavMeshAgent>().enabled = true;
+				// Get a random point
+				var spawnTile = candidates[Random.Range(0, candidates.Count)];
+				// Remove current and closest tiles
+				candidates.RemoveAll(t => t == spawnTile || Vector3.Distance(t.coords, spawnTile.coords) < 12);
+			
+				// Instantiate the monster gameobject
+				var monster = Instantiate(monsterPrefab);
+				monster.GetComponent<NavMeshAgent>().enabled = false;
+				monster.transform.position = new Vector3(spawnTile.coords.x, 0, spawnTile.coords.y) * CellSize;
+				monster.GetComponent<NavMeshAgent>().enabled = true;	
+			}
+
+			
 			
         }
 
@@ -903,6 +928,12 @@ namespace TMM
 
 		void ChooseBlocks()
 		{
+			int stage = GameManager.Instance.GameStage;
+			if (stage >= doubleCreatureStage && stage < tripleCreatureStage)
+				wallMax = Mathf.CeilToInt(wallMax * doubleMultiplier);
+			else if(stage >= tripleCreatureStage)
+				wallMax = Mathf.CeilToInt(wallMax * tripleMultiplier);
+
 #if USE_WEIGHT
 			// Minumum
 			int count = 0;

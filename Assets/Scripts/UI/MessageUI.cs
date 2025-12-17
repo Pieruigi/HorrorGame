@@ -64,6 +64,7 @@ namespace TMM.UI
 			{
 				seq.AppendInterval(2f);
 				seq.Append(canvasGroup.DOFade(0, fadeTime));
+				seq.OnComplete(() => { visible = false; });
 			}
 
 		}

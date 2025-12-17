@@ -143,7 +143,7 @@ namespace TMM.AI
 
 		void InitByStage()
 		{
-			walkSpeed *= 0.75f;
+			walkSpeed *= 0.75f; // 1.75, 2.5
 			runSpeed *= 0.75f;
 			
 
