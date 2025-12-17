@@ -543,33 +543,48 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2979079714061634130, guid: 1f053a8e9b368094ca80c911e0bcc657,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3130981576083180499, guid: 1f053a8e9b368094ca80c911e0bcc657,
         type: 3}
       propertyPath: m_Name
       value: MapUI
       objectReference: {fileID: 0}
-    - target: {fileID: 7359766589015793851, guid: 1f053a8e9b368094ca80c911e0bcc657,
+    - target: {fileID: 3130981576083180499, guid: 1f053a8e9b368094ca80c911e0bcc657,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3681950420719453069, guid: 1f053a8e9b368094ca80c911e0bcc657,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4419527757973382499, guid: 1f053a8e9b368094ca80c911e0bcc657,
         type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7724522525438651522, guid: 1f053a8e9b368094ca80c911e0bcc657,
         type: 3}
-      propertyPath: mapFloor
-      value: 
-      objectReference: {fileID: 3263591708711443682, guid: aabe284d7c3da6140a52319e77c36cbe,
-        type: 3}
-    - target: {fileID: 7724522525438651522, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: mapWallPrefab
+      propertyPath: wallPrefab
       value: 
       objectReference: {fileID: 6421191631804042817, guid: 0affd8ed9f278a6479719ce838faa481,
         type: 3}
     - target: {fileID: 7724522525438651522, guid: 1f053a8e9b368094ca80c911e0bcc657,
         type: 3}
-      propertyPath: mapFloorPrefab
+      propertyPath: floorPrefab
       value: 
       objectReference: {fileID: 3263591708711443682, guid: aabe284d7c3da6140a52319e77c36cbe,
+        type: 3}
+    - target: {fileID: 7724522525438651522, guid: 1f053a8e9b368094ca80c911e0bcc657,
+        type: 3}
+      propertyPath: miniGamePrefab
+      value: 
+      objectReference: {fileID: 3014504082666015766, guid: a437bc17474d2314db607be7c2ec6f94,
         type: 3}
     - target: {fileID: 9218024283005024642, guid: 1f053a8e9b368094ca80c911e0bcc657,
         type: 3}
@@ -578,8 +593,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9218024283005024642, guid: 1f053a8e9b368094ca80c911e0bcc657,
         type: 3}
-      propertyPath: m_PixelPerfect
-      value: 1
+      propertyPath: m_SortingOrder
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3203,10 +3218,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 706567921611571114, guid: 9a46aca5371ee5942bab30381bf55c1a,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4184032207761029357, guid: 9a46aca5371ee5942bab30381bf55c1a,
         type: 3}
       propertyPath: m_Name
       value: CameraFadeUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 4184032207761029357, guid: 9a46aca5371ee5942bab30381bf55c1a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4444722461925748724, guid: 9a46aca5371ee5942bab30381bf55c1a,
         type: 3}

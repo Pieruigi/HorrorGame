@@ -28,7 +28,7 @@ namespace TMM
 		{
 			public List<Vector2> tiles;
 
-			public bool createFlippedVariant; 
+			public bool createFlippedVariant;
 
 			public int min;
 
@@ -36,7 +36,7 @@ namespace TMM
 			public int weight;
 #else
 			public int max;
-#endif 
+#endif
 
 
 			public int count;
@@ -67,15 +67,15 @@ namespace TMM
 			public FloorAsset asset; // Only available for triggers
 
 			public bool AvailableForSpawn()
-            {
+			{
 				return coin == null;
-            }
-			
+			}
+
 		}
 
 		[System.Serializable]
 		class WallBlock
-        {
+		{
 			public WallBlockData data;
 
 			public int rotationType;
@@ -85,9 +85,9 @@ namespace TMM
 			public Tile origin;
 
 			public GameObject mainObject;
-        }
-		
-		
+		}
+
+
 
 		[SerializeField]
 		GameObject wallHelperPrefab;
@@ -147,10 +147,13 @@ namespace TMM
 
 		public int TileCount
 		{
-			get{ return tiles.Count; }
+			get { return tiles.Count; }
 		}
 
-
+		public int BlockCount
+		{
+			get{ return blocks.Count; }
+		}
 
 
 		// Start is called before the first frame update
@@ -181,7 +184,7 @@ namespace TMM
 			SpawnMonster();
 
 			OnMazeCreated?.Invoke();
-	    }
+		}
 
 		// Update is called once per frame
 		void Update()
@@ -198,7 +201,7 @@ namespace TMM
 		{
 			// Get resources
 			int stage = GameManager.Instance.GameStage;
-			var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).Where(r=>(r.MinStage < 0 || r.MinStage <= stage) && (r.MaxStage < 0 || r.MaxStage >= stage)).ToList();
+			var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).Where(r => (r.MinStage < 0 || r.MinStage <= stage) && (r.MaxStage < 0 || r.MaxStage >= stage)).ToList();
 			Debug.Log($"FloorTriggers.Count:{all.Count}");
 
 			// Get all floors
@@ -211,7 +214,7 @@ namespace TMM
 			foreach (var asset in all)
 			{
 				int count = Random.Range(asset.MinCount, asset.MaxCount + 1);
-				while(count > 0 && floors.Count > 0)
+				while (count > 0 && floors.Count > 0)
 				{
 					// Get a random floor tile
 					var tile = floors[Random.Range(0, floors.Count)];
@@ -224,12 +227,12 @@ namespace TMM
 				}
 			}
 
-			
+
 		}
 
 		void AddCoins()
 		{
-            // Get tiles at a minimum given distance from in and out tiles
+			// Get tiles at a minimum given distance from in and out tiles
 			List<Tile> availables = tiles.Where(t => t.type == 0 && t.AvailableForSpawn()).ToList();
 			availables.RemoveAll(t => t == inTile || Vector3.Distance(t.coords, inTile.coords) < 3);
 			availables.RemoveAll(t => t == outTile || Vector3.Distance(t.coords, outTile.coords) < 3);
@@ -237,7 +240,7 @@ namespace TMM
 			int maxCoins = Random.Range(1, 4);
 			int count = 0;
 
-			while(availables.Count > 0 && count < maxCoins)
+			while (availables.Count > 0 && count < maxCoins)
 			{
 				// get a random tile
 				var tile = availables[Random.Range(0, availables.Count)];
@@ -247,9 +250,9 @@ namespace TMM
 				availables.RemoveAll(t => t == tile || Vector2.Distance(t.coords, tile.coords) < 3);
 
 				count++;
-            }
+			}
 
-        }		
+		}
 
 		void AddLights()
 		{
@@ -266,9 +269,9 @@ namespace TMM
 			List<Tile> availables = tiles.Where(t => t.type == 0 && t.light == null).ToList();
 			availables.RemoveAll(t => t == inTile || Vector3.Distance(t.coords, inTile.coords) < 3);
 			availables.RemoveAll(t => t == outTile || Vector3.Distance(t.coords, outTile.coords) < 3);
-		
 
-			while(availables.Count > 0 && count < maxLights)
+
+			while (availables.Count > 0 && count < maxLights)
 			{
 				var tile = availables[Random.Range(0, availables.Count)];
 
@@ -277,11 +280,11 @@ namespace TMM
 				tile.light = light.GetComponentInChildren<Light>();
 
 				// Remove current tile and other too closed
-				availables.RemoveAll(t=>t == tile || Vector2.Distance(t.coords, tile.coords) < 3);
+				availables.RemoveAll(t => t == tile || Vector2.Distance(t.coords, tile.coords) < 3);
 				count++;
-            }
-            
-        }
+			}
+
+		}
 
 		Tile GetTileTowardsBlockOrigin(WallBlock block)
 		{
@@ -289,13 +292,13 @@ namespace TMM
 			Tile ret = null;
 			switch (block.rotationType)
 			{
-				case 0: 
+				case 0:
 					ret = tiles.Find(t => t.coords.x == origin.coords.x && t.coords.y == origin.coords.y - 1);
 					break;
-				case 1: 
+				case 1:
 					ret = tiles.Find(t => t.coords.x == origin.coords.x - 1 && t.coords.y == origin.coords.y);
 					break;
-				case 2: 
+				case 2:
 					ret = tiles.Find(t => t.coords.x == origin.coords.x && t.coords.y == origin.coords.y + 1);
 					break;
 				case 3:
@@ -304,23 +307,23 @@ namespace TMM
 			}
 
 			return ret;
-        }
+		}
 
 		void SpawnMonster()
 		{
-			
+			return;
 			int stage = GameManager.Instance.GameStage;
 			int creatureCount = 1;
 			if (stage >= doubleCreatureStage)
 			{
 				creatureCount++;
 			}
-			if(stage >= tripleCreatureStage)
+			if (stage >= tripleCreatureStage)
 			{
 				creatureCount++;
 			}
-			
-			for(int i=0; i<creatureCount; i++)
+
+			for (int i = 0; i < creatureCount; i++)
 			{
 				// Choose a floor tile (type = 0) which is at a minimum distance the palayer spawn point
 				float minDistance = 10f / CellSize;
@@ -332,23 +335,23 @@ namespace TMM
 				var spawnTile = candidates[Random.Range(0, candidates.Count)];
 				// Remove current and closest tiles
 				candidates.RemoveAll(t => t == spawnTile || Vector3.Distance(t.coords, spawnTile.coords) < 12);
-			
+
 				// Instantiate the monster gameobject
 				var monster = Instantiate(monsterPrefab);
 				monster.GetComponent<NavMeshAgent>().enabled = false;
 				monster.transform.position = new Vector3(spawnTile.coords.x, 0, spawnTile.coords.y) * CellSize;
-				monster.GetComponent<NavMeshAgent>().enabled = true;	
+				monster.GetComponent<NavMeshAgent>().enabled = true;
 			}
 
-			
-			
-        }
+
+
+		}
 
 		public void BuildNavMesh()
-        {
+		{
 			var nms = tiles.Find(t => t == inTile).mainObject.GetComponentInChildren<NavMeshSurface>();
 			nms.BuildNavMesh();
-        }
+		}
 
 		void ChooseMiniGame()
 		{
@@ -365,7 +368,7 @@ namespace TMM
 			availableBlocks.Add(wbd);
 
 			minigameBlockIndex = availableBlocks.Count - 1;
-        }
+		}
 
 		void InstantiateWallsAndFloors()
 		{
@@ -387,7 +390,7 @@ namespace TMM
 							var obj = InstantiateObject(t.asset.Prefab, t.coords);
 							t.mainObject = obj.transform.GetChild(0).gameObject;
 						}
-						
+
 					}
 					else
 					{
@@ -400,7 +403,7 @@ namespace TMM
 					CheckBorders(t);
 
 					FloorTrigger ft = t.mainObject.GetComponentInChildren<FloorTrigger>();
-					if(ft)
+					if (ft)
 						CheckTriggerStepsAndWalls(ft);
 
 				}
@@ -431,9 +434,9 @@ namespace TMM
 			// Get tile
 			var tile = tiles.First(t => t.mainObject == floorTrigger.gameObject);
 			floorTrigger.SetStepDirection(0, GetTile(tile.coords.x, tile.coords.y + 1) == 0); // North
-			floorTrigger.SetStepDirection(1, GetTile(tile.coords.x+1, tile.coords.y) == 0); // East
+			floorTrigger.SetStepDirection(1, GetTile(tile.coords.x + 1, tile.coords.y) == 0); // East
 			floorTrigger.SetStepDirection(2, GetTile(tile.coords.x, tile.coords.y - 1) == 0); // South
-			floorTrigger.SetStepDirection(3, GetTile(tile.coords.x-1, tile.coords.y) == 0); // West
+			floorTrigger.SetStepDirection(3, GetTile(tile.coords.x - 1, tile.coords.y) == 0); // West
 		}
 
 		void CheckBorders(Tile tile)
@@ -459,25 +462,25 @@ namespace TMM
 				else
 					root.GetChild(i).gameObject.SetActive(false);
 
-			
+
 
 			}
 
-			
-				
+
+
 
 		}
 
 		GameObject InstantiateObject(GameObject prefab, Vector2 coords, int rotationType = 0)
-        {
-            var go = Instantiate(prefab);
+		{
+			var go = Instantiate(prefab);
 			// Apply rotation
 			go.transform.localEulerAngles = Vector3.up * rotationType * 90;
 			// Move to position
 			go.transform.position = new Vector3(coords.x, 0, coords.y) * CellSize;
 
 			return go;
-        }
+		}
 
 		void LoadFromResources()
 		{
@@ -512,7 +515,7 @@ namespace TMM
 			{
 				var nttb = Resources.LoadAll<NoTriggerTilesBlockAsset>($"{NoTriggerTilesBlockAsset.ResourceFolder}/{theme}");
 				var vb = nttb[0];
-				
+
 				WallBlockData wbd = new WallBlockData();
 				wbd.createFlippedVariant = false;
 				wbd.min = 1;
@@ -522,10 +525,10 @@ namespace TMM
 				wbd.tiles = vb.GetTiles();
 				wbd.blockType = 2; // Vending machine
 				availableBlocks.Add(wbd);
-				
+
 			}
-			
-			
+
+
 
 			// // Check for no trigger tiles floor block
 			// var vendBlocks = Resources.LoadAll<VendingMachineBlockAsset>($"{VendingMachineBlockAsset.ResourceFolder}/{theme}");
@@ -553,7 +556,7 @@ namespace TMM
 			var candidates = tiles.Where(t => t.type == 0 && GetTile(t.coords + Vector2.down) < 0 && !tiles.Exists(t2 => t2.coords.x == t.coords.x && t2.coords.y < t.coords.y)).ToList();
 			// Remove blocks which are to close to the minigame block
 			var specialBlocks = blocks.Where(b => b.data.blockType == 1 || b.data.blockType == 2); // Mini-game and vending machines
-			foreach(var sb in specialBlocks)
+			foreach (var sb in specialBlocks)
 			{
 				candidates.RemoveAll(t => Vector3.Distance(t.coords, sb.origin.coords) < 8);
 			}
@@ -562,7 +565,7 @@ namespace TMM
 
 			// Out tile
 			candidates = tiles.Where(t => t.type == 0 && GetTile(t.coords + Vector2.up) < 0 && !tiles.Exists(t2 => t2.coords.x == t.coords.x && t2.coords.y > t.coords.y)).ToList();
-			foreach(var sb in specialBlocks)
+			foreach (var sb in specialBlocks)
 			{
 				candidates.RemoveAll(t => Vector3.Distance(t.coords, sb.origin.coords) < 8);
 			}
@@ -582,7 +585,7 @@ namespace TMM
 
 		void CreateFlippedVariants()
 		{
-		
+
 			List<WallBlockData> toAdd = new List<WallBlockData>();
 			foreach (var b in availableBlocks)
 			{
@@ -606,17 +609,17 @@ namespace TMM
 					wbd.tiles.Add(t);
 				}
 
-				toAdd.Add(wbd); 
+				toAdd.Add(wbd);
 			}
-			
+
 			availableBlocks.AddRange(toAdd);
-        }
+		}
 
 		void CreateMaze()
 		{
 			for (int i = 0; i < wallMax; i++)
 			{
-				
+
 
 				if (i == 0)
 				{
@@ -636,12 +639,12 @@ namespace TMM
 					BorderWithFloor(tiles);
 
 				}
-                else
+				else
 				{
 					//if (i > 3) return;
 					AddAnotherBlock();
-					
-                }
+
+				}
 			}
 		}
 
@@ -653,10 +656,10 @@ namespace TMM
 
 			// Create new block and add to list
 			blocks.Add(new WallBlock() { data = data, origin = t[0], rotationType = rotationType, tiles = t });
-        }
+		}
 
 		Tile GetClosestBorderToTheOrigin()
-        {
+		{
 			var borders = GetBorderTileAll();
 
 			Tile tile = null;
@@ -673,25 +676,25 @@ namespace TMM
 			}
 
 			return tile;
-        }
+		}
 
 		List<Tile> GetBorderTileAll()
-        {
+		{
 			return tiles.Where(t => GetTile(t.coords.x, t.coords.y + 1) < 0 || GetTile(t.coords.x + 1, t.coords.y) < 0 ||
 										  GetTile(t.coords.x, t.coords.y - 1) < 0 || GetTile(t.coords.x - 1, t.coords.y) < 0).ToList();
-        }
+		}
 
 		void AddAnotherBlock()
 		{
-			
+
 			// Get borders
 			List<Tile>[] borders = new List<Tile>[4];
-			borders[0] = tiles.Where(t => GetTile(t.coords.x, t.coords.y + 1) < 0).OrderBy(t=>t.coords.y).ToList(); // North
-			borders[1] = tiles.Where(t => GetTile(t.coords.x + 1, t.coords.y) < 0).OrderBy(t=>t.coords.x).ToList(); // East
-			borders[2] = tiles.Where(t => GetTile(t.coords.x, t.coords.y - 1) < 0).OrderBy(t=>t.coords.y).ToList(); // South
-			borders[3] = tiles.Where(t => GetTile(t.coords.x - 1, t.coords.y) < 0).OrderBy(t=>t.coords.x).ToList(); // West
+			borders[0] = tiles.Where(t => GetTile(t.coords.x, t.coords.y + 1) < 0).OrderBy(t => t.coords.y).ToList(); // North
+			borders[1] = tiles.Where(t => GetTile(t.coords.x + 1, t.coords.y) < 0).OrderBy(t => t.coords.x).ToList(); // East
+			borders[2] = tiles.Where(t => GetTile(t.coords.x, t.coords.y - 1) < 0).OrderBy(t => t.coords.y).ToList(); // South
+			borders[3] = tiles.Where(t => GetTile(t.coords.x - 1, t.coords.y) < 0).OrderBy(t => t.coords.x).ToList(); // West
 
-	
+
 			//int borderType = availableBorderTypes[Random.Range(0, availableBorderTypes.Count)];// 3; // Top
 			int borderType = nextBorderDirection;
 			nextBorderDirection = (nextBorderDirection + 1) % 4;
@@ -727,7 +730,7 @@ namespace TMM
 
 				while (rotTypes.Count > 0 && !done)
 				{
-					
+
 					// Choose a random rotation
 					int rotType = rotTypes[Random.Range(0, rotTypes.Count)];
 					rotTypes.Remove(rotType);
@@ -754,7 +757,7 @@ namespace TMM
 
 							foreach (var borderDir in borderDirs)
 							{
-								if (!rotatedTiles.Exists(t=>new Vector2(t.x,t.y) == new Vector2(rotatedTile.x, rotatedTile.y)-borderDir) && GetTile(placedTile - borderDir) < 0 && GetTile(placedTile - 2 * borderDir) == 0)
+								if (!rotatedTiles.Exists(t => new Vector2(t.x, t.y) == new Vector2(rotatedTile.x, rotatedTile.y) - borderDir) && GetTile(placedTile - borderDir) < 0 && GetTile(placedTile - 2 * borderDir) == 0)
 								{
 									done = false;
 									break;
@@ -762,43 +765,43 @@ namespace TMM
 							}
 
 							if (!done) break;
-						
+
 							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x - 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y - 1) < 0 && GetTile(placedTile.x - 1, placedTile.y - 2) == 0)
 								done = false;
 							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x + 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y - 1) < 0 && GetTile(placedTile.x + 1, placedTile.y - 2) == 0)
 								done = false;
-					
-					
+
+
 							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y + 1) < 0 && GetTile(placedTile.x - 2, placedTile.y + 1) == 0)
 								done = false;
 							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y - 1) < 0 && GetTile(placedTile.x - 2, placedTile.y - 1) == 0)
 								done = false;
-					
-					
+
+
 							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x - 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x - 1) && GetTile(placedTile.x - 1, placedTile.y + 1) < 0 && GetTile(placedTile.x - 1, placedTile.y + 2) == 0)
 								done = false;
 							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y && t.x == rotatedTile.x + 1) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y + 1) < 0 && GetTile(placedTile.x + 1, placedTile.y + 2) == 0)
 								done = false;
-					
-					
+
+
 							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y + 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y + 1) < 0 && GetTile(placedTile.x + 2, placedTile.y + 1) == 0)
 								done = false;
 							if (!rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x) && !rotatedTiles.Exists(t => t.y == rotatedTile.y - 1 && t.x == rotatedTile.x + 1) && GetTile(placedTile.x + 1, placedTile.y - 1) < 0 && GetTile(placedTile.x + 2, placedTile.y - 1) == 0)
 								done = false;
-					
+
 
 							if (!done) break;
 
 						}
 
-                        if (done)
+						if (done)
 						{
 							// Update position and place tiles
-							for(int i=0; i<rotatedTiles.Count; i++)
-                            {
+							for (int i = 0; i < rotatedTiles.Count; i++)
+							{
 								rotatedTiles[i] += offset;
 								AddTile(rotatedTiles[i], 1);
-                            }
+							}
 							// // We can place all tiles
 							// foreach (var rotatedTile in rotatedTiles)
 							// {
@@ -814,15 +817,15 @@ namespace TMM
 							BorderWithFloor(rotatedTiles);
 
 							return;
-                        }
+						}
 					}
 				}
 			}
-			
 
 
-			
-        }
+
+
+		}
 
 		void AddTiles(List<Vector2> coords, int type)
 		{
@@ -837,14 +840,14 @@ namespace TMM
 				tiles.Add(new Tile() { coords = coords, type = type });
 			}
 		}
-		
+
 		void CreateFloorTile(Vector2 coords)
-        {
-            GameObject prefab = floorPrefab;
+		{
+			GameObject prefab = floorPrefab;
 			GameObject tile = Instantiate(prefab);
 			Vector3 pos = new Vector3(coords.x, 0, coords.y) * CellSize;
 			tile.transform.position = pos;
-        }
+		}
 
 		void CreateHelperTile(Vector2 coords, int type)
 		{
@@ -853,7 +856,7 @@ namespace TMM
 
 			Vector3 pos = new Vector3(coords.x, 0, coords.y) * CellSize;
 			tile.transform.position = pos;
-        }
+		}
 
 		void BorderWithFloor(List<Vector2> walls)
 		{
@@ -879,32 +882,32 @@ namespace TMM
 
 				if (GetTile(wall.x - 1, wall.y) < 0)
 					AddTile(new Vector2(wall.x - 1, wall.y), 0);
-					
+
 				if (GetTile(wall.x - 1, wall.y + 1) < 0)
 					AddTile(new Vector2(wall.x - 1, wall.y + 1), 0);
 			}
 		}
-		
+
 		/// <summary>
-        /// -1 is empty
+		/// -1 is empty
 		/// 0 is floor
 		/// 1 is wall
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="z"></param>
-        /// <returns></returns>
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="z"></param>
+		/// <returns></returns>
 		public int GetTile(float x, float y)
-        {
+		{
 			if (!tiles.Exists(t => t.coords.x == x && t.coords.y == y))
 				return -1;
 
 			return tiles.Find(t => t.coords.x == x && t.coords.y == y).type;
-        }
+		}
 
 		public int GetTile(Vector2 coords)
-        {
+		{
 			return GetTile(coords.x, coords.y);
-        }
+		}
 
 		List<Vector2> RotateTiles(List<Vector2> tiles, int rotationType)
 		{
@@ -931,15 +934,15 @@ namespace TMM
 
 			return ret;
 
-			
-        }
+
+		}
 
 		void ChooseBlocks()
 		{
 			int stage = GameManager.Instance.GameStage;
 			if (stage >= doubleCreatureStage && stage < tripleCreatureStage)
 				wallMax = Mathf.CeilToInt(wallMax * doubleMultiplier);
-			else if(stage >= tripleCreatureStage)
+			else if (stage >= tripleCreatureStage)
 				wallMax = Mathf.CeilToInt(wallMax * tripleMultiplier);
 
 #if USE_WEIGHT
@@ -1025,10 +1028,53 @@ namespace TMM
 			return tiles[index].coords;
 
 		}
-		
+
 		public int GetTileType(int index)
 		{
 			return tiles[index].type;
+		}
+
+		public int GetTileIndex(Vector2 coords)
+		{
+			return tiles.FindIndex(t => t.coords == coords);
+
+		}
+
+		public bool IsEnterTile(int index)
+		{
+			return tiles[index] == inTile;
+		}
+
+		public bool IsExitTile(int index)
+		{
+			return tiles[index] == outTile;
+		}
+
+		public bool IsMiniGameController(int index)
+		{
+			var tile = tiles[index];
+			return blocks.Exists(b => b.origin == tile && b.data.blockType == 1);
+		}
+
+
+		public int GetBlockRotationTypeByTileOrigin(int tileOriginIndex)
+		{
+			return blocks.Find(b => b.origin == tiles[tileOriginIndex]).rotationType;
+		}
+
+		public Vector2 GetBlockCoords(int index)
+		{
+			return blocks[index].origin.coords;
+		}
+
+		public int GetBlockRotationType(int index)
+		{
+			return blocks[index].rotationType;
+		}	
+
+		public int GetBlockType(int index)
+		{
+			return blocks[index].data.blockType;
 		}
 
 	}
