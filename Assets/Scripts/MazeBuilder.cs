@@ -8,6 +8,7 @@ using TMM.Scriptables;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 using UnityEngine.InputSystem.Android;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal.Internal;
@@ -18,6 +19,8 @@ namespace TMM
 {
 	public class MazeBuilder : Singleton<MazeBuilder>
 	{
+		public static UnityAction OnMazeCreated;
+
 		public const float CellSize = 2;
 
 		[System.Serializable]
@@ -53,7 +56,7 @@ namespace TMM
 		{
 			public Vector2 coords;
 
-			public int type; // 0: floor, 1: wall
+			public int type; // 0: floor, 1: inside block
 
 			public GameObject mainObject;
 
@@ -142,6 +145,11 @@ namespace TMM
 		float doubleMultiplier = 1.5f;
 		float tripleMultiplier = 2f;
 
+		public int TileCount
+		{
+			get{ return tiles.Count; }
+		}
+
 
 
 
@@ -172,7 +180,7 @@ namespace TMM
 
 			SpawnMonster();
 
-		
+			OnMazeCreated?.Invoke();
 	    }
 
 		// Update is called once per frame
@@ -1001,15 +1009,27 @@ namespace TMM
 
 
 		}
-		
+
 		public List<Vector3> GetWalkableTilePositions()
-        {
+		{
 			List<Vector3> ret = new List<Vector3>();
 			var l = tiles.Where(t => t.type == 0);
 			foreach (var t in l)
 				ret.Add(new Vector3(t.coords.x, 0, t.coords.y) * CellSize);
 
 			return ret;
-        }
+		}
+
+		public Vector2 GetTileCoords(int index)
+		{
+			return tiles[index].coords;
+
+		}
+		
+		public int GetTileType(int index)
+		{
+			return tiles[index].type;
+		}
+
 	}
 }
