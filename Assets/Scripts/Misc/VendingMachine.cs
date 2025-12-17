@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMM.Scriptables;
 using TMPro;
 using UnityEngine;
 
@@ -39,6 +36,12 @@ namespace TMM
 
 		[SerializeField]
 		DeviceInteractor deviceInteractor;
+
+		[SerializeField]
+		AudioSource switchAudioSource;
+
+		[SerializeField]
+		List<AudioClip> switchClips;
 
 		
         void Awake()
@@ -77,10 +80,10 @@ namespace TMM
         {
 			if (type != VendingMachineType.NoTriggerTiles) return;
 
-			Init();
+			StartCoroutine(Switch());
         }
 
-        private void HandleOnInteraction(DeviceInteractor deviceInteractor)
+		private void HandleOnInteraction(DeviceInteractor deviceInteractor)
 		{
 			if (this.deviceInteractor != deviceInteractor) return;
 
@@ -90,6 +93,15 @@ namespace TMM
 				TriggerTileManager.Instance.DisableTriggers(timer);
 		}
 		
+		IEnumerator Switch()
+		{
+			yield return new WaitForSeconds(.5f);
+			
+			switchAudioSource.clip = switchClips[Random.Range(0, switchClips.Count)];
+			switchAudioSource.Play();
+			yield return new WaitForSeconds(.1f);
+			Init();
+		}
 		
         void Init()
 		{

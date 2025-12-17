@@ -519,8 +519,6 @@ namespace TMM
 			// Add the entrance to the south and the exit to the north
 			var candidates = tiles.Where(t => t.type == 0 && GetTile(t.coords + Vector2.down) < 0 && !tiles.Exists(t2 => t2.coords.x == t.coords.x && t2.coords.y < t.coords.y)).ToList();
 			// Remove blocks which are to close to the minigame block
-			//var miniGame = blocks.Find(b => b.data.blockType == 1);
-			//candidates.RemoveAll(t => Vector3.Distance(t.coords, miniGame.origin.coords) < 8);
 			var specialBlocks = blocks.Where(b => b.data.blockType == 1 || b.data.blockType == 2); // Mini-game and vending machines
 			foreach(var sb in specialBlocks)
 			{
@@ -531,12 +529,10 @@ namespace TMM
 
 			// Out tile
 			candidates = tiles.Where(t => t.type == 0 && GetTile(t.coords + Vector2.up) < 0 && !tiles.Exists(t2 => t2.coords.x == t.coords.x && t2.coords.y > t.coords.y)).ToList();
-			//candidates.RemoveAll(t => Vector3.Distance(t.coords, miniGame.origin.coords) < 8);
 			foreach(var sb in specialBlocks)
 			{
 				candidates.RemoveAll(t => Vector3.Distance(t.coords, sb.origin.coords) < 8);
 			}
-			
 
 			outTile = candidates[Random.Range(0, candidates.Count)];
 

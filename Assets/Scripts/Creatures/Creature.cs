@@ -143,8 +143,9 @@ namespace TMM.AI
 
 		void InitByStage()
 		{
-			walkSpeed *= .75f;
+			walkSpeed *= 0.75f;
 			runSpeed *= 0.75f;
+			
 
 			switch (GameManager.Instance.GameStage)
             {

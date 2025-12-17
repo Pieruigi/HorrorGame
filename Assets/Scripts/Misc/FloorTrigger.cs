@@ -21,6 +21,9 @@ namespace TMM
 		[SerializeField]
 		List<GameObject> steps;
 
+		[SerializeField]
+		AudioSource audioSource;
+
 		float height;
 
 
@@ -145,6 +148,9 @@ namespace TMM
 			seq.Join(tileMaterial.DOVector(new Vector4(1, 1, 1, 0), "_BaseColor", time));
 			seq.Join(stepMaterial.DOVector(new Vector4(1, 1, 1, 0), "_BaseColor", time));
 			seq.OnComplete(() => { HideStepAll(); MazeBuilder.Instance.BuildNavMesh(); });
+
+			// Play audio
+			audioSource.Play();
 		}
 
 		public void ResetTrigger()
@@ -160,6 +166,9 @@ namespace TMM
 			seq.Join(tileMaterial.DOVector(new Vector4(1, 1, 1, 1) * materialIntensity, "_BaseColor", time));
 			seq.Join(stepMaterial.DOVector(new Vector4(1, 1, 1, 1) * materialIntensity, "_BaseColor", time));
 			seq.OnComplete(() => { triggered = false; MazeBuilder.Instance.BuildNavMesh(); });
+
+			// Play audio
+			audioSource.Play();
 		}
 
 		public void SetStepDirection(int index, bool visible)

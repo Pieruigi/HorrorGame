@@ -74,11 +74,17 @@ namespace TMM
 			floorTrigger.ResetTrigger();
         }
 
-        private void HandleOnTriggered()
-        {
-			AlarmManager.Instance.ReportTriggerActivated(gameObject);
+		private void HandleOnTriggered()
+		{
+			StartCoroutine(ReportTriggerActivated());
 			elapsed = 0;
 			activated = true;
-        }
+		}
+		
+		IEnumerator ReportTriggerActivated()
+		{
+			yield return new WaitForSeconds(.5f);
+			AlarmManager.Instance.ReportTriggerActivated(gameObject);
+		}
     }
 }
