@@ -12,13 +12,15 @@ namespace TMM.UI
 	{
 		class PointOfInterest
 		{
-			public enum Type { MiniGame, VendingMachine }
+			public enum Type { MiniGame, VendingMachine, PressurePlate, CoinPicker }
 			
 			public GameObject mapObject;
 
 			public Type type;
 
 			public PinMap pin;
+
+			public int tileIndex = -1;
 		}
 
 		[SerializeField]
@@ -32,6 +34,12 @@ namespace TMM.UI
 
 		[SerializeField]
 		GameObject miniGamePrefab;
+
+		[SerializeField]
+		GameObject pressurePlatePrefab;
+
+		[SerializeField]
+		GameObject coinPickerPrefab;
 
 		[SerializeField]
 		Transform mapRoot;
@@ -68,7 +76,7 @@ namespace TMM.UI
         void Start()
 	    {
 			fpc = FindFirstObjectByType<FirstPersonController>();
-			playerStartingPosition = fpc.transform.position;
+			
 			canvasGroup.alpha = 0;
 	    }
 
@@ -97,17 +105,32 @@ namespace TMM.UI
         void OnEnable()
 		{
 			MazeBuilder.OnMazeCreated += Create;
+			CoinPicker.OnCoinPicked += HandleOnCoinPicked;
 		}
 
         void OnDisable()
         {
-            MazeBuilder.OnMazeCreated -= Create;
+			MazeBuilder.OnMazeCreated -= Create;
+			CoinPicker.OnCoinPicked -= HandleOnCoinPicked;
         }
 
-		void UpdatePositionAndRotation()
+        private void HandleOnCoinPicked(CoinPicker coinPicker)
+        {
+			int tileIndex = MazeBuilder.Instance.GetTileIndex(coinPicker);
+			var poi = pointsOfInterest.Find(p => p.type == PointOfInterest.Type.CoinPicker && p.tileIndex == tileIndex);
+			// Remove poi from the list
+			pointsOfInterest.Remove(poi);
+			// Remove both map and pin elements
+			Destroy(poi.mapObject);
+			Destroy(poi.pin);
+			
+        }
+
+        void UpdatePositionAndRotation()
 		{
 			var playerPos = fpc.transform.position;
 			var diff = playerPos - playerStartingPosition;
+			Debug.Log("Diff:" + diff);
 			// Move map
 			var move = Vector3.zero;
 			move.x = diff.x * mapRatio;
@@ -214,9 +237,13 @@ namespace TMM.UI
 		void Create()
 		{
 
+			playerStartingPosition = fpc.transform.position;
+
 			CheckFloor();
 
 			CheckBlocks();
+
+			CheckSpawnables();
 
 			CreatePins();
 
@@ -225,15 +252,22 @@ namespace TMM.UI
 
 		}
 		
+		void CheckSpawnables()
+		{
+			
+		}
+
 		void CreatePins()
 		{
 			foreach(var poi in pointsOfInterest)
 			{
 				var pin = Instantiate(pinPrefab, mapRoot);
-				poi.pin = pin.GetComponent<PinMap>(); 
-				
+				poi.pin = pin.GetComponent<PinMap>();
+
 				if (poi.type == PointOfInterest.Type.MiniGame || poi.type == PointOfInterest.Type.VendingMachine)
 					poi.pin.SetGoodPin();
+				else if (poi.type == PointOfInterest.Type.CoinPicker)
+					poi.pin.SetGoldPin();
 				else
 					poi.pin.SetBadPin();
 
@@ -271,12 +305,45 @@ namespace TMM.UI
 
 				CreateWalls(coords, mf.transform);
 
-				
+
+				// Check if is a trigger tile
+				if (builder.IsTriggerTile(i))
+				{
+					// Add the pressure plate prefab
+					GameObject pp = Instantiate(pressurePlatePrefab, mapRoot);
+					pp.name = $"T-{i.ToString("000")}-B";
+					pp.transform.localPosition = mf.transform.localPosition;
+					pp.transform.localRotation = Quaternion.identity;
+
+					PointOfInterest poi = new PointOfInterest();
+					poi.mapObject = pp;
+					poi.type = PointOfInterest.Type.PressurePlate;
+					poi.tileIndex = i;
+					pointsOfInterest.Add(poi);
+				}
+
+				// Check coins
+				if (builder.TileHasCoin(i))
+				{
+					// Add the pressure plate prefab
+					GameObject pp = Instantiate(coinPickerPrefab, mapRoot);
+					pp.name = $"T-{i.ToString("000")}-G";
+					pp.transform.localPosition = mf.transform.localPosition;
+					pp.transform.localRotation = Quaternion.identity;
+
+					PointOfInterest poi = new PointOfInterest();
+					poi.mapObject = pp;
+					poi.type = PointOfInterest.Type.CoinPicker;
+					poi.tileIndex = i;
+					pointsOfInterest.Add(poi);
+				}
 
 				// Hide floor
 				//mf.GetComponent<Image>().enabled = false;
 
 			}
+			
+
 		}
 
 		void CheckBlocks()

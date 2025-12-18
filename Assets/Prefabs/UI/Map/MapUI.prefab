@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2790950001765548277}
   - component: {fileID: 8076801952434022835}
   - component: {fileID: 4419527757973382499}
+  - component: {fileID: 1026435950644440358}
   m_Layer: 5
   m_Name: Player
   m_TagString: Untagged
@@ -76,6 +77,29 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!223 &1026435950644440358
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2603258099099757431}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 10
+  m_TargetDisplay: 0
 --- !u!1 &2979079714061634130
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,7 +207,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -242,11 +266,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasGroup: {fileID: 3681950420719453069}
-  mapWallPrefab: {fileID: 6421191631804042817, guid: 0affd8ed9f278a6479719ce838faa481,
+  wallPrefab: {fileID: 6421191631804042817, guid: 0affd8ed9f278a6479719ce838faa481,
     type: 3}
-  mapFloorPrefab: {fileID: 3263591708711443682, guid: aabe284d7c3da6140a52319e77c36cbe,
+  floorPrefab: {fileID: 3263591708711443682, guid: aabe284d7c3da6140a52319e77c36cbe,
+    type: 3}
+  miniGamePrefab: {fileID: 3014504082666015766, guid: a437bc17474d2314db607be7c2ec6f94,
+    type: 3}
+  pressurePlatePrefab: {fileID: 5019628326730563513, guid: 850ebfbe7cb46aa499a40b967e57c561,
+    type: 3}
+  coinPickerPrefab: {fileID: 5019628326730563513, guid: 14536a41d29ea3344bfd19ec824a31e8,
     type: 3}
   mapRoot: {fileID: 8788862411787438715}
+  pinPrefab: {fileID: 4465209513618747632, guid: 15edc2a0bc4773245b71be3a9fa44256,
+    type: 3}
 --- !u!114 &2085273095106230372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +300,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8788862411787438715}
+  - component: {fileID: 5027054233915158867}
   m_Layer: 5
   m_Name: Root
   m_TagString: Untagged
@@ -294,3 +327,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &5027054233915158867
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4202478166837194701}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 5
+  m_TargetDisplay: 0

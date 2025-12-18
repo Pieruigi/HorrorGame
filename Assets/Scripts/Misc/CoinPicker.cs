@@ -7,6 +7,9 @@ namespace TMM
 {
 	public class CoinPicker : MonoBehaviour
 	{
+		public delegate void CoinPickedDelegate(CoinPicker coinPicker);
+		public static CoinPickedDelegate OnCoinPicked;
+
 		[SerializeField]
 		ActivationTrigger trigger;
 
@@ -42,6 +45,8 @@ namespace TMM
 			PlayFX();
 
 			Destroy(gameObject, 1);
+
+			OnCoinPicked?.Invoke(this);
 		}
 
 		void PlayFX()

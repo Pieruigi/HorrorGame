@@ -1060,11 +1060,22 @@ namespace TMM
 			return blocks.Exists(b => b.origin == tile && b.data.blockType == 1);
 		}
 
-
-		public int GetBlockRotationTypeByTileOrigin(int tileOriginIndex)
+		public bool IsTriggerTile(int index)
 		{
-			return blocks.Find(b => b.origin == tiles[tileOriginIndex]).rotationType;
+			var tile = tiles[index];
+			return tile.asset && tile.asset.GetType() == typeof(FloorTriggerAsset);
 		}
+
+		public bool TileHasCoin(int index)
+		{
+			return tiles[index].coin != null;
+		}
+
+		public int GetTileIndex(CoinPicker coinPicker)
+		{
+			return tiles.FindIndex(t => t.coin == coinPicker);
+		}
+		
 
 		public Vector2 GetBlockCoords(int index)
 		{

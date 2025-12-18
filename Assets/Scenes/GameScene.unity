@@ -543,64 +543,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2979079714061634130, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3130981576083180499, guid: 1f053a8e9b368094ca80c911e0bcc657,
         type: 3}
       propertyPath: m_Name
       value: MapUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 3130981576083180499, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3681950420719453069, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4419527757973382499, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7724522525438651522, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: pinPrefab
-      value: 
-      objectReference: {fileID: 4465209513618747632, guid: 15edc2a0bc4773245b71be3a9fa44256,
-        type: 3}
-    - target: {fileID: 7724522525438651522, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: wallPrefab
-      value: 
-      objectReference: {fileID: 6421191631804042817, guid: 0affd8ed9f278a6479719ce838faa481,
-        type: 3}
-    - target: {fileID: 7724522525438651522, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: floorPrefab
-      value: 
-      objectReference: {fileID: 3263591708711443682, guid: aabe284d7c3da6140a52319e77c36cbe,
-        type: 3}
-    - target: {fileID: 7724522525438651522, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: miniGamePrefab
-      value: 
-      objectReference: {fileID: 3014504082666015766, guid: a437bc17474d2314db607be7c2ec6f94,
-        type: 3}
-    - target: {fileID: 9218024283005024642, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: m_RenderMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9218024283005024642, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: m_SortingOrder
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

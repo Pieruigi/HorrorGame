@@ -43,10 +43,15 @@ namespace TMM.UI
 		{
 			image.color = Color.green;
 		}
-		
+
 		public void SetBadPin()
 		{
 			image.color = Color.red;
+		}
+		
+		public void SetGoldPin()
+		{
+			image.color = Color.yellow;
 		}
 	}
 }
