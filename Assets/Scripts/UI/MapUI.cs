@@ -160,7 +160,7 @@ namespace TMM.UI
 				var poiX = pos.x * Mathf.Cos(angle) + pos.y * Mathf.Sin(angle); // X relative to player screen
 				var poiY = -pos.x * Mathf.Sin(angle) + pos.y * Mathf.Cos(angle); // Y relative to player screen
 
-				if (Mathf.Abs(poiX) < width / 2f && Mathf.Abs(poiY) < height / 2f)
+				if (Mathf.Abs(poiX) < width / 2f + 100 && Mathf.Abs(poiY) < height / 2f + 100)
 				{
 					if (!floor.activeSelf)
 					{
@@ -245,13 +245,12 @@ namespace TMM.UI
 						}
 					}
 
-
+					
 					// Move pin out
-					var oldParent = pin.transform.parent;
-					pin.transform.parent = canvasGroup.transform;
-					//pin.transform.SetParent(canvasGroup.transform, false);
+					//var oldParent = pin.transform.parent;
+					//pin.transform.parent = canvasGroup.transform;
 					(pin.transform as RectTransform).anchoredPosition = new Vector2(x, y);
-					pin.transform.parent = oldParent;
+					//pin.transform.parent = oldParent;
 					
 				}
 				 	
@@ -301,7 +300,7 @@ namespace TMM.UI
 		{
 			foreach(var poi in pointsOfInterest)
 			{
-				var pin = Instantiate(pinPrefab, mapRoot);
+				var pin = Instantiate(pinPrefab, canvasGroup.transform);
 				poi.pin = pin.GetComponent<PinMap>();
 
 				if (poi.type == PointOfInterest.Type.MiniGame || poi.type == PointOfInterest.Type.VendingMachine)
@@ -352,7 +351,7 @@ namespace TMM.UI
 					// Add the pressure plate prefab
 					GameObject pp = Instantiate(pressurePlatePrefab, mapRoot);
 					pp.name = $"T-{i.ToString("000")}-B";
-					pp.transform.localPosition = mf.transform.localPosition;
+					pp.transform.localPosition = coords * cellSize; //mf.transform.localPosition;
 					pp.transform.localRotation = Quaternion.identity;
 
 					PointOfInterest poi = new PointOfInterest();
@@ -368,7 +367,7 @@ namespace TMM.UI
 					// Add the pressure plate prefab
 					GameObject pp = Instantiate(coinPickerPrefab, mapRoot);
 					pp.name = $"T-{i.ToString("000")}-G";
-					pp.transform.localPosition = mf.transform.localPosition;
+					pp.transform.localPosition = coords * cellSize; //mf.transform.localPosition;
 					pp.transform.localRotation = Quaternion.identity;
 
 					PointOfInterest poi = new PointOfInterest();
