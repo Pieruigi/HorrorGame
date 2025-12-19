@@ -259,7 +259,8 @@ namespace TMM
 			Sequence seq = DOTween.Sequence();
 			seq.Append(player.transform.DOMove(lastPlayerPosition, moveTime));
 			seq.Join(player.transform.DORotateQuaternion(lastPlayerRotation, moveTime));
-			seq.Join(wall.transform.DOLocalMoveY(wallHeightDefault, moveTime));
+			if(!beaten)
+				seq.Join(wall.transform.DOLocalMoveY(wallHeightDefault, moveTime));
 			seq.Join(ruleCanvasGroup.DOFade(0, moveTime));
 			seq.OnComplete(() =>
 			{

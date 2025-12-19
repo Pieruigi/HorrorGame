@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: alarm
+  m_Shader: {fileID: 4800000, guid: 71a090e9b5b488349913abe716bb7bc6, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _USE_AMBIENT_OVERRIDE
+  - _USE_DITHERING
+  - _USE_PIXEL_LIGHTING
+  - _USE_POINT_FILTER_ON
+  m_InvalidKeywords:
+  - _USE_AMBIENT_OVERRIDE_ON
+  - _USE_DITHERING_ON
+  - _USE_PIXEL_LIGHTING_ON
+  - _USE_VERTEX_COLORS_OFF
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: ca520daf7e71f5041a231c6af2e45c2b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints:
+    - _ColorBitDepth: 64
+    - _ResolutionLimit: 256
+    - _SnapsPerUnit: 128
+    m_Floats:
+    - _AffineTextureStrength: 0.021
+    - _AlphaClip: 0
+    - _AmbientLight: 0.02
+    - _ColorBitDepthOffset: 0
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DstBlend: 10
+    - _SrcBlend: 5
+    - _Surface: 1
+    - _USE_AMBIENT_OVERRIDE: 1
+    - _USE_DITHERING: 1
+    - _USE_PIXEL_LIGHTING: 1
+    - _USE_POINT_FILTER: 1
+    - _USE_VERTEX_COLORS: 0
+    - _ZWrite: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

@@ -9,6 +9,10 @@ namespace TMM.UI
         void Awake()
 		{
 			Canvas c = GetComponent<Canvas>();
+
+			//  c.renderMode = RenderMode.ScreenSpaceOverlay;
+			//  return;
+
 			if (c.renderMode == RenderMode.ScreenSpaceOverlay)
 				c.renderMode = RenderMode.ScreenSpaceCamera;
             c.worldCamera = Camera.main;

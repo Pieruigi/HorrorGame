@@ -61,7 +61,7 @@ namespace TMM
 			{
 				if(GameManager.Instance.GameStage == 1)
 				{
-					timer = 0;
+					timer = 11110;
 				}
 			}
         }

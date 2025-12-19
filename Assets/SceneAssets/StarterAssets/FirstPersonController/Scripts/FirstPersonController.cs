@@ -1,6 +1,7 @@
 ﻿using System;
 using Cinemachine;
 using DG.Tweening;
+using TMM;
 using TMM.Interfaces;
 using TMPro;
 using UnityEngine;
@@ -29,6 +30,9 @@ namespace StarterAssets
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
 		public float CrouchSpeed = 2.0f;
+
+
+		float speedDebuff = 1f;
 
 		float walkNoiseRange = 6;
 
@@ -134,8 +138,6 @@ namespace StarterAssets
 
 		bool isDead = false;
 
-
-
 		public bool IsRunning
 		{
 			get { return Grounded && !_input.crouch && _input.sprint; }
@@ -193,6 +195,8 @@ namespace StarterAssets
 
 			_cameraRootHeightDefault = CameraRoot.localPosition.y;
 			_playerHeight = _controller.height;
+
+			speedDebuff = PlayerSpeedDebuff.Instance.Value;
 		}
 
 		private void Update()
@@ -216,7 +220,29 @@ namespace StarterAssets
 			CameraRotation();
 		}
 
-		void ComputeNoiseRange()
+		void OnEnable()
+		{
+			PlayerSpeedDebuff.OnApplied += HandleOnSpeedDebuffApplied;
+			PlayerSpeedDebuff.OnExpired += HandleOnSpeedDebuffExpired;
+		}
+
+        void OnDisable()
+        {
+			PlayerSpeedDebuff.OnApplied -= HandleOnSpeedDebuffApplied;
+			PlayerSpeedDebuff.OnExpired -= HandleOnSpeedDebuffExpired;
+        }
+
+        private void HandleOnSpeedDebuffApplied()
+        {
+			speedDebuff = PlayerSpeedDebuff.Instance.Value;
+        }
+
+        private void HandleOnSpeedDebuffExpired()
+        {
+			speedDebuff = 1;
+        }
+
+        void ComputeNoiseRange()
         {
 			if (_speed < 0.01f)
 			{
@@ -353,6 +379,8 @@ namespace StarterAssets
 			// set target speed based on move speed, sprint speed and if sprint is pressed
 			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 			if (_input.crouch) targetSpeed = CrouchSpeed;
+
+			targetSpeed *= speedDebuff;
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 

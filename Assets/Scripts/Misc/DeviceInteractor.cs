@@ -47,7 +47,7 @@ namespace TMM
 				LayerMask mask = LayerMask.GetMask(new string[] { "Interactable" });
 				if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, FirstPersonController.InteractionDistance, mask))
 				{
-					Debug.Log("AAAAAAAAAAAAAAAA:" + hit.collider.gameObject);
+					
 					if (hit.collider == interactionCollider)
 					{
 						// Show message if any

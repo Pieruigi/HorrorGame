@@ -97,6 +97,8 @@ namespace TMM.UI
 			UpdatePositionAndRotation();
 
 			UpdatePointsOfInterest();
+
+			Clipping();
 			
         }
 
@@ -136,6 +138,51 @@ namespace TMM.UI
 
 			var yaw = fpc.transform.eulerAngles.y;
 			mapRoot.parent.localEulerAngles = Vector3.forward * yaw;
+		}
+
+		void Clipping()
+		{
+			float width = (canvasGroup.transform as RectTransform).rect.width;
+			float height = (canvasGroup.transform as RectTransform).rect.height;
+
+			var playerPos = (mapRoot.parent as RectTransform).anchoredPosition;
+			var rootPos = (mapRoot as RectTransform).anchoredPosition - playerPos;
+
+			var yaw = fpc.transform.eulerAngles.y;
+
+			foreach(var floor in floors)
+			{
+				var pos = (floor.transform as RectTransform).anchoredPosition + rootPos;
+
+				var atanPoi = Mathf.Atan(pos.y / pos.x) * Mathf.Deg2Rad;
+				var angle = atanPoi - yaw;
+				angle *= Mathf.Deg2Rad;
+				var poiX = pos.x * Mathf.Cos(angle) + pos.y * Mathf.Sin(angle); // X relative to player screen
+				var poiY = -pos.x * Mathf.Sin(angle) + pos.y * Mathf.Cos(angle); // Y relative to player screen
+
+				if (Mathf.Abs(poiX) < width / 2f && Mathf.Abs(poiY) < height / 2f)
+				{
+					if (!floor.activeSelf)
+					{
+						floor.SetActive(true);
+						// var l = floor.GetComponentsInChildren<Image>();
+						// foreach (var f in l)
+						// 	f.gameObject.SetActive(true);
+					}
+						
+				}
+				else
+				{
+					if (floor.activeSelf)
+					{
+						floor.SetActive(false);
+						// var l = floor.GetComponentsInChildren<Image>();
+						// foreach (var f in l)
+						// 	f.gameObject.SetActive(false);
+					}
+						
+				}
+			}
 		}
 
 		void UpdatePointsOfInterest()
