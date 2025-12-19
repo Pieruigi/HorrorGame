@@ -145,9 +145,9 @@ namespace TMM
 			float time = .5f;
 			var seq = DOTween.Sequence();
 			seq.Append(transform.DOMoveY(0, time));
-			seq.Join(tileMaterial.DOVector(new Vector4(1, 1, 1, 0), "_BaseColor", time));
-			seq.Join(stepMaterial.DOVector(new Vector4(1, 1, 1, 0), "_BaseColor", time));
-			seq.OnComplete(() => { HideStepAll(); MazeBuilder.Instance.BuildNavMesh(); });
+			// seq.Join(tileMaterial.DOVector(new Vector4(1, 1, 1, 0), "_BaseColor", time));
+			// seq.Join(stepMaterial.DOVector(new Vector4(1, 1, 1, 0), "_BaseColor", time));
+			seq.OnComplete(() => { HideStepAll(); /*MazeBuilder.Instance.BuildNavMesh();*/ });
 
 			// Play audio
 			audioSource.Play();
@@ -163,9 +163,9 @@ namespace TMM
 			float time = .5f;
 			var seq = DOTween.Sequence();
 			seq.Append(transform.DOMoveY(height, time));
-			seq.Join(tileMaterial.DOVector(new Vector4(1, 1, 1, 1) * materialIntensity, "_BaseColor", time));
-			seq.Join(stepMaterial.DOVector(new Vector4(1, 1, 1, 1) * materialIntensity, "_BaseColor", time));
-			seq.OnComplete(() => { triggered = false; MazeBuilder.Instance.BuildNavMesh(); });
+			// seq.Join(tileMaterial.DOVector(new Vector4(1, 1, 1, 1) * materialIntensity, "_BaseColor", time));
+			// seq.Join(stepMaterial.DOVector(new Vector4(1, 1, 1, 1) * materialIntensity, "_BaseColor", time));
+			seq.OnComplete(() => { triggered = false; /*MazeBuilder.Instance.BuildNavMesh();*/ });
 
 			// Play audio
 			audioSource.Play();

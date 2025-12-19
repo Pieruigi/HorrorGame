@@ -9,23 +9,7 @@ namespace TMM.Scriptables
 	{
 		public const string ResourceFolder = WallBlockAsset.ResourceFolder;
 
-		// [SerializeField]
-		// VendingMachineType type;
-
-		[SerializeField]
-		int minCount;
-		public int MinCount
-		{
-			get{ return minCount; }
-		}
-
-		[SerializeField]
-		int maxCount;
-		public int MaxCount
-		{
-			get{ return maxCount; }
-		}
-
+		
 		[SerializeField]
 		int minStage;
 		public int MinStage

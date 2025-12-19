@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using StarterAssets;
 using TMM.Scriptables;
 using Unity.AI.Navigation;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Android;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal.Internal;
@@ -199,33 +201,89 @@ namespace TMM
 
 		void AddFloorTriggers()
 		{
-			// Get resources
+
+			// How many pressure plates?
+			//
+			int tileCount = tiles.Count(t => t.type == 0); // Count floors
+			float mul = .05f;
 			int stage = GameManager.Instance.GameStage;
-			var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).Where(r => (r.MinStage < 0 || r.MinStage <= stage) && (r.MaxStage < 0 || r.MaxStage >= stage)).ToList();
-			Debug.Log($"FloorTriggers.Count:{all.Count}");
+			// Increase pressure plates when stage increases
+			if (stage >= doubleCreatureStage && stage < tripleCreatureStage)
+			{
+				mul = 0.06f;
+			}
+			else if (stage >= tripleCreatureStage)
+			{
+				mul = 0.07f;
+			}
 
-			// Get all floors
+			int count = Mathf.CeilToInt((float)mul * (float)tileCount); // Max number of pressure plates to add
+
+			Debug.Log("TileCount:" + tileCount);
+			Debug.Log("PressCount:" + count);
+
+			// Load all assets
+			var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).Where(r => (r.MinStage < 0 || r.MinStage <= stage)).ToList();
+			// Create a list of candidates depending of their weight
+			List<FloorTriggerAsset> triggers = new List<FloorTriggerAsset>();
+			foreach (var fta in all)
+			{
+				for (int i = 0; i < count * fta.Weight; i++)
+					triggers.Add(fta);
+			}
+			// Filter tiles to be used
 			var floors = tiles.Where(t => t.type == 0).ToList();
-
-			// Remove in tile from the list (we don't want to spawn on some trap or alarm)
 			floors.Remove(inTile);
 
-			// Add tiles
-			foreach (var asset in all)
+			bool noRoom = false;
+			while(count > 0 && noRoom == false)
 			{
-				int count = Random.Range(asset.MinCount, asset.MaxCount + 1);
-				while (count > 0 && floors.Count > 0)
-				{
-					// Get a random floor tile
-					var tile = floors[Random.Range(0, floors.Count)];
-					// Set trigger tile 
-					tile.asset = asset;
-					// Remove current tile and closest ones from floor tiles
-					floors.RemoveAll(t => t == tile || Vector3.Distance(t.coords, tile.coords) < 3);
-					// Update count
-					count--;
-				}
+				// Choose a random tile
+				var tile = floors[Random.Range(0, floors.Count)];
+
+				// Remove current tile and closest ones
+				floors.RemoveAll(t => t == tile || Vector3.Distance(t.coords, tile.coords) < 3);
+
+				// Choose a random trigger
+				var asset = triggers[Random.Range(0, triggers.Count)];
+
+				// Remove trigger 
+				triggers.Remove(asset);
+
+				// Add the asset
+				tile.asset = asset;
+
+				// Decrease counter
+				count--;
 			}
+
+			// // Get resources
+			// int stage = GameManager.Instance.GameStage;
+			// var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).Where(r => (r.MinStage < 0 || r.MinStage <= stage) && (r.MaxStage < 0 || r.MaxStage >= stage)).ToList();
+			// Debug.Log($"FloorTriggers.Count:{all.Count}");
+
+			// // Get all floors
+			// var floors = tiles.Where(t => t.type == 0).ToList();
+
+			// // Remove in tile from the list (we don't want to spawn on some trap or alarm)
+			// floors.Remove(inTile);
+
+			// // Add tiles
+			// foreach (var asset in all)
+			// {
+			// 	int count = Random.Range(asset.MinCount, asset.MaxCount + 1);
+			// 	while (count > 0 && floors.Count > 0)
+			// 	{
+			// 		// Get a random floor tile
+			// 		var tile = floors[Random.Range(0, floors.Count)];
+			// 		// Set trigger tile 
+			// 		tile.asset = asset;
+			// 		// Remove current tile and closest ones from floor tiles
+			// 		floors.RemoveAll(t => t == tile || Vector3.Distance(t.coords, tile.coords) < 3);
+			// 		// Update count
+			// 		count--;
+			// 	}
+			// }
 
 
 		}
@@ -510,7 +568,7 @@ namespace TMM
 
 			// Check for no trigger tiles floor block
 			var stage = GameManager.Instance.GameStage;
-			bool hasTriggerTiles = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).ToList().Exists(r => (r.MinStage < 0 || r.MinStage <= stage) && (r.MaxStage < 0 || r.MaxStage >= stage));
+			bool hasTriggerTiles = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).ToList().Exists(r => (r.MinStage < 0 || r.MinStage <= stage));
 			if (hasTriggerTiles)
 			{
 				var nttb = Resources.LoadAll<NoTriggerTilesBlockAsset>($"{NoTriggerTilesBlockAsset.ResourceFolder}/{theme}");
@@ -528,21 +586,20 @@ namespace TMM
 
 			}
 
-
-
-			// // Check for no trigger tiles floor block
-			// var vendBlocks = Resources.LoadAll<VendingMachineBlockAsset>($"{VendingMachineBlockAsset.ResourceFolder}/{theme}");
-			// foreach(var vb in vendBlocks)
-			// {
-			// 	WallBlockData wbd = new WallBlockData();
-			// 	wbd.createFlippedVariant = false;
-			// 	wbd.min = Random.Range(vb.MinCount, vb.MaxCount + 1);
-			// 	wbd.weight = 0;
-			// 	wbd.count = 0;
-			// 	wbd.prefabs = new List<GameObject>() { vb.Prefab };
-			// 	wbd.tiles = vb.GetTiles();
-			// 	availableBlocks.Add(wbd);
-			// }
+			// Check common vending machines
+			var vendBlocks = Resources.LoadAll<VendingMachineBlockAsset>($"{VendingMachineBlockAsset.ResourceFolder}/{theme}");
+			foreach(var vb in vendBlocks)
+			{
+				WallBlockData wbd = new WallBlockData();
+				wbd.createFlippedVariant = false;
+				wbd.min = 1;
+				wbd.weight = 0;
+				wbd.count = 0;
+				wbd.prefabs = new List<GameObject>() { vb.Prefab };
+				wbd.tiles = vb.GetTiles();
+				wbd.blockType = 2; // Vending machine
+				availableBlocks.Add(wbd);
+			}
 
 		}
 

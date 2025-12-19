@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace TMM.UI
 {
-	public class MapUI : MonoBehaviour
+	public class MapUI : Singleton<MapUI>
 	{
 		class PointOfInterest
 		{
@@ -41,6 +41,7 @@ namespace TMM.UI
 		[SerializeField]
 		GameObject coinPickerPrefab;
 
+		
 		[SerializeField]
 		Transform mapRoot;
 
@@ -48,6 +49,10 @@ namespace TMM.UI
 		GameObject pinPrefab;
 
 		bool open = false;
+		public bool IsOpen
+		{
+			get{ return open; }
+		}
 
 		float fadeTime = .25f;
 
@@ -67,15 +72,16 @@ namespace TMM.UI
 
 		List<PointOfInterest> pointsOfInterest = new List<PointOfInterest>();
 
-	    void Awake()
-        {
+	    protected override void Awake()
+		{
+			base.Awake();
             mapRatio = cellSize / MazeBuilder.CellSize;
         }
 
         // Start is called before the first frame update
         void Start()
 	    {
-			fpc = FindFirstObjectByType<FirstPersonController>();
+			
 			
 			canvasGroup.alpha = 0;
 	    }
@@ -83,14 +89,6 @@ namespace TMM.UI
 		// Update is called once per frame
 		void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.Q))
-			{
-				if (open)
-					Close();
-				else
-					Open();
-			}
-
 			
 		}
 
@@ -130,7 +128,6 @@ namespace TMM.UI
 		{
 			var playerPos = fpc.transform.position;
 			var diff = playerPos - playerStartingPosition;
-			Debug.Log("Diff:" + diff);
 			// Move map
 			var move = Vector3.zero;
 			move.x = diff.x * mapRatio;
@@ -151,7 +148,6 @@ namespace TMM.UI
 
 			var yaw = fpc.transform.eulerAngles.y;
 
-			Debug.Log($"Rect:{playerPos}");
 			foreach(var poi in pointsOfInterest)
 			{
 				//if (poi.type != PointOfInterest.Type.MiniGame) continue;
@@ -163,17 +159,13 @@ namespace TMM.UI
 				angle *= Mathf.Deg2Rad;
 				var poiX = poiPos.x * Mathf.Cos(angle) + poiPos.y * Mathf.Sin(angle); // X relative to player screen
 				var poiY = -poiPos.x * Mathf.Sin(angle) + poiPos.y * Mathf.Cos(angle); // Y relative to player screen
-				Debug.Log($"POI(X,Y):{poiX},{poiY}");
-				
 				
 				if (Mathf.Abs(poiX) < width/2f && Mathf.Abs(poiY) < height / 2f)
 				{
-					Debug.Log($"POI is visibile");
 					poi.pin.Hide();
 				}
 				else
 				{
-					Debug.Log($"POI is NOT visibile");
 
 					var pin = poi.pin;
 					pin.Show();
@@ -193,7 +185,7 @@ namespace TMM.UI
 							x = x > w ? w : -w;
 							y = x * poiY / poiX;
 						}
-						Debug.Log($"Pin {x}		{y}");
+					
 
 						
 					}
@@ -205,11 +197,12 @@ namespace TMM.UI
 							y = x * poiY / poiX;
 						}
 					}
-					
+
 
 					// Move pin out
 					var oldParent = pin.transform.parent;
 					pin.transform.parent = canvasGroup.transform;
+					//pin.transform.SetParent(canvasGroup.transform, false);
 					(pin.transform as RectTransform).anchoredPosition = new Vector2(x, y);
 					pin.transform.parent = oldParent;
 					
@@ -218,7 +211,7 @@ namespace TMM.UI
 			}
 		}
 
-		void Open()
+		public void Open()
 		{
 			if (open) return;
 			open = true;
@@ -226,7 +219,7 @@ namespace TMM.UI
 			canvasGroup.DOFade(1, fadeTime);
 		}
 		
-		void Close()
+		public void Close()
 		{
 			if (!open) return;
 			open = false;
@@ -236,7 +229,7 @@ namespace TMM.UI
 
 		void Create()
 		{
-
+			fpc = FindFirstObjectByType<FirstPersonController>();
 			playerStartingPosition = fpc.transform.position;
 
 			CheckFloor();
@@ -336,6 +329,12 @@ namespace TMM.UI
 					poi.type = PointOfInterest.Type.CoinPicker;
 					poi.tileIndex = i;
 					pointsOfInterest.Add(poi);
+				}
+
+				// Check Exit tile
+				if (builder.IsExitTile(i))
+				{
+					
 				}
 
 				// Hide floor

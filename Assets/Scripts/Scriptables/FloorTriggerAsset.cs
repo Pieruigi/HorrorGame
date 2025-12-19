@@ -15,32 +15,32 @@ namespace TMM.Scriptables
 			get{ return minStage; }
 		}
 
-		[SerializeField]
-		int maxStage = -1;
-		public int MaxStage
-		{
-			get{ return maxStage; }
-		}
-
-		[SerializeField]
-		int minCount = 1;
-		public int MinCount
-		{
-			get{ return minCount; }
-		}
-
-		[SerializeField]
-		int maxCount = 3;
-		public int MaxCount
-		{
-			get{ return maxCount; }
-		}
+		// [SerializeField]
+		// int maxStage = -1;
+		// public int MaxStage
+		// {
+		// 	get{ return maxStage; }
+		// }
 
 		// [SerializeField]
-		// int weight = 10;
-		// public int Weight
+		// int minCount = 1;
+		// public int MinCount
 		// {
-		// 	get{ return weight; }
+		// 	get{ return minCount; }
 		// }
+
+		// [SerializeField]
+		// int maxCount = 3;
+		// public int MaxCount
+		// {
+		// 	get{ return maxCount; }
+		// }
+
+		[SerializeField]
+		int weight = 10;
+		public int Weight
+		{
+			get{ return weight; }
+		}
 	}
 }

@@ -87,10 +87,29 @@ namespace TMM
 		{
 			if (this.deviceInteractor != deviceInteractor) return;
 
-			if (TriggerTileManager.Instance.TriggerTilesDisabled) return; // Already disabled (unless we want to give the player the change to buy more time)
+			switch (type)
+			{
+				case VendingMachineType.NoTriggerTiles:
+					if (TriggerTileManager.Instance.TriggerTilesDisabled) return; // Already disabled (unless we want to give the player the change to buy more time)
+					if (Wallet.Instance.TryUseCoins(cost))
+						TriggerTileManager.Instance.DisableTriggers(timer);
+					break;
+				case VendingMachineType.Map:
+					if (Wallet.Instance.TryUseCoins(cost))
+					{
+						Map.Instance.SetTimer(timer);
+						StartCoroutine(SwitchAndForceOff());	
+					}
+					break;
+			}
 
-			if (Wallet.Instance.TryUseCoins(cost))
-				TriggerTileManager.Instance.DisableTriggers(timer);
+		}
+
+		IEnumerator SwitchAndForceOff()
+		{
+			yield return Switch();
+			InitButton(true);
+			InitDescription(true);
 		}
 		
 		IEnumerator Switch()
@@ -110,6 +129,10 @@ namespace TMM
 				case VendingMachineType.NoTriggerTiles:
 					InitButton(TriggerTileManager.Instance.TriggerTilesDisabled);
 					InitDescription(TriggerTileManager.Instance.TriggerTilesDisabled);
+					break;
+				case VendingMachineType.Map:
+					InitButton(false);
+					InitDescription(false);
 					break;
 			}
 		}
