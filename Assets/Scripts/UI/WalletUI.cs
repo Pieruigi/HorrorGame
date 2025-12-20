@@ -36,14 +36,15 @@ namespace TMM.UI
         void Start()
 	    {
 			balanceField.text = Wallet.Instance.Balance.ToString("00");
-			ShowAndHide();
+			//ShowAndHide();
 
 	    }
 
 		// Update is called once per frame
 		void Update()
 		{
-
+			if (Input.GetKeyDown(KeyCode.Tab))
+				ShowAndHide();
 		}
 
 		void OnEnable()
@@ -77,11 +78,12 @@ namespace TMM.UI
 		{
 			if (keepVisible || busy) return;
 
+			busy = true;
 			canvasGroup.DOKill();
 
 			Sequence seq = DOTween.Sequence();
 			seq.Append(canvasGroup.DOFade(1, fadeTime));
-			seq.AppendInterval(1f);
+			seq.AppendInterval(3f);
 			seq.Append(canvasGroup.DOFade(0, fadeTime));
 			seq.onComplete += ()=>{ busy = false; };
 		}

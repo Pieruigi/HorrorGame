@@ -9,8 +9,8 @@ namespace TMM
 {
 	public abstract class TimedBuffDebuff : MonoBehaviour
 	{
-	 	public static UnityAction OnApplied;
-		public static UnityAction OnExpired;
+	 	public static UnityAction<TimedBuffDebuff> OnApplied;
+		public static UnityAction<TimedBuffDebuff> OnExpired;
 
 		float timer = 0;
 
@@ -39,7 +39,7 @@ namespace TMM
 				{
 					timer = 0;
 					DoExpire();
-					OnExpired?.Invoke();
+					OnExpired?.Invoke(this);
 				}
 			}
 		}
@@ -67,13 +67,14 @@ namespace TMM
 		protected virtual void ResetAll()
 		{
 			timer = 0;
+			DoExpire();
 		}
 
 		public void Apply()
 		{
 			timer = timerDefault;
 			DoApply();
-			OnApplied?.Invoke();
+			OnApplied?.Invoke(this);
 		}
 	}
 }

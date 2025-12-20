@@ -1,16 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace TMM
 {
-	public class _ChildA : SingletonPersistent<_ChildA>
+	public class _ChildA : _Parent
 	{
 	    // Start is called before the first frame update
-	    void Start()
+	    async void Start()
 	    {
-	        
+			await Task.Delay(5000);
+			InvokeOnTest();
 	    }
 
 		// Update is called once per frame
@@ -19,18 +21,6 @@ namespace TMM
 
 		}
 
-		void OnEnable()
-		{
-			PlayerSpeedDebuff.OnApplied += HandleOnApplied;
-		}
-        void OnDisable()
-        {
-            PlayerSpeedDebuff.OnApplied -= HandleOnApplied;
-        }
-
-        private void HandleOnApplied()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

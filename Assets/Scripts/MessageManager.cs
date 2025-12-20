@@ -39,7 +39,7 @@ namespace TMM
 		{
 			var seq = DOTween.Sequence();
 			seq.AppendInterval(2f);
-			seq.OnComplete(() => { MessageUI.Instance.ShowMessage("F: flashlight on/off"); });
+			seq.OnComplete(() => { MessageUI.Instance.ShowMessage("F: flashlight on/off\nTAB: show HUD"); });
 		}
 
 		public void ShowCustomMessage(int messageId, bool keepOn = false)

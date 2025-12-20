@@ -232,13 +232,15 @@ namespace StarterAssets
 			PlayerSpeedDebuff.OnExpired -= HandleOnSpeedDebuffExpired;
         }
 
-        private void HandleOnSpeedDebuffApplied()
-        {
+        private void HandleOnSpeedDebuffApplied(TimedBuffDebuff arg)
+		{
+			if (arg.GetType() != typeof(PlayerSpeedDebuff)) return;
 			speedDebuff = PlayerSpeedDebuff.Instance.Value;
         }
 
-        private void HandleOnSpeedDebuffExpired()
-        {
+        private void HandleOnSpeedDebuffExpired(TimedBuffDebuff arg)
+		{
+			if (arg.GetType() != typeof(PlayerSpeedDebuff)) return;
 			speedDebuff = 1;
         }
 

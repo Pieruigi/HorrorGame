@@ -45,10 +45,11 @@ namespace TMM
 
 		}
 
-        protected override void DoExpire()
-        {
+		protected override void DoExpire()
+		{
 			value = 1f;
-        }
-		
+		}
+
+       
     }
 }

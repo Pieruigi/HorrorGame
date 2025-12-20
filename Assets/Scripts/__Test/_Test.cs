@@ -1,14 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace TMM
 {
-	public abstract class _Parent : MonoBehaviour
+	public class _Test : MonoBehaviour
 	{
-		public static UnityAction<_Parent> OnTest;
-
 	    // Start is called before the first frame update
 	    void Start()
 	    {
@@ -21,10 +18,10 @@ namespace TMM
 
 		}
 
-		protected void InvokeOnTest()
-		{
-			OnTest?.Invoke(this);
-		}
-
+        void OnEnable()
+        {
+			_ChildA.OnTest += (a) => { Debug.Log("TTTTTTTTTTTTTTTTTTTT - A:"+a.GetType()); };
+			_ChildB.OnTest += (a) => { Debug.Log("TTTTTTTTTTTTTTTTTTTT - B:" + a.GetType()); };
+        }
     }
 }

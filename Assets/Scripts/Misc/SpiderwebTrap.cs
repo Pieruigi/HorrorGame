@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
@@ -17,6 +16,11 @@ namespace TMM
 		float elapsed = 0;
 
 		bool triggered = false;
+
+
+		
+
+	
 
 	
 	    // Start is called before the first frame update
@@ -41,11 +45,21 @@ namespace TMM
 		void OnEnable()
 		{
 			floorTrigger.OnTriggered += HandleOnTriggered;
+			TriggerTileManager.OnChanged += HandleOnTriggerTileManagerChanged;
 		}
 
         void OnDisable()
         {
-            floorTrigger.OnTriggered -= HandleOnTriggered;
+			floorTrigger.OnTriggered -= HandleOnTriggered;
+			TriggerTileManager.OnChanged -= HandleOnTriggerTileManagerChanged;
+        }
+
+        private void HandleOnTriggerTileManagerChanged()
+        {
+           if (TriggerTileManager.Instance.TriggerTilesDisabled)
+				floorTrigger.SwitchOff();
+			else if (!AlarmManager.Instance.IsActive())
+				floorTrigger.ResetTrigger();
         }
 
         private void HandleOnTriggered()
@@ -53,6 +67,10 @@ namespace TMM
 			elapsed = 0;
 			triggered = true;
 			PlayerSpeedDebuff.Instance.Apply();
-        }
+
+		
+		}
+		
+	
     }
 }

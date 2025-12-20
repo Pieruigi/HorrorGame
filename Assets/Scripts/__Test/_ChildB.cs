@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace TMM
 {
-	public class _ChildB : SingletonPersistent<_ChildB>
+	public class _ChildB : _Parent
 	{
 	    // Start is called before the first frame update
-	    void Start()
+	    async void Start()
 	    {
-			Debug.Log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDD:"+(_ChildA.Instance == _ChildB.Instance));
+			await Task.Delay(8000);
+			InvokeOnTest();
 	    }
 
 	    // Update is called once per frame

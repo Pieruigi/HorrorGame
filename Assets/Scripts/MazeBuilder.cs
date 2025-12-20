@@ -235,6 +235,33 @@ namespace TMM
 			var floors = tiles.Where(t => t.type == 0).ToList();
 			floors.Remove(inTile);
 
+			// Remove minigames adjacent tiles (where you stand to play)
+			var minigames = blocks.Where(b => b.data.blockType == 1);
+			foreach(var mg in minigames)
+			{
+				Tile tile = null;
+				// Get adjacent
+				switch (mg.rotationType)
+				{
+					case 0:
+						tile = tiles.Find(t => t.coords == mg.origin.coords - Vector2.up);
+						break;
+					case 1:
+						tile = tiles.Find(t => t.coords == mg.origin.coords - Vector2.right);
+						break;
+					case 2:
+						tile = tiles.Find(t => t.coords == mg.origin.coords + Vector2.up);
+						break;
+					case 3:
+						tile = tiles.Find(t => t.coords == mg.origin.coords + Vector2.right);
+						break;
+				}
+				Debug.Log("Removing tile index:" + tiles.IndexOf(tile));
+				floors.Remove(tile);
+		
+			}
+
+
 			bool noRoom = false;
 			while(count > 0 && noRoom == false)
 			{
@@ -369,7 +396,7 @@ namespace TMM
 
 		void SpawnMonster()
 		{
-			return;
+			//return;
 			int stage = GameManager.Instance.GameStage;
 			int creatureCount = 1;
 			if (stage >= doubleCreatureStage)
@@ -1008,7 +1035,7 @@ namespace TMM
 
 #if USE_WEIGHT
 			// Minumum
-			int count = 0;
+			int count = 1; // Reservation for minigame that will be choose further in the script
 			foreach (var bp in availableBlocks)
 			{
 				bp.count = bp.min;
@@ -1036,6 +1063,8 @@ namespace TMM
 				// Increase the counter
 				wbd.count++;
 			}
+
+		
 #else
 			// Minumum
 			int count = 0;

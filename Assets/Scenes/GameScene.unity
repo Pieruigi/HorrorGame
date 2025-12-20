@@ -1377,9 +1377,9 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 970443569199602833, guid: f0336fb00dd9cc644afa0736ea9f2206,
         type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 27
-      objectReference: {fileID: 0}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 8574642533513903749}
     - target: {fileID: 2045059213728001083, guid: f0336fb00dd9cc644afa0736ea9f2206,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1484,11 +1484,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WalletUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 4861809120088602249, guid: f0336fb00dd9cc644afa0736ea9f2206,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3286,7 +3281,7 @@ PrefabInstance:
     - target: {fileID: 706567921611571114, guid: 9a46aca5371ee5942bab30381bf55c1a,
         type: 3}
       propertyPath: m_Alpha
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4184032207761029357, guid: 9a46aca5371ee5942bab30381bf55c1a,
         type: 3}
@@ -3872,6 +3867,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TargetTexture
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8550716750324513024, guid: cca75ef0d88b24749aca6e34f84a6cfb,
+        type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8550716750324513024, guid: cca75ef0d88b24749aca6e34f84a6cfb,
+        type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8550716750324513024, guid: cca75ef0d88b24749aca6e34f84a6cfb,
+        type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
