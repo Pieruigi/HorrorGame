@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 4694489374838300666}
   - component: {fileID: 5953485540457998181}
   m_Layer: 0
-  m_Name: ScaryClown
+  m_Name: ScaryClown1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

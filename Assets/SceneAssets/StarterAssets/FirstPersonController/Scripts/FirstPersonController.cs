@@ -159,9 +159,14 @@ namespace StarterAssets
 #endif
 			}
 		}
+
 		
 		public bool InputDisabled { get; set; }
-        
+		
+		
+        public bool AimingDisabled { get; set; }
+		
+		
 
 		private void Awake()
 		{
@@ -265,7 +270,7 @@ namespace StarterAssets
 
 		private void CameraRotation()
 		{
-			if(isDead)
+			if(AimingDisabled || isDead)
             {
 				_input.look = Vector2.zero;
             }
@@ -367,9 +372,10 @@ namespace StarterAssets
 			if (InputDisabled || isDead)
 			{
 				_input.crouch = false;
-				_input.sprint = false;
-				_input.move = Vector3.zero;
+				//_input.sprint = false;
+				//_input.move = Vector3.zero;
 			}
+			
 
             if (!Grounded)
             {
@@ -378,11 +384,15 @@ namespace StarterAssets
 				//_input.move = Vector3.zero; //TODO: disable movement when falling down
             }
 
+			Debug.Log("INput.Move:" + _input.move);
+
 			// set target speed based on move speed, sprint speed and if sprint is pressed
 			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 			if (_input.crouch) targetSpeed = CrouchSpeed;
 
 			targetSpeed *= speedDebuff;
+
+			if (InputDisabled || isDead) targetSpeed = 0;
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -504,7 +514,11 @@ namespace StarterAssets
 			return _speed;
 		}
 
-		
+		public void SetTargetPitch(float value)
+		{
+			_cinemachineTargetPitch = value;
+		}
+
 		private void OnDrawGizmosSelected()
 		{
 			Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);

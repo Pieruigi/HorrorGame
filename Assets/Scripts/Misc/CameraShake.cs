@@ -22,19 +22,19 @@ public class CameraShake : MonoBehaviour
 
     public void PlayLetterboxJumpScare()
     {
-        var fpc = FindFirstObjectByType<FirstPersonController>();
-        fpc.InputDisabled = true;
+        //var fpc = FindFirstObjectByType<FirstPersonController>();
+        //fpc.InputDisabled = true;
 
         PlayShake(
             duration: 1.7f,
             posStrength: 0.25f * .4f,
             rotStrength: 15f * .4f,
             vibratoPos: 30,
-            vibratoRot: 20,
-            onComplete: () =>
-            {
-                fpc.InputDisabled = false;
-            }
+            vibratoRot: 20
+            // onComplete: () =>
+            // {
+            //     fpc.InputDisabled = false;
+            // }
         );
     }
 
@@ -50,6 +50,17 @@ public class CameraShake : MonoBehaviour
             rotStrength: 2.5f,          // leggero recoil visivo
             vibratoPos: 8,
             vibratoRot: 10
+        );
+    }
+
+    public void PlayJumpscareShake(float duration)
+    {
+        PlayShake(
+            duration: duration,            // molto breve
+            posStrength: 0.25f * .4f,
+            rotStrength: 15f * .4f,
+            vibratoPos: 30,
+            vibratoRot: 20
         );
     }
 

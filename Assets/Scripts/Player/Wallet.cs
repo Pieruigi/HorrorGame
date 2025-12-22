@@ -26,10 +26,10 @@ namespace TMM
         void Update()
         {
 #if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.X))
-			{
-				Wallet.Instance.AddCoins(3);
-			}
+			// if (Input.GetKeyDown(KeyCode.X))
+			// {
+			// 	Wallet.Instance.AddCoins(3);
+			// }
 #endif
         }
 

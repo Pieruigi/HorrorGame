@@ -423,6 +423,7 @@ namespace TMM
 
 				// Instantiate the monster gameobject
 				var monster = Instantiate(monsterPrefab);
+				monster.name = monsterPrefab.name; // To avoid having (Clone) at the end of the name
 				monster.GetComponent<NavMeshAgent>().enabled = false;
 				monster.transform.position = new Vector3(spawnTile.coords.x, 0, spawnTile.coords.y) * CellSize;
 				monster.GetComponent<NavMeshAgent>().enabled = true;
@@ -1162,6 +1163,10 @@ namespace TMM
 			return tiles.FindIndex(t => t.coin == coinPicker);
 		}
 		
+		public int GetTileIndex(GameObject mainObject)
+		{
+			return tiles.FindIndex(t => t.mainObject == mainObject);
+		}
 
 		public Vector2 GetBlockCoords(int index)
 		{
