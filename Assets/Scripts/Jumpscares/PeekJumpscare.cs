@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
+using NUnit.Framework.Internal;
 using UnityEngine;
 
 namespace TMM
@@ -11,37 +12,43 @@ namespace TMM
 		[SerializeField]
 		List<GameObject> prefabs;
 
+		/// <summary>
+		/// 0: north-east
+		/// 1: south-east
+		/// 2: south-west
+		/// 3: north-west
+		/// </summary>
+		[SerializeField]
+		List<ActivationTrigger> triggers;
+
 		GameObject clown;
 
-		bool[] directions = new bool[4]; 
+		void OnEnable()
+		{
+			foreach (var t in triggers)
+				t.OnEnter += (c) => { Test(t, c); }; 
+		}
 
-		public override void ReportUsed()
+		void OnDisable()
+		{
+
+		}
+		
+		void Test(ActivationTrigger t, Collider other)
+		{
+			if (!other.CompareTag("Player")) return;
+			if (Triggered) return;
+
+			int index = triggers.IndexOf(t);
+
+			
+		}
+
+        public override void ReportUsed()
 		{
 			// Instantiate a clown
 			clown = Instantiate(prefabs[Random.Range(0, prefabs.Count)], transform);
 
-			// Get floor object
-			var floor = transform.root;
-
-			// Get the corresponding tile from builder
-			var tileIndex = MazeBuilder.Instance.GetTileIndex(floor.gameObject);
-
-			var coords = MazeBuilder.Instance.GetTileCoords(tileIndex);
-
-			for(int i=0; i<4; i++)
-			{
-				var otherCoords = Vector2.zero;
-				switch (i)
-				{
-					case 0:
-						otherCoords = coords + Vector2.up;
-
-						break;
-				}
-
-				if (MazeBuilder.Instance.GetTileType(MazeBuilder.Instance.GetTileIndex(otherCoords)) == 0)
-					directions[i] = true;
-			}
 
 		}
 
