@@ -58,7 +58,7 @@ namespace TMM
 		{
 			public Vector2 coords;
 
-			public int type; // 0: floor, 1: inside block
+			public int type; // 0: floor, 1: inside block, -1: doesn't exist
 
 			public GameObject mainObject;
 
@@ -1122,7 +1122,15 @@ namespace TMM
 
 		public int GetTileType(int index)
 		{
-			return tiles[index].type;
+			if (index < tiles.Count && index >= 0)
+				return tiles[index].type;
+			else
+				return -1;
+		}
+
+		public int GetTileType(Vector2 coords)
+		{
+			return GetTileType(GetTileIndex(coords));
 		}
 
 		public int GetTileIndex(Vector2 coords)

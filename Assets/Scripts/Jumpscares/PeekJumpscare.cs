@@ -67,7 +67,7 @@ namespace TMM
 			return false;
 		}
 
-        public override bool CheckForDestroy()
+        public override bool Validate()
         {
             // Get the root tile
 			var tile = MazeBuilder.Instance.GetTileIndex(transform.root.gameObject);
@@ -76,30 +76,54 @@ namespace TMM
 			var coords = MazeBuilder.Instance.GetTileCoords(tile);
 
 			// Get others
-			var n = MazeBuilder.Instance.GetTileIndex(coords + Vector2.up);
-			var e = MazeBuilder.Instance.GetTileIndex(coords + Vector2.right);
-			var s = MazeBuilder.Instance.GetTileIndex(coords - Vector2.up);
-			var w = MazeBuilder.Instance.GetTileIndex(coords - Vector2.right);
+			// var n = MazeBuilder.Instance.GetTileIndex(coords + Vector2.up);
+			// var e = MazeBuilder.Instance.GetTileIndex(coords + Vector2.right);
+			// var s = MazeBuilder.Instance.GetTileIndex(coords - Vector2.up);
+			// var w = MazeBuilder.Instance.GetTileIndex(coords - Vector2.right);
+
+			// var n2 = MazeBuilder.Instance.GetTileIndex(coords + Vector2.up * 2);
+			// var e2 = MazeBuilder.Instance.GetTileIndex(coords + Vector2.right * 2);
+			// var s2 = MazeBuilder.Instance.GetTileIndex(coords - Vector2.up * 2);
+			// var w2 = MazeBuilder.Instance.GetTileIndex(coords - Vector2.right * 2);
 
 			// Get types
-			n = n < 0 ? -1 : MazeBuilder.Instance.GetTileType(n);
-			e = e < 0 ? -1 : MazeBuilder.Instance.GetTileType(e);
-			s = s < 0 ? -1 : MazeBuilder.Instance.GetTileType(s);
-			w = w < 0 ? -1 : MazeBuilder.Instance.GetTileType(w);
+			// n = n < 0 ? -1 : MazeBuilder.Instance.GetTileType(n);
+			// n2 = n2 < 0 ? -1 : MazeBuilder.Instance.GetTileType(n2);
+			//triggers[0].gameObject.SetActive(n == 0 && n2 == 0 && MazeBuilder.Instance.GetTileType(coords + Vector2.up + Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(coords + Vector2.up - Vector2.right) == 0);
+			triggers[0].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords + Vector2.up) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords + Vector2.up * 2) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords + Vector2.up + Vector2.right) != 0 &&
+											 MazeBuilder.Instance.GetTileType(coords + Vector2.up - Vector2.right) != 0);
 
-			triggers[0].gameObject.SetActive(n == 0);
-			triggers[1].gameObject.SetActive(e == 0);
-			triggers[2].gameObject.SetActive(s == 0);
-			triggers[3].gameObject.SetActive(w == 0);
+			// e = e < 0 ? -1 : MazeBuilder.Instance.GetTileType(e);
+			// e2 = e2 < 0 ? -1 : MazeBuilder.Instance.GetTileType(e2);
+			//triggers[1].gameObject.SetActive(e == 0 && e2 == 0);
+			triggers[1].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords + Vector2.right) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords + Vector2.right * 2) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords + Vector2.right + Vector2.up) != 0 &&
+											 MazeBuilder.Instance.GetTileType(coords + Vector2.right - Vector2.up) != 0);
 
+			// s = s < 0 ? -1 : MazeBuilder.Instance.GetTileType(s);
+			// s2 = s2 < 0 ? -1 : MazeBuilder.Instance.GetTileType(s2);
+			//triggers[2].gameObject.SetActive(s == 0 && s2 == 0);
+			triggers[2].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords - Vector2.up) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords - Vector2.up * 2) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords - Vector2.up + Vector2.right) != 0 &&
+											 MazeBuilder.Instance.GetTileType(coords - Vector2.up - Vector2.right) != 0);
+
+			// w = w < 0 ? -1 : MazeBuilder.Instance.GetTileType(w);
+			// w2 = w2 < 0 ? -1 : MazeBuilder.Instance.GetTileType(w2);
+			//triggers[3].gameObject.SetActive(w == 0 && w2 == 0);
+			triggers[3].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords - Vector2.right) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords - Vector2.right * 2) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords - Vector2.right + Vector2.up) != 0 &&
+											 MazeBuilder.Instance.GetTileType(coords - Vector2.right - Vector2.up) != 0);
 
 			// Check coords
-			if (!((n == 0 || s == 0) && (e == 0 || w == 0)))
+			if (!((triggers[0].gameObject.activeSelf || triggers[2].gameObject.activeSelf) && (triggers[1].gameObject.activeSelf || triggers[3].gameObject.activeSelf)))
 				return true;
 
-			// Check valid triggers (only trigger with another tile behind, just like if you walk through a corridor)
-
-
+			
 			return false;
         }
 	}

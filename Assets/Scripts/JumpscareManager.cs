@@ -43,7 +43,7 @@ namespace TMM
 			List<Jumpscare> toRemove = new List<Jumpscare>();
 			foreach (var js in jsl)
 			{
-				if(js.CheckForDestroy())
+				if(js.Validate())
 					toRemove.Add(js);
 			}
 			// Remove tiles

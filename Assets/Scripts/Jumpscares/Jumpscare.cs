@@ -51,7 +51,7 @@ namespace TMM
 
 		protected abstract bool CheckPlay();
 
-		public abstract bool CheckForDestroy();
+		public abstract bool Validate();
 
 
 	    // Start is called before the first frame update
