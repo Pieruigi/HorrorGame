@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace TMM
 {
@@ -38,13 +39,26 @@ namespace TMM
 			// Get all jumpscare objects
 			List<Jumpscare> jsl = FindObjectsByType<Jumpscare>(FindObjectsSortMode.None).ToList();
 
-			// Prima devo eliminare tutti quelli che non hanno almeno un tile libero in una delle 4 posizioni (tipo quelli interni ai corridoi che si possono attraversare solo n-s e e-o)
+			// Remove all tiles with only North-South or East-West connections
+			List<Jumpscare> toRemove = new List<Jumpscare>();
+			foreach (var js in jsl)
+			{
+				if(js.CheckForDestroy())
+					toRemove.Add(js);
+			}
+			// Remove tiles
+			foreach(var r in toRemove)
+			{
+				jsl.Remove(r);
+				Destroy(r.gameObject);
+			}
 
 
 			// Set random jumpscares
 			int count = Random.Range(1, 6);
+			count = 4;
 
-			for (int i = 0; i < count; i++)
+			for (int i = 0; i < count && jsl.Count > 0; i++)
 			{
 				jsl.RemoveAt(Random.Range(0, jsl.Count));
 			}

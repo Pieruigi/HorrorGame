@@ -1,7 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using StarterAssets;
+using TMM.AI;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace TMM
 {
@@ -36,9 +40,18 @@ namespace TMM
 
 		float oldJaw, oldPitch;
 
+		public FirstPersonController FirstPersonController
+		{
+			get { return fpc; }
+		}
+
+		List<Creature> clowns;
+
 		public abstract void ReportUsed(); // Called by the JumpscareManager
 
 		protected abstract bool CheckPlay();
+
+		public abstract bool CheckForDestroy();
 
 
 	    // Start is called before the first frame update
@@ -65,9 +78,22 @@ namespace TMM
 #endif
 		}
 
+		protected virtual void OnEnable()
+		{
+			clowns = FindObjectsByType<Creature>(FindObjectsSortMode.None).ToList();
+		}
+		
+		protected virtual void OnDisable()
+		{
+			
+		}
+
 		void Play()
 		{
 			if (triggered) return;
+
+			// Only if you are not chased or searched for
+			if (clowns.Exists(c => c.State == CreatureState.Chase || c.State == CreatureState.Search)) return;
 
 			triggered = true;
 
