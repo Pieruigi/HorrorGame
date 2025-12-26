@@ -43,18 +43,26 @@ namespace TMM
 			if (Triggered) return;
 
 			// The player must be looking along the trigger's forward axis
-			if (Vector3.Angle(FirstPersonController.transform.forward, t.transform.forward) < 40f) return;
+			if (Vector3.Angle(FirstPersonController.transform.forward, t.transform.forward) > 40f) return;
 
 			int index = triggers.IndexOf(t);
 
 			Debug.Log($"Jumpscare triggered - {transform.root.gameObject.name} - {index}");
 
-
+			if (FirstPersonController.GetTargetPitch() > -30 && FirstPersonController.GetTargetPitch() < 30)
+				Play();
 
 			
 		}
 
-        public override void ReportUsed()
+        protected override void Play()
+        {
+			base.Play();
+			
+
+        }
+
+		public override void ReportUsed()
 		{
 			// Instantiate a clown
 			clown = Instantiate(prefabs[Random.Range(0, prefabs.Count)], transform);
@@ -62,10 +70,10 @@ namespace TMM
 
 		}
 
-		protected override bool CheckPlay()
-		{
-			return false;
-		}
+		// protected override bool CheckPlay()
+		// {
+		// 	return false;
+		// }
 
         public override bool Validate()
         {
@@ -75,49 +83,32 @@ namespace TMM
 			// Get coords
 			var coords = MazeBuilder.Instance.GetTileCoords(tile);
 
-			// Get others
-			// var n = MazeBuilder.Instance.GetTileIndex(coords + Vector2.up);
-			// var e = MazeBuilder.Instance.GetTileIndex(coords + Vector2.right);
-			// var s = MazeBuilder.Instance.GetTileIndex(coords - Vector2.up);
-			// var w = MazeBuilder.Instance.GetTileIndex(coords - Vector2.right);
-
-			// var n2 = MazeBuilder.Instance.GetTileIndex(coords + Vector2.up * 2);
-			// var e2 = MazeBuilder.Instance.GetTileIndex(coords + Vector2.right * 2);
-			// var s2 = MazeBuilder.Instance.GetTileIndex(coords - Vector2.up * 2);
-			// var w2 = MazeBuilder.Instance.GetTileIndex(coords - Vector2.right * 2);
+		
 
 			// Get types
-			// n = n < 0 ? -1 : MazeBuilder.Instance.GetTileType(n);
-			// n2 = n2 < 0 ? -1 : MazeBuilder.Instance.GetTileType(n2);
-			//triggers[0].gameObject.SetActive(n == 0 && n2 == 0 && MazeBuilder.Instance.GetTileType(coords + Vector2.up + Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(coords + Vector2.up - Vector2.right) == 0);
 			triggers[0].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords + Vector2.up) == 0 &&
 											 MazeBuilder.Instance.GetTileType(coords + Vector2.up * 2) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords + Vector2.up * 3) == 0 /*&&
 											 MazeBuilder.Instance.GetTileType(coords + Vector2.up + Vector2.right) != 0 &&
-											 MazeBuilder.Instance.GetTileType(coords + Vector2.up - Vector2.right) != 0);
+											 MazeBuilder.Instance.GetTileType(coords + Vector2.up - Vector2.right) != 0*/);
 
-			// e = e < 0 ? -1 : MazeBuilder.Instance.GetTileType(e);
-			// e2 = e2 < 0 ? -1 : MazeBuilder.Instance.GetTileType(e2);
-			//triggers[1].gameObject.SetActive(e == 0 && e2 == 0);
 			triggers[1].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords + Vector2.right) == 0 &&
 											 MazeBuilder.Instance.GetTileType(coords + Vector2.right * 2) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords + Vector2.right * 3) == 0 /*&&
 											 MazeBuilder.Instance.GetTileType(coords + Vector2.right + Vector2.up) != 0 &&
-											 MazeBuilder.Instance.GetTileType(coords + Vector2.right - Vector2.up) != 0);
+											 MazeBuilder.Instance.GetTileType(coords + Vector2.right - Vector2.up) != 0*/);
 
-			// s = s < 0 ? -1 : MazeBuilder.Instance.GetTileType(s);
-			// s2 = s2 < 0 ? -1 : MazeBuilder.Instance.GetTileType(s2);
-			//triggers[2].gameObject.SetActive(s == 0 && s2 == 0);
 			triggers[2].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords - Vector2.up) == 0 &&
 											 MazeBuilder.Instance.GetTileType(coords - Vector2.up * 2) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords - Vector2.up * 3) == 0 /*&&
 											 MazeBuilder.Instance.GetTileType(coords - Vector2.up + Vector2.right) != 0 &&
-											 MazeBuilder.Instance.GetTileType(coords - Vector2.up - Vector2.right) != 0);
+											 MazeBuilder.Instance.GetTileType(coords - Vector2.up - Vector2.right) != 0*/);
 
-			// w = w < 0 ? -1 : MazeBuilder.Instance.GetTileType(w);
-			// w2 = w2 < 0 ? -1 : MazeBuilder.Instance.GetTileType(w2);
-			//triggers[3].gameObject.SetActive(w == 0 && w2 == 0);
 			triggers[3].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords - Vector2.right) == 0 &&
 											 MazeBuilder.Instance.GetTileType(coords - Vector2.right * 2) == 0 &&
+											 MazeBuilder.Instance.GetTileType(coords - Vector2.right * 3) == 0 /*&&
 											 MazeBuilder.Instance.GetTileType(coords - Vector2.right + Vector2.up) != 0 &&
-											 MazeBuilder.Instance.GetTileType(coords - Vector2.right - Vector2.up) != 0);
+											 MazeBuilder.Instance.GetTileType(coords - Vector2.right - Vector2.up) != 0*/);
 
 			// Check coords
 			if (!((triggers[0].gameObject.activeSelf || triggers[2].gameObject.activeSelf) && (triggers[1].gameObject.activeSelf || triggers[3].gameObject.activeSelf)))

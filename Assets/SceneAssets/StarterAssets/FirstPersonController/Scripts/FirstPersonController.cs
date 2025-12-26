@@ -384,8 +384,6 @@ namespace StarterAssets
 				//_input.move = Vector3.zero; //TODO: disable movement when falling down
             }
 
-			Debug.Log("INput.Move:" + _input.move);
-
 			// set target speed based on move speed, sprint speed and if sprint is pressed
 			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 			if (_input.crouch) targetSpeed = CrouchSpeed;
@@ -517,6 +515,11 @@ namespace StarterAssets
 		public void SetTargetPitch(float value)
 		{
 			_cinemachineTargetPitch = value;
+		}
+
+		public float GetTargetPitch()
+		{
+			return _cinemachineTargetPitch;
 		}
 
 		private void OnDrawGizmosSelected()

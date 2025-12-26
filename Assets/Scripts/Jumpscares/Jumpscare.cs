@@ -49,7 +49,7 @@ namespace TMM
 
 		public abstract void ReportUsed(); // Called by the JumpscareManager
 
-		protected abstract bool CheckPlay();
+		//protected abstract bool CheckPlay();
 
 		public abstract bool Validate();
 
@@ -67,8 +67,8 @@ namespace TMM
 		{
 			if (triggered) return;
 
-			if (CheckPlay())
-				Play();
+			// if (CheckPlay())
+			// 	Play();
 
 #if UNITY_EDITOR
 			if (Input.GetKeyDown(KeyCode.X))
@@ -88,7 +88,7 @@ namespace TMM
 			
 		}
 
-		void Play()
+		protected virtual void Play()
 		{
 			if (triggered) return;
 
