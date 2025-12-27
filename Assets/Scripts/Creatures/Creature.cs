@@ -111,8 +111,10 @@ namespace TMM.AI
 			agent = GetComponent<NavMeshAgent>();
 
 #if UNITY_EDITOR
-			walkSpeed *= 0.75f; // Max 1.75
-			runSpeed *= 0.75f; // Max 1.75
+			// walkSpeed *= 0.75f; // Max 1.75
+			// runSpeed *= 0.75f; // Max 1.75
+
+			idleTimer = 30000;
 #endif
 
 			InitByStage();
@@ -121,7 +123,7 @@ namespace TMM.AI
 
 		protected virtual void Start()
 		{
-			SetState(CreatureState.Patrol);
+			SetState(CreatureState.Idle);
 			player = FindFirstObjectByType<FirstPersonController>().gameObject;
 			fpc = player.GetComponent<FirstPersonController>();
 			flashlight = player.transform.parent.GetComponentInChildren<Flashlight>();
@@ -143,8 +145,8 @@ namespace TMM.AI
 
 		void InitByStage()
 		{
-			walkSpeed *= 0.75f; // 1.75, 2.5
-			runSpeed *= 0.75f;
+			walkSpeed *= 0.5625f; // 1.75, 2.5
+			runSpeed *= 0.5625f;
 			
 
 			switch (GameManager.Instance.GameStage)

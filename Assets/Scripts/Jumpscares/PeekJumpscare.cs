@@ -1,9 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
+using System.Linq;
+using System.Threading.Tasks;
+using DG.Tweening;
+using Mono.Cecil;
 using NUnit.Framework.Internal;
 using StarterAssets;
+using TMM.AI;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Assertions.Must;
 
 namespace TMM
@@ -12,7 +19,7 @@ namespace TMM
 	{
 
 		[SerializeField]
-		List<GameObject> prefabs;
+		List<GameObject> clownPrefabs;
 
 		/// <summary>
 		/// 0: north
@@ -25,6 +32,14 @@ namespace TMM
 
 		GameObject clown;
 
+		List<Creature> creatures;
+
+        protected override void Start()
+        {
+			base.Start();
+
+			creatures = FindObjectsByType<Creature>(FindObjectsSortMode.None).ToList();
+        }
 
 
 		protected override void OnEnable()
@@ -32,7 +47,7 @@ namespace TMM
 			base.OnEnable();
 
 			foreach (var t in triggers)
-				t.OnEnter += (c) => { HandleOnTriggerEnter(t, c); }; 
+				t.OnEnter += (c) => { HandleOnTriggerEnter(t, c); };
 		}
 
 	
@@ -42,30 +57,121 @@ namespace TMM
 			if (!other.CompareTag("Player")) return;
 			if (Triggered) return;
 
+			// Only if you are not chased or searched for
+			if (creatures.Exists(c => c.State == CreatureState.Chase || c.State == CreatureState.Search)) return;
+			
 			// The player must be looking along the trigger's forward axis
-			if (Vector3.Angle(FirstPersonController.transform.forward, t.transform.forward) > 40f) return;
+			float signedAngle = Vector3.SignedAngle(FirstPersonController.transform.forward, t.transform.forward, Vector3.up);
+			if (Mathf.Abs(signedAngle) > 40f) return;
 
 			int index = triggers.IndexOf(t);
 
-			Debug.Log($"Jumpscare triggered - {transform.root.gameObject.name} - {index}");
+			Debug.Log($"Jumpscare triggered - {transform.root.gameObject.name} - {index}, pitch:{FirstPersonController.GetTargetPitch()}, angle:{signedAngle}");
 
-			if (FirstPersonController.GetTargetPitch() > -30 && FirstPersonController.GetTargetPitch() < 30)
-				Play();
+			float pitch = 20;
+			if (FirstPersonController.GetTargetPitch() > -pitch && FirstPersonController.GetTargetPitch() < pitch)
+				Play(signedAngle, index);
 
-			
+
 		}
 
-        protected override void Play()
+		bool IsRightAvailable(int triggerIndex)
+		{
+			var builder = MazeBuilder.Instance;
+			var coords = builder.GetTileCoords(builder.GetTileIndex(transform.parent.gameObject));
+			bool ret = false;
+			switch (triggerIndex)
+			{
+				case 0:
+					ret = builder.GetTileType(coords - Vector2.right) == 0;
+					break;
+				case 1:
+					ret = builder.GetTileType(coords + Vector2.up) == 0;
+					break;
+
+				case 2:
+					ret = builder.GetTileType(coords + Vector2.right) == 0;
+					break;
+				case 3:
+					ret = builder.GetTileType(coords - Vector2.up) == 0;
+					break;
+			}
+
+			return ret;
+		}
+
+		bool IsLeftAvailable(int triggerIndex)
+		{
+			var builder = MazeBuilder.Instance;
+			var coords = builder.GetTileCoords(builder.GetTileIndex(transform.parent.gameObject));
+			bool ret = false;
+			switch (triggerIndex)
+			{
+				case 0:
+					ret = builder.GetTileType(coords + Vector2.right) == 0;
+					break;
+				case 1:
+					ret = builder.GetTileType(coords - Vector2.up) == 0;
+					break;
+
+				case 2:
+					ret = builder.GetTileType(coords - Vector2.right) == 0;
+					break;
+				case 3:
+					ret = builder.GetTileType(coords + Vector2.up) == 0;
+					break;
+			}
+
+			return ret;
+		}
+
+		void Play(float signedAngle, int triggerIndex)
         {
-			base.Play();
 			
 
+			// Spawn clown
+			clown = Instantiate(clownPrefabs[Random.Range(0, clownPrefabs.Count)]);
+			clown.transform.parent = transform;
+
+			// Check side 
+			int side = 0; // 0: right, 1: left
+			if (IsLeftAvailable(triggerIndex) && IsRightAvailable(triggerIndex))
+			{
+				side = Random.Range(0, 2);
+			}
+			else
+			{
+				if (IsLeftAvailable(triggerIndex))
+					side = 1;
+			}
+
+			// Get spawn point
+			var spawn = side == 0 ? triggers[triggerIndex].transform.Find("R") : triggers[triggerIndex].transform.Find("L");
+
+			var lookAt = new GameObject("LookAt");
+			lookAt.transform.parent = transform;
+			lookAt.transform.position = spawn.position + Vector3.up * 1.5f + (side == 0 ? spawn.right : -spawn.right) * .75f;
+			SetLookAt(lookAt.transform);
+
+			clown.transform.position = spawn.position;
+			clown.transform.rotation = spawn.rotation;
+
+			// Get animator
+			var animator = clown.GetComponentInChildren<Animator>();
+
+			animator.SetInteger("Side", side);
+			animator.SetTrigger("Peek");
+
+			var seq = DOTween.Sequence();
+			seq.AppendInterval(1f).OnComplete(()=> { animator.SetTrigger("Idle"); });
+
+			Play();
         }
 
 		public override void ReportUsed()
 		{
 			// Instantiate a clown
-			clown = Instantiate(prefabs[Random.Range(0, prefabs.Count)], transform);
+			//clown = Instantiate(prefabs[Random.Range(0, prefabs.Count)], transform);
 
 
 		}
@@ -76,7 +182,9 @@ namespace TMM
 		// }
 
         public override bool Validate()
-        {
+		{
+			var builder = MazeBuilder.Instance;
+
             // Get the root tile
 			var tile = MazeBuilder.Instance.GetTileIndex(transform.root.gameObject);
 
@@ -86,29 +194,25 @@ namespace TMM
 		
 
 			// Get types
-			triggers[0].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords + Vector2.up) == 0 &&
-											 MazeBuilder.Instance.GetTileType(coords + Vector2.up * 2) == 0 &&
-											 MazeBuilder.Instance.GetTileType(coords + Vector2.up * 3) == 0 /*&&
-											 MazeBuilder.Instance.GetTileType(coords + Vector2.up + Vector2.right) != 0 &&
-											 MazeBuilder.Instance.GetTileType(coords + Vector2.up - Vector2.right) != 0*/);
+			triggers[0].gameObject.SetActive(builder.GetTileType(coords + Vector2.up) == 0 &&
+											 builder.GetTileType(coords + Vector2.up * 2) == 0 &&
+											 builder.GetTileType(coords + Vector2.up * 3) == 0 &&
+											 (builder.GetTileType(coords + Vector2.right) == 0 || builder.GetTileType(coords - Vector2.right) == 0));
 
-			triggers[1].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords + Vector2.right) == 0 &&
-											 MazeBuilder.Instance.GetTileType(coords + Vector2.right * 2) == 0 &&
-											 MazeBuilder.Instance.GetTileType(coords + Vector2.right * 3) == 0 /*&&
-											 MazeBuilder.Instance.GetTileType(coords + Vector2.right + Vector2.up) != 0 &&
-											 MazeBuilder.Instance.GetTileType(coords + Vector2.right - Vector2.up) != 0*/);
+			triggers[1].gameObject.SetActive(builder.GetTileType(coords + Vector2.right) == 0 &&
+											 builder.GetTileType(coords + Vector2.right * 2) == 0 &&
+											 builder.GetTileType(coords + Vector2.right * 3) == 0 &&
+											 (builder.GetTileType(coords + Vector2.up) == 0 || builder.GetTileType(coords - Vector2.up) == 0));
 
-			triggers[2].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords - Vector2.up) == 0 &&
-											 MazeBuilder.Instance.GetTileType(coords - Vector2.up * 2) == 0 &&
-											 MazeBuilder.Instance.GetTileType(coords - Vector2.up * 3) == 0 /*&&
-											 MazeBuilder.Instance.GetTileType(coords - Vector2.up + Vector2.right) != 0 &&
-											 MazeBuilder.Instance.GetTileType(coords - Vector2.up - Vector2.right) != 0*/);
+			triggers[2].gameObject.SetActive(builder.GetTileType(coords - Vector2.up) == 0 &&
+											 builder.GetTileType(coords - Vector2.up * 2) == 0 &&
+											 builder.GetTileType(coords - Vector2.up * 3) == 0 && 
+											 (builder.GetTileType(coords + Vector2.right) == 0 || builder.GetTileType(coords - Vector2.right) == 0));
 
-			triggers[3].gameObject.SetActive(MazeBuilder.Instance.GetTileType(coords - Vector2.right) == 0 &&
-											 MazeBuilder.Instance.GetTileType(coords - Vector2.right * 2) == 0 &&
-											 MazeBuilder.Instance.GetTileType(coords - Vector2.right * 3) == 0 /*&&
-											 MazeBuilder.Instance.GetTileType(coords - Vector2.right + Vector2.up) != 0 &&
-											 MazeBuilder.Instance.GetTileType(coords - Vector2.right - Vector2.up) != 0*/);
+			triggers[3].gameObject.SetActive(builder.GetTileType(coords - Vector2.right) == 0 &&
+											 builder.GetTileType(coords - Vector2.right * 2) == 0 &&
+											 builder.GetTileType(coords - Vector2.right * 3) == 0 &&
+											 (builder.GetTileType(coords + Vector2.up) == 0 || builder.GetTileType(coords - Vector2.up) == 0));
 
 			// Check coords
 			if (!((triggers[0].gameObject.activeSelf || triggers[2].gameObject.activeSelf) && (triggers[1].gameObject.activeSelf || triggers[3].gameObject.activeSelf)))

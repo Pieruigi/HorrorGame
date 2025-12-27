@@ -21,7 +21,7 @@ namespace TMM
 		// Null if you don't want the player looking at any specific direction
 		[SerializeField]
 		Transform lookAt;
-
+	
 		[SerializeField]
 		float lookTime = .2f;
 
@@ -45,7 +45,7 @@ namespace TMM
 			get { return fpc; }
 		}
 
-		List<Creature> clowns;
+		//List<Creature> clowns;
 
 		public abstract void ReportUsed(); // Called by the JumpscareManager
 
@@ -54,8 +54,10 @@ namespace TMM
 		public abstract bool Validate();
 
 
+
+
 	    // Start is called before the first frame update
-	    void Start()
+	    protected virtual void Start()
 	    {
 			fpc = FindFirstObjectByType<FirstPersonController>();
 			camRoot = fpc.transform.Find("PlayerCameraRoot");
@@ -80,7 +82,7 @@ namespace TMM
 
 		protected virtual void OnEnable()
 		{
-			clowns = FindObjectsByType<Creature>(FindObjectsSortMode.None).ToList();
+			//clowns = FindObjectsByType<Creature>(FindObjectsSortMode.None).ToList();
 		}
 		
 		protected virtual void OnDisable()
@@ -93,7 +95,7 @@ namespace TMM
 			if (triggered) return;
 
 			// Only if you are not chased or searched for
-			if (clowns.Exists(c => c.State == CreatureState.Chase || c.State == CreatureState.Search)) return;
+			//if (clowns.Exists(c => c.State == CreatureState.Chase || c.State == CreatureState.Search)) return;
 
 			triggered = true;
 
@@ -151,12 +153,21 @@ namespace TMM
 
 		}
 
-		
+
 		public void ReportNotUsed()
 		{
 			Destroy(gameObject);
 		}
-	
+
+		protected void SetLookAt(Transform value)
+		{
+			lookAt = value;
+		}
+		
+		protected void ResetLookAt()
+		{
+			lookAt = null;
+		}
 
 	}
 }
