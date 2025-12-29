@@ -4,6 +4,7 @@ using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 namespace TMM
 {
@@ -18,6 +19,12 @@ namespace TMM
 
 		[SerializeField]
 		Transform currentBlockRoot;
+
+		[SerializeField]
+		Image nextBlockImage;
+
+		[SerializeField]
+		List<Sprite> sprites;
 
 		GameObject currentBlock;
 
@@ -112,7 +119,7 @@ namespace TMM
 				alignBlockToView = false;
 				if (Physics.Raycast(origin, direction, out hitInfo, distance, LayerMask.GetMask(new string[] { "Interactable" })))
 				{
-					Debug.Log($"Tetris hit:{hitInfo.collider.transform.parent.gameObject.name}/{hitInfo.collider.gameObject.name}");
+					//Debug.Log($"Tetris hit:{hitInfo.collider.transform.parent.gameObject.name}/{hitInfo.collider.gameObject.name}");
 
 					// Check if the player is trying to insert the block
 					if (Input.GetMouseButtonDown(0))
@@ -156,9 +163,9 @@ namespace TMM
 					var dist = orig.magnitude / cos;
 					// Get target position
 					var targetPos = Camera.main.transform.position + dist * Camera.main.transform.forward;
-					Debug.Log("TEST - Alignnnnnnnnnnnnnnnnnnnn:"+targetPos);
+					
 					targetPos = ClampCurrentBlockPosition(targetPos);
-					Debug.Log("TEST - CCCCCCCCCCCCCCCCCCCCCCPP:"+targetPos);
+					
 					// Move
 					currentBlock.transform.position = targetPos;// Vector3.MoveTowards(currentBlock.transform.position, targetPos, 5f * Time.deltaTime);
 					
@@ -395,7 +402,13 @@ namespace TMM
 			var seq = DOTween.Sequence();
 			seq.Append(currentBlock.transform.DOScale(1, time).SetEase(Ease.OutBounce));
 			seq.Join(currentBlock.transform.DOShakePosition(time));
-			seq.OnComplete(()=> { blockBusy = false; });
+			seq.OnComplete(() => { blockBusy = false; });
+
+			// Set sprite
+
+			var sprite = sprites.Find(s => s.name.ToLower().EndsWith(nextBlockPrefab.name.Substring(nextBlockPrefab.name.Length - 2).ToLower()));
+			Debug.Log("TEST - Sprite:" + sprite.name + ", prefab:" + nextBlockPrefab.name.Substring(nextBlockPrefab.name.Length - 2).ToLower());
+			nextBlockImage.sprite = sprite;
 
 		}
     }
