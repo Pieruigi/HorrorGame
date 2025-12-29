@@ -60,29 +60,33 @@ namespace TMM
 					var child = cellRows[i].transform.GetChild(j);
 					child.gameObject.name = "E"; // E=empty, F=full
 
-					if (!top || child.position.y > borders.yMax)
+					var relPos = currentBlockRoot.InverseTransformPoint(child.position);
+
+					if (!top || relPos.y > borders.yMax)
 					{
 						top = true;
-						borders.yMax = child.position.y;
+						borders.yMax = relPos.y;
 					}
-					if (!right || child.position.x > borders.xMax)
+					if (!right || relPos.x > borders.xMax)
 					{
 						right = true;
-						borders.xMax = child.position.x;
+						borders.xMax = relPos.x;
 					}
-					if (!bottom || child.position.y < borders.yMin)
+					if (!bottom || relPos.y < borders.yMin)
 					{
 						bottom = true;
-						borders.yMin = child.position.y;
+						borders.yMin = relPos.y;
 					}
-					if(!left || child.position.x < borders.xMin)
+					if (!left || relPos.x < borders.xMin)
 					{
 						left = true;
-						borders.xMin = child.position.x;
+						borders.xMin = relPos.x;
 					}
 				}
 
 			}
+
+			Debug.Log($"Borders:{borders}");
 
 			emptyMaterial = cellRows[0].transform.GetChild(0).GetComponent<Renderer>().material;
 
@@ -144,6 +148,7 @@ namespace TMM
 				// Try align the block
 				if (alignBlockToView)
 				{
+					
 					// Vector from camera to current block root
 					var orig = currentBlockRoot.position - Camera.main.transform.position;
 					var cos = Mathf.Cos(Vector3.Angle(orig, Camera.main.transform.forward)*Mathf.Deg2Rad);
@@ -151,9 +156,11 @@ namespace TMM
 					var dist = orig.magnitude / cos;
 					// Get target position
 					var targetPos = Camera.main.transform.position + dist * Camera.main.transform.forward;
+					Debug.Log("TEST - Alignnnnnnnnnnnnnnnnnnnn:"+targetPos);
 					targetPos = ClampCurrentBlockPosition(targetPos);
+					Debug.Log("TEST - CCCCCCCCCCCCCCCCCCCCCCPP:"+targetPos);
 					// Move
-					currentBlock.transform.position = Vector3.MoveTowards(currentBlock.transform.position, targetPos, 5f * Time.deltaTime);
+					currentBlock.transform.position = targetPos;// Vector3.MoveTowards(currentBlock.transform.position, targetPos, 5f * Time.deltaTime);
 					
 
 				}
@@ -185,37 +192,64 @@ namespace TMM
 		
 		Vector3 ClampCurrentBlockPosition(Vector3 position)
 		{
-			// Vector3 offset = Vector3.zero;
+			Vector3 clamped = currentBlockRoot.InverseTransformPoint(position);
 
-			// int count = currentBlock.transform.childCount;
+			Vector3 oldPosition = currentBlock.transform.position;
+			currentBlock.transform.position = position;
 
-			// for(int i=0; i<count; i++)
-			// {
-				
-			// }
+			int count = currentBlock.transform.childCount;
 
-			// if (position.x < borders.xMin)
-			// 	position.x = borders.xMin;
+			List<Transform> children = new List<Transform>();
+			for (int i = 0; i < count; i++)
+			{
+				children.Add(currentBlock.transform.GetChild(i));
+			}
+			var tmp = children.OrderBy(c => currentBlockRoot.InverseTransformPoint(c.position).x);
+			Transform left = tmp.First();
+			Transform right = tmp.Last();
+			tmp = children.OrderBy(c => currentBlockRoot.InverseTransformPoint(c.position).y);
+			Transform top = tmp.Last();
+			Transform bottom = tmp.First();
 
-			// if (position.x > borders.xMax)
-			// 	position.x = borders.xMax;
+			float xMin = currentBlockRoot.InverseTransformPoint(left.position).x;
+			float xMax = currentBlockRoot.InverseTransformPoint(right.position).x;
+			float yMin = currentBlockRoot.InverseTransformPoint(bottom.position).y;
+			float yMax = currentBlockRoot.InverseTransformPoint(top.position).y;
 
-			// if (position.y < borders.yMin)
-			// 	position.y = borders.yMin;
+			if (xMin < borders.xMin)
+			{
+				clamped.x = borders.xMin + Mathf.Abs(currentBlockRoot.InverseTransformPoint(currentBlock.transform.position).x - xMin);
+			}
 
-			// if (position.y > borders.yMax)
-			// 	position.y = borders.yMax;
-				
+			if (xMax > borders.xMax)
+			{
+				clamped.x = borders.xMax - Mathf.Abs(currentBlockRoot.InverseTransformPoint(currentBlock.transform.position).x - xMax);// - 0.01f;
+			}
 
-			return position;
+			if (yMin < borders.yMin)
+			{
+				clamped.y = borders.yMin + Mathf.Abs(currentBlockRoot.InverseTransformPoint(currentBlock.transform.position).y - yMin);// + 0.01f;
+			}
+
+			if (yMax > borders.yMax)
+			{
+				clamped.y = borders.yMax - Mathf.Abs(currentBlockRoot.InverseTransformPoint(currentBlock.transform.position).y - yMax);// - 0.01f;
+			}
+
+
+			currentBlock.transform.position = oldPosition;
+
+			return currentBlockRoot.TransformPoint(clamped);
 		}
 
 		void ClearBoard()
 		{
-			if (!cellRows.Exists(r => !r.GetComponentsInChildren<Transform>().ToList().Exists(c => "f".Equals(c.gameObject.name.ToLower())))) return;
+			if (!cellRows.Exists(r => r.GetComponentsInChildren<Transform>().ToList().Exists(c => "f".Equals(c.gameObject.name.ToLower())))) return;
+			if (blockBusy) return;
 
 			blockBusy = true;
 			float time = .2f;
+			
 			foreach(var row in cellRows)
 			{
 				int count = row.transform.childCount;

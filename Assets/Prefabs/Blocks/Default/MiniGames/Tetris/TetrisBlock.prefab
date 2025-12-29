@@ -10667,7 +10667,7 @@ MonoBehaviour:
   activateDot: 1
   deviceInteractor: {fileID: 3628892805993529211}
   recharger: {fileID: 5218308799618564395}
-  timer: 45
+  timer: 45000
   beatenAudioSource: {fileID: 3228415450131091667}
   mainLight: {fileID: 1185539755407994971}
   mainCanvas: {fileID: 7077450987451737129}
