@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace TMM
 {
@@ -22,6 +23,8 @@ namespace TMM
 
 		GameObject nextBlockPrefab;
 
+		Material emptyMaterial;
+
 		bool[,] gridCells;
 
 		bool alignBlockToView;
@@ -29,6 +32,8 @@ namespace TMM
 		bool blockBusy = false;
 
 		float rotationTime = .2f;
+
+		Rect borders = new Rect();
 
 		protected override void Awake()
 		{
@@ -46,15 +51,40 @@ namespace TMM
 			gridCells = new bool[rows, cols];
 
 			// Add cells to grid
+			bool top = false, bottom = false, left = false, right = false;
 			for (int i = 0; i < rows; i++)
 			{
 				for (int j = 0; j < cols; j++)
 				{
 					gridCells[i, j] = cellRows[i].transform.GetChild(j);
-					cellRows[i].transform.GetChild(j).gameObject.name = "E"; // E=empty, F=full
+					var child = cellRows[i].transform.GetChild(j);
+					child.gameObject.name = "E"; // E=empty, F=full
+
+					if (!top || child.position.y > borders.yMax)
+					{
+						top = true;
+						borders.yMax = child.position.y;
+					}
+					if (!right || child.position.x > borders.xMax)
+					{
+						right = true;
+						borders.xMax = child.position.x;
+					}
+					if (!bottom || child.position.y < borders.yMin)
+					{
+						bottom = true;
+						borders.yMin = child.position.y;
+					}
+					if(!left || child.position.x < borders.xMin)
+					{
+						left = true;
+						borders.xMin = child.position.x;
+					}
 				}
-					
+
 			}
+
+			emptyMaterial = cellRows[0].transform.GetChild(0).GetComponent<Renderer>().material;
 
 
 		}
@@ -65,6 +95,11 @@ namespace TMM
 
 			if (IsActive)
 			{
+				if (Input.GetKeyDown(KeyCode.R))
+				{
+					ClearBoard();
+				}
+
 				var origin = Camera.main.transform.position;
 				var direction = Camera.main.transform.forward;
 
@@ -116,6 +151,7 @@ namespace TMM
 					var dist = orig.magnitude / cos;
 					// Get target position
 					var targetPos = Camera.main.transform.position + dist * Camera.main.transform.forward;
+					targetPos = ClampCurrentBlockPosition(targetPos);
 					// Move
 					currentBlock.transform.position = Vector3.MoveTowards(currentBlock.transform.position, targetPos, 5f * Time.deltaTime);
 					
@@ -141,11 +177,64 @@ namespace TMM
 			base.DoChildDeactivation();
 
 			// Clear current and next blocks
+			Destroy(currentBlock);
 			currentBlock = null;
 			nextBlockPrefab = null;
 
 		}
 		
+		Vector3 ClampCurrentBlockPosition(Vector3 position)
+		{
+			// Vector3 offset = Vector3.zero;
+
+			// int count = currentBlock.transform.childCount;
+
+			// for(int i=0; i<count; i++)
+			// {
+				
+			// }
+
+			// if (position.x < borders.xMin)
+			// 	position.x = borders.xMin;
+
+			// if (position.x > borders.xMax)
+			// 	position.x = borders.xMax;
+
+			// if (position.y < borders.yMin)
+			// 	position.y = borders.yMin;
+
+			// if (position.y > borders.yMax)
+			// 	position.y = borders.yMax;
+				
+
+			return position;
+		}
+
+		void ClearBoard()
+		{
+			if (!cellRows.Exists(r => !r.GetComponentsInChildren<Transform>().ToList().Exists(c => "f".Equals(c.gameObject.name.ToLower())))) return;
+
+			blockBusy = true;
+			float time = .2f;
+			foreach(var row in cellRows)
+			{
+				int count = row.transform.childCount;
+				for(int i=0; i<count; i++)
+				{
+					var child = row.transform.GetChild(i);
+					if ("e".Equals(child.gameObject.name.ToLower())) continue;
+
+					child.gameObject.name = "E";
+					//child.GetComponent<Renderer>().material = emptyMaterial;
+					var seq = DOTween.Sequence();
+					//seq.AppendInterval(time / 2f).OnComplete(() => { child.GetComponent<Renderer>().material = emptyMaterial; });
+					StartCoroutine(SetCellFreeMaterialDelayed(child.gameObject, time / 2f));
+					seq.Append(child.DOShakeRotation(time).SetEase(Ease.OutBounce).OnComplete(() => { child.localEulerAngles = Vector3.left * 90f; }));
+					seq.OnComplete(() => { blockBusy = false; });
+				}
+			}
+		}
+
 		void TryInsertCurrentBlock()
 		{
 			// Raycast from each piece of the block to the panel
@@ -162,8 +251,10 @@ namespace TMM
 				RaycastHit hitInfo;
 				if (Physics.Raycast(orig, dir, out hitInfo, rayDist, LayerMask.GetMask(new string[] { "Interactable" })))
 				{
-					if("e".Equals(hitInfo.collider.gameObject.name.ToLower()))
+					if ("e".Equals(hitInfo.collider.gameObject.name.ToLower()))
 						cells.Add(hitInfo.collider.gameObject);
+					else
+						failed = true;
 				}
 				else
 				{
@@ -175,18 +266,76 @@ namespace TMM
 			if (failed)
 			{
 				// Do shake
+				blockBusy = true;
+				var eulers = currentBlock.transform.localEulerAngles;
+				currentBlock.transform.DOShakeRotation(.1f).OnComplete(() => { currentBlock.transform.localEulerAngles = eulers; blockBusy = false; });
 			}
 			else // Place the block
 			{
+				blockBusy = true;
 				Material mat = currentBlock.transform.GetChild(0).GetComponent<Renderer>().material;
-				foreach(var cell in cells)
-				{
-					cell.GetComponent<Renderer>().material = mat;
+				foreach (var cell in cells)
 					cell.name = "F";
-				}
+
+				float time = .2f;
+				StartCoroutine(SetCellsMaterialAndCheckRows(mat, cells, time / 2f));
+				var seq = DOTween.Sequence();
+				seq.Append(currentBlock.transform.DOPunchScale(Vector3.one * 1.2f, time));
+				seq.Append(currentBlock.transform.DOScale(0, time).SetEase(Ease.OutBounce).OnComplete(() =>
+				{
+					Destroy(currentBlock);
+					currentBlock = null;
+					UpdateBlocks();
+				}));
+
+
 			}
 
 
+		}
+		
+		IEnumerator SetCellsMaterialAndCheckRows(Material mat, List<GameObject> cells, float time)
+		{
+			yield return new WaitForSeconds(time);
+
+			foreach (var cell in cells)
+				cell.GetComponent<Renderer>().material = mat;
+
+			CheckRows(cells, time);
+		}
+
+		void CheckRows(List<GameObject> cells, float time)
+		{
+			foreach (var cell in cells)
+			{
+				// Get row
+				var row = cell.transform.parent;
+				bool setFree = true;
+				int count = row.childCount;
+				for (int i = 0; i < count && setFree; i++)
+				{
+					if ("e".Equals(row.GetChild(i).gameObject.name.ToLower()))
+						setFree = false;
+				}
+
+				if (setFree)
+				{
+					for (int i = 0; i < count && setFree; i++)
+					{
+						var seq = DOTween.Sequence();
+						var child = row.GetChild(i);
+						child.gameObject.name = "E";
+						StartCoroutine(SetCellFreeMaterialDelayed(child.gameObject, time/2f));
+						seq.Append(child.DOShakeRotation(time).OnComplete(() => { child.localEulerAngles = Vector3.left * 90f; }));
+					}
+				}
+			}
+		}
+		
+		IEnumerator SetCellFreeMaterialDelayed(GameObject cell, float delay)
+		{
+			yield return new WaitForSeconds(delay);
+			cell.GetComponent<Renderer>().material = emptyMaterial;
 		}
 
 		void UpdateBlocks()
@@ -204,6 +353,15 @@ namespace TMM
 			// Choose the next block prefab
 			var candidates = blockPrefabs.Where(b => b != prefab).ToList();
 			nextBlockPrefab = candidates[Random.Range(0, candidates.Count)];
+
+			// Do scale
+			blockBusy = true;
+			float time = .2f;
+			currentBlock.transform.localScale = Vector3.zero;
+			var seq = DOTween.Sequence();
+			seq.Append(currentBlock.transform.DOScale(1, time).SetEase(Ease.OutBounce));
+			seq.Join(currentBlock.transform.DOShakePosition(time));
+			seq.OnComplete(()=> { blockBusy = false; });
 
 		}
     }
