@@ -30,6 +30,8 @@ namespace TMM
 		[SerializeField]
 		List<ActivationTrigger> triggers;
 
+
+
 		GameObject clown;
 
 		List<Creature> creatures;
@@ -128,7 +130,6 @@ namespace TMM
 		void Play(float signedAngle, int triggerIndex)
         {
 			
-
 			// Spawn clown
 			clown = Instantiate(clownPrefabs[Random.Range(0, clownPrefabs.Count)]);
 			clown.transform.parent = transform;
@@ -163,7 +164,9 @@ namespace TMM
 			animator.SetTrigger("Peek");
 
 			var seq = DOTween.Sequence();
-			seq.AppendInterval(1f).OnComplete(()=> { animator.SetTrigger("Idle"); });
+			seq.AppendInterval(.5f).OnComplete(() => { animator.SetTrigger("Idle"); });
+			seq.AppendInterval(.5f).OnComplete(() => { Destroy(clown); });
+			
 
 			Play();
         }

@@ -110,6 +110,8 @@ namespace TMM
 			if (lookAt)
 				LookAt();
 
+			JumpscareManager.Instance.PlayAudio();
+
 			StartCoroutine(Stop());
 
 #if UNITY_EDITOR

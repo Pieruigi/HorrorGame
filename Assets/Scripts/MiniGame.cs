@@ -233,7 +233,7 @@ namespace TMM
 			Sequence seq = DOTween.Sequence();
 			seq.Append(player.transform.DOMove(playerTarget.position, moveTime));
 			seq.Join(player.transform.DORotateQuaternion(playerTarget.rotation, moveTime));
-			seq.Join(wall.transform.DOLocalMoveY(wallHeightDefault * 6f, moveTime));
+			seq.Join(wall.transform.DOLocalMoveY(wallHeightDefault * 5f, moveTime));
 			seq.Join(ruleCanvasGroup.DOFade(1, moveTime));
 			seq.OnComplete(() => { activated = true; if (activateDot) DotCanvas.Instance.Show(); });
 

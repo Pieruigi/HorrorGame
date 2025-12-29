@@ -7,10 +7,17 @@ using UnityEngine.Rendering;
 
 namespace TMM
 {
-	public class JumpscareManager : MonoBehaviour
+	public class JumpscareManager : Singleton<JumpscareManager>
 	{
 
-		
+		AudioSource audioSource;
+
+		protected override void Awake()
+		{
+			base.Awake();
+
+			audioSource = GetComponent<AudioSource>();
+		}
 
 	    // Start is called before the first frame update
 	    void Start()
@@ -55,8 +62,8 @@ namespace TMM
 
 
 			// Set random jumpscares
-			int count = Random.Range(1, 6);
-			count = 4;
+			int count = Random.Range(0, 3);
+			//count = 4;
 
 			for (int i = 0; i < count && jsl.Count > 0; i++)
 			{
@@ -68,7 +75,10 @@ namespace TMM
 				Destroy(js.gameObject);
 		}
 
-		
+		public void PlayAudio()
+		{
+			audioSource.Play();
+		}
 		
     }
 }
