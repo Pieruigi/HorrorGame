@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -26,6 +27,12 @@ namespace TMM
 		[SerializeField]
 		List<Sprite> sprites;
 
+		[SerializeField]
+		TMP_Text scoreField;
+
+		[SerializeField]
+		int score = 10;
+
 		GameObject currentBlock;
 
 		GameObject nextBlockPrefab;
@@ -42,10 +49,12 @@ namespace TMM
 
 		Rect borders = new Rect();
 
+		CanvasGroup miniCanvas;
+
 		protected override void Awake()
 		{
 			base.Awake();
-
+			miniCanvas = scoreField.transform.parent.GetComponent<CanvasGroup>();
 		}
 
 		protected override void Start()
@@ -184,6 +193,7 @@ namespace TMM
 
 			alignBlockToView = false;
 			blockBusy = false;
+
 		}
 
 		public override void DoChildDeactivation()
@@ -366,11 +376,20 @@ namespace TMM
 						var seq = DOTween.Sequence();
 						var child = row.GetChild(i);
 						child.gameObject.name = "E";
-						StartCoroutine(SetCellFreeMaterialDelayed(child.gameObject, time/2f));
+						StartCoroutine(SetCellFreeMaterialDelayed(child.gameObject, time / 2f));
 						seq.Append(child.DOShakeRotation(time).OnComplete(() => { child.localEulerAngles = Vector3.left * 90f; }));
 					}
+
+					// Update score 
+					score--;
+					if (score < 0) score = 0;
+					scoreField.text = score.ToString("00");
+
 				}
 			}
+			
+			if (score <= 0)
+				ReportBeaten();
 		}
 		
 		IEnumerator SetCellFreeMaterialDelayed(GameObject cell, float delay)

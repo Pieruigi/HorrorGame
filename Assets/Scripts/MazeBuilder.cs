@@ -581,7 +581,7 @@ namespace TMM
 
 			// Clear the available block list
 			availableBlocks.Clear();
-			// Fill the list
+			// Fill the list with common blocks
 			foreach (var block in blocks)
 			{
 				WallBlockData wbd = new WallBlockData();

@@ -114,7 +114,7 @@ namespace TMM.AI
 			// walkSpeed *= 0.75f; // Max 1.75
 			// runSpeed *= 0.75f; // Max 1.75
 
-			idleTimer = 30000;
+			//idleTimer = 30000;
 #endif
 
 			InitByStage();
