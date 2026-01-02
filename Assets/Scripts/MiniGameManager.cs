@@ -24,6 +24,8 @@ namespace TMM
 
 		List<MiniGameAsset> miniGames;
 
+		MiniGameAsset lastChosen;
+
         protected override void Awake()
         {
 			base.Awake();
@@ -54,15 +56,24 @@ namespace TMM
 		{
 			LoadMiniGameFromResourcesAll();
 			var availables = miniGames.Where(m => (m.MinLevel < 0 || m.MinLevel <= level) && (m.MaxLevel < 0 || m.MaxLevel >= level)).ToList();
-			var chosen = availables[Random.Range(0, availables.Count)];
 
-			var smg = spawnedMiniGames.Find(m => m.asset == chosen);
+			if (!lastChosen)
+				availables.Remove(lastChosen);
+
+			lastChosen = availables[Random.Range(0, availables.Count)];
+			
+
+#if UNITY_EDITOR
+			//lastChosen = availables.Find(m => "tetris".Equals(m.name.ToLower()));
+#endif
+
+			var smg = spawnedMiniGames.Find(m => m.asset == lastChosen);
 			if (smg == null)
-                spawnedMiniGames.Add(smg = new SpawnedMiniGame(chosen));
+                spawnedMiniGames.Add(smg = new SpawnedMiniGame(lastChosen));
            
 			smg.count++;
 
-			return chosen;
+			return lastChosen;
 
 		}
 		

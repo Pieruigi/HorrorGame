@@ -14,7 +14,14 @@ namespace TMM.Scriptables
 		int minStage;
 		public int MinStage
 		{
-			get{ return minStage; }
+			get { return minStage; }
+		}
+
+		[SerializeField]
+		int weight;
+		public int Weight
+		{
+			get{ return weight; }
 		}
 
 

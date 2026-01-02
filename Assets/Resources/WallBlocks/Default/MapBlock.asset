@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: MapBlock
   m_EditorClassIdentifier: 
   minStage: 1
+  weight: 10
   prefab: {fileID: 6419829726046342541, guid: 049d7cdfa0758af48b966e8abb2b0179, type: 3}

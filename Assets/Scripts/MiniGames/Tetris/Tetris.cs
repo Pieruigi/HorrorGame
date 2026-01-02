@@ -33,6 +33,30 @@ namespace TMM
 		[SerializeField]
 		int score = 10;
 
+		[SerializeField]
+		AudioSource placeBlockAudioSource;
+
+		[SerializeField]
+		List<AudioClip> placeBlockClips;
+
+		[SerializeField]
+		AudioSource clearRowAudioSource;
+
+		[SerializeField]
+		List<AudioClip> clearRowClips;
+
+		[SerializeField]
+		AudioSource failedBlockAudioSource;
+
+		[SerializeField]
+		List<AudioClip> failedBlockClips;
+
+		[SerializeField]
+		AudioSource rotateAudioSource;
+
+		[SerializeField]
+		List<AudioClip> rotateClips;
+
 		GameObject currentBlock;
 
 		GameObject nextBlockPrefab;
@@ -55,6 +79,7 @@ namespace TMM
 		{
 			base.Awake();
 			miniCanvas = scoreField.transform.parent.GetComponent<CanvasGroup>();
+			scoreField.text = score.ToString("00");
 		}
 
 		protected override void Start()
@@ -147,6 +172,10 @@ namespace TMM
 							blockBusy = false;
 							currentBlock.transform.localEulerAngles = angle + Vector3.forward * rotAngle;
 						});
+
+						// Play sound
+						rotateAudioSource.clip = rotateClips[Random.Range(0, rotateClips.Count)];
+						rotateAudioSource.Play();
 					}
 
 					if (!blockBusy)
@@ -266,11 +295,11 @@ namespace TMM
 
 			blockBusy = true;
 			float time = .2f;
-			
-			foreach(var row in cellRows)
+
+			foreach (var row in cellRows)
 			{
 				int count = row.transform.childCount;
-				for(int i=0; i<count; i++)
+				for (int i = 0; i < count; i++)
 				{
 					var child = row.transform.GetChild(i);
 					if ("e".Equals(child.gameObject.name.ToLower())) continue;
@@ -284,6 +313,9 @@ namespace TMM
 					seq.OnComplete(() => { blockBusy = false; });
 				}
 			}
+			
+			clearRowAudioSource.clip = clearRowClips[Random.Range(0, clearRowClips.Count)];
+			clearRowAudioSource.Play();
 		}
 
 		void TryInsertCurrentBlock()
@@ -296,12 +328,14 @@ namespace TMM
 			float rayDist = .25f;
 			for (int i = 0; i < count && !failed; i++)
 			{
+				Debug.Log($"TEST - Try i:{i}");
 				var child = currentBlock.transform.GetChild(i);
 				var orig = child.position;
 				var dir = -child.up;
 				RaycastHit hitInfo;
 				if (Physics.Raycast(orig, dir, out hitInfo, rayDist, LayerMask.GetMask(new string[] { "Interactable" })))
 				{
+					Debug.Log($"TEST - Hit:{hitInfo.collider.transform.parent.gameObject.name}/{hitInfo.collider.gameObject.name}");
 					if ("e".Equals(hitInfo.collider.gameObject.name.ToLower()))
 						cells.Add(hitInfo.collider.gameObject);
 					else
@@ -309,9 +343,12 @@ namespace TMM
 				}
 				else
 				{
+					Debug.Log("Hit failed");
 					failed = true;
 				}
 			}
+
+			Debug.Log($"TEST - Failed:{failed}");
 
 			// If failed just shake the block
 			if (failed)
@@ -320,6 +357,10 @@ namespace TMM
 				blockBusy = true;
 				var eulers = currentBlock.transform.localEulerAngles;
 				currentBlock.transform.DOShakeRotation(.1f).OnComplete(() => { currentBlock.transform.localEulerAngles = eulers; blockBusy = false; });
+
+				// Play audio
+				failedBlockAudioSource.clip = failedBlockClips[Random.Range(0, failedBlockClips.Count)];
+				failedBlockAudioSource.Play();
 			}
 			else // Place the block
 			{
@@ -339,6 +380,9 @@ namespace TMM
 					UpdateBlocks();
 				}));
 
+				placeBlockAudioSource.clip = placeBlockClips[Random.Range(0, placeBlockClips.Count)];
+				placeBlockAudioSource.Play();
+
 
 			}
 
@@ -357,6 +401,7 @@ namespace TMM
 
 		void CheckRows(List<GameObject> cells, float time)
 		{
+			var playSound = false;
 			foreach (var cell in cells)
 			{
 				// Get row
@@ -371,6 +416,7 @@ namespace TMM
 
 				if (setFree)
 				{
+					playSound = true;
 					for (int i = 0; i < count && setFree; i++)
 					{
 						var seq = DOTween.Sequence();
@@ -386,6 +432,12 @@ namespace TMM
 					scoreField.text = score.ToString("00");
 
 				}
+			}
+
+			if(playSound)
+			{
+				clearRowAudioSource.clip = clearRowClips[Random.Range(0, clearRowClips.Count)];
+				clearRowAudioSource.Play();
 			}
 			
 			if (score <= 0)

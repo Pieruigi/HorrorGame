@@ -119,7 +119,7 @@ namespace TMM
 		GameObject outPrefab;
 
 		[SerializeField]
-		GameObject monsterPrefab;
+		List<GameObject> monsterPrefabs;
 
 		[SerializeField]
 		GameObject floorLightPrefab;
@@ -284,33 +284,7 @@ namespace TMM
 				count--;
 			}
 
-			// // Get resources
-			// int stage = GameManager.Instance.GameStage;
-			// var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).Where(r => (r.MinStage < 0 || r.MinStage <= stage) && (r.MaxStage < 0 || r.MaxStage >= stage)).ToList();
-			// Debug.Log($"FloorTriggers.Count:{all.Count}");
-
-			// // Get all floors
-			// var floors = tiles.Where(t => t.type == 0).ToList();
-
-			// // Remove in tile from the list (we don't want to spawn on some trap or alarm)
-			// floors.Remove(inTile);
-
-			// // Add tiles
-			// foreach (var asset in all)
-			// {
-			// 	int count = Random.Range(asset.MinCount, asset.MaxCount + 1);
-			// 	while (count > 0 && floors.Count > 0)
-			// 	{
-			// 		// Get a random floor tile
-			// 		var tile = floors[Random.Range(0, floors.Count)];
-			// 		// Set trigger tile 
-			// 		tile.asset = asset;
-			// 		// Remove current tile and closest ones from floor tiles
-			// 		floors.RemoveAll(t => t == tile || Vector3.Distance(t.coords, tile.coords) < 3);
-			// 		// Update count
-			// 		count--;
-			// 	}
-			// }
+		
 
 
 		}
@@ -408,6 +382,11 @@ namespace TMM
 				creatureCount++;
 			}
 
+			// Create a temporary monster list
+			List<GameObject> availableMonsters = new List<GameObject>();
+			foreach (var m in monsterPrefabs)
+				availableMonsters.Add(m);
+
 			for (int i = 0; i < creatureCount; i++)
 			{
 				// Choose a floor tile (type = 0) which is at a minimum distance the palayer spawn point
@@ -420,6 +399,11 @@ namespace TMM
 				var spawnTile = candidates[Random.Range(0, candidates.Count)];
 				// Remove current and closest tiles
 				candidates.RemoveAll(t => t == spawnTile || Vector3.Distance(t.coords, spawnTile.coords) < 12);
+
+				// Chooser a random monster prefab
+				var monsterPrefab = availableMonsters[Random.Range(0, availableMonsters.Count)];
+				// Remove the chosen monster from the list
+				availableMonsters.Remove(monsterPrefab);
 
 				// Instantiate the monster gameobject
 				var monster = Instantiate(monsterPrefab);
@@ -614,9 +598,33 @@ namespace TMM
 
 			}
 
+			//
+			// Vending machines
+			//
+			int vendingCount = 1; // It depends by the stage
+
 			// Check common vending machines
-			var vendBlocks = Resources.LoadAll<VendingMachineBlockAsset>($"{VendingMachineBlockAsset.ResourceFolder}/{theme}");
-			foreach(var vb in vendBlocks)
+			var vendBlocks = Resources.LoadAll<VendingMachineBlockAsset>($"{VendingMachineBlockAsset.ResourceFolder}/{theme}").ToList();
+			List<VendingMachineBlockAsset> weightedVendBlocks = new List<VendingMachineBlockAsset>();
+			foreach (var vb in vendBlocks)
+			{
+				for (int i = 0; i < vb.Weight; i++)
+					weightedVendBlocks.Add(vb);
+			}
+
+			// Clear vendblocks
+			vendBlocks.Clear();
+			
+			// Choose vending blocks depending on their weight
+			for(int i=0; i<vendingCount; i++)
+			{
+				var vb = weightedVendBlocks[Random.Range(0, weightedVendBlocks.Count)];
+				vendBlocks.Add(vb);
+				weightedVendBlocks.RemoveAll(v => v == vb);
+			}
+
+			// Add choosen vending machines to the available block list
+			foreach (var vb in vendBlocks)
 			{
 				WallBlockData wbd = new WallBlockData();
 				wbd.createFlippedVariant = false;
@@ -628,6 +636,8 @@ namespace TMM
 				wbd.blockType = 2; // Vending machine
 				availableBlocks.Add(wbd);
 			}
+
+			
 
 		}
 

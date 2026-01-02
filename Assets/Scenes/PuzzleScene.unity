@@ -3321,6 +3321,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: TetrisBlock
       objectReference: {fileID: 0}
+    - target: {fileID: 2329560333424823122, guid: e8127ebfecce08645bde4588b05757c1,
+        type: 3}
+      propertyPath: score
+      value: 600
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329560333424823122, guid: e8127ebfecce08645bde4588b05757c1,
+        type: 3}
+      propertyPath: timer
+      value: 4500
+      objectReference: {fileID: 0}
     - target: {fileID: 6760770678316607297, guid: e8127ebfecce08645bde4588b05757c1,
         type: 3}
       propertyPath: m_LocalPosition.x

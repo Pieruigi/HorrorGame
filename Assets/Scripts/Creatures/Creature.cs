@@ -51,7 +51,7 @@ namespace TMM.AI
 		float sightAngle;
 
 		[SerializeField]
-		[Range(0, 1)]
+		[Range(0, 5)]
 		float hearMultiplier;
 
 		[SerializeField]
@@ -162,28 +162,32 @@ namespace TMM.AI
 					runSpeed *= 2.5f;
 					break;
 				case 4:
-					walkSpeed *= 3.25f;
-					runSpeed *= 3.25f;
+					// walkSpeed *= 3.25f;
+					// runSpeed *= 3.25f;
 					break;
 				case 5:
-					walkSpeed *= 4f;
-					runSpeed *= 4f;
+					walkSpeed *= 1.75f;
+					runSpeed *= 1.75f;
 					break;
 				case 6:
-					walkSpeed *= 4.75f;
-					runSpeed *= 4.75f;
+					walkSpeed *= 2.5f;
+					runSpeed *= 2.5f;
 					break;
 				case 7:
-					walkSpeed *= 5.25f;
-					runSpeed *= 5.25f;
+					// walkSpeed *= 5.25f;
+					// runSpeed *= 5.25f;
 					break;
 				case 8:
-					walkSpeed *= 6f;
-					runSpeed *= 6f;
+					walkSpeed *= 1.75f;
+					runSpeed *= 1.75f;
+					break;
+				case 9:
+					walkSpeed *= 2.5f;
+					runSpeed *= 2.5f;
 					break;
 				default:
-					walkSpeed *= 6f;
-					runSpeed *= 6f;
+					walkSpeed *= 1f;
+					runSpeed *= 1f;
 					break;
 
             }
