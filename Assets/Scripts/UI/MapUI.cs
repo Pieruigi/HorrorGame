@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using DG.Tweening;
 using StarterAssets;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.UI;
@@ -41,6 +43,8 @@ namespace TMM.UI
 		[SerializeField]
 		GameObject coinPickerPrefab;
 
+		[SerializeField]
+		TMP_Text timerField;
 		
 		[SerializeField]
 		Transform mapRoot;
@@ -99,6 +103,8 @@ namespace TMM.UI
 			UpdatePointsOfInterest();
 
 			Clipping();
+
+			UpdateTimer();
 			
         }
 
@@ -126,7 +132,12 @@ namespace TMM.UI
 			
         }
 
-        void UpdatePositionAndRotation()
+		void UpdateTimer()
+		{
+			timerField.text = Map.Instance.GetTimer().ToString("00");
+		}
+
+		void UpdatePositionAndRotation()
 		{
 			var playerPos = fpc.transform.position;
 			var diff = playerPos - playerStartingPosition;

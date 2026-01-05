@@ -73,10 +73,10 @@ namespace TMM
 			// 	Play();
 
 #if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.X))
-			{
-				Play();
-			}
+			// if (Input.GetKeyDown(KeyCode.X))
+			// {
+			// 	Play();
+			// }
 #endif
 		}
 

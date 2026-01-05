@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using RetroShadersPro.URP;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 namespace TMM
 {
@@ -16,11 +19,39 @@ namespace TMM
 		List<GameObject> activeTriggers = new List<GameObject>();
 
 		bool active = false;
+
+		CRTSettings crt;
+
 		
 
-	    
+		protected override void Awake()
+		{
+			base.Awake();
 
-		public void ReportTriggerActivated(GameObject trigger)
+		}
+
+		void Start()
+		{
+			// Get crt setting 
+			FindFirstObjectByType<Volume>().profile.TryGet<CRTSettings>(out crt);
+		}
+		
+		void Update()
+		{
+
+#if UNITY_EDITOR
+			// if (Input.GetKeyDown(KeyCode.X))
+			// {
+			// 	StartFx();
+			// }
+			// if (Input.GetKeyDown(KeyCode.C))
+			// {
+			// 	StopFx();
+			// }
+#endif
+		}
+
+        public void ReportTriggerActivated(GameObject trigger)
 		{
 			activeTriggers.Add(trigger);
 
@@ -28,6 +59,9 @@ namespace TMM
 			{
 				active = true;
 				alarmAudioSource.Play();
+
+				StartFx();
+
 				OnActivated?.Invoke();
 			}
 		}
@@ -39,10 +73,33 @@ namespace TMM
 			{
 				active = false;
 				alarmAudioSource.Stop();
+				StopFx();
 				OnDeactivated?.Invoke();
 			}
 		}
+
+		void StartFx()
+		{
+			// Kill any previous tween
+			DOTween.KillAll();
+
+			// Set initial color by default for safety
+			crt.tintColor.value = Color.white;
+
+			// Start tween
+			DOTween.To(() => crt.tintColor.value, c => crt.tintColor.value = c, Color.red, .25f).SetLoops(-1, LoopType.Yoyo);
+
+		}
 		
+		void StopFx()
+		{
+			// Kill any previous tween
+			DOTween.KillAll();
+
+			// Reset color
+			DOTween.To(() => crt.tintColor.value, c => crt.tintColor.value = c, Color.white, 0.25f);
+		}
+
 		public bool IsActive()
         {
 			return active;

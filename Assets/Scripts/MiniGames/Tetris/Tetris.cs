@@ -195,7 +195,7 @@ namespace TMM
 				{
 					
 					// Vector from camera to current block root
-					var orig = currentBlockRoot.position - Camera.main.transform.position;
+					var orig = Vector3.Project(currentBlockRoot.position - Camera.main.transform.position, currentBlockRoot.forward);
 					var cos = Mathf.Cos(Vector3.Angle(orig, Camera.main.transform.forward)*Mathf.Deg2Rad);
 					// Distance along camera forward
 					var dist = orig.magnitude / cos;

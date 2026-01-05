@@ -141,8 +141,8 @@ namespace TMM
 
 		int minigameBlockIndex;
 
-		int doubleCreatureStage = 4;
-		int tripleCreatureStage = 7;
+		int doubleCreatureStage = 3;
+		int tripleCreatureStage = 6;
 
 		float doubleMultiplier = 1.5f;
 		float tripleMultiplier = 2f;
@@ -233,7 +233,7 @@ namespace TMM
 			}
 			// Filter tiles to be used
 			var floors = tiles.Where(t => t.type == 0).ToList();
-			floors.Remove(inTile);
+			floors.RemoveAll(f=> f == inTile || Vector2.Distance(f.coords, inTile.coords) < 5);
 
 			// Remove minigames adjacent tiles (where you stand to play)
 			var minigames = blocks.Where(b => b.data.blockType == 1);

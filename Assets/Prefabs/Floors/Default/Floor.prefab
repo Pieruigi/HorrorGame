@@ -746,8 +746,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b8480fcb229388409cb7853accdb669, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stopMoving: 0
-  stopAiming: 0
+  stopMoving: 1
+  stopAiming: 1
   lookAt: {fileID: 0}
   lookTime: 0.2
   duration: 1

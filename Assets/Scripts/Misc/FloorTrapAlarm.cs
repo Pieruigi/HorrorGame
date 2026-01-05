@@ -20,7 +20,8 @@ namespace TMM
 	    // Start is called before the first frame update
 	    void Start()
 	    {
-	        
+	        if (TriggerTileManager.Instance.TriggerTilesDisabled)
+				floorTrigger.SwitchOff();
 	    }
 
 		// Update is called once per frame

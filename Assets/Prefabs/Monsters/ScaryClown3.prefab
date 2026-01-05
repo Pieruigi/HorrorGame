@@ -80,10 +80,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 2.5
   runSpeed: 3.5
-  sightRange: 4
+  sightRange: 6
   sightAngle: 45
-  hearMultiplier: 2
-  smellRange: 2
+  hearMultiplier: 1.5
+  smellRange: 3
   attackRange: 1
   attackAngle: 60
   idleTimer: 5

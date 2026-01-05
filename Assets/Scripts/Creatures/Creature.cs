@@ -134,7 +134,12 @@ namespace TMM.AI
 		// Update is called once per frame
 		protected virtual void Update()
 		{
-
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.X))
+			{
+				smellRange = 100;
+			}
+#endif
 
 			UpdateState();
 
@@ -147,50 +152,80 @@ namespace TMM.AI
 		{
 			walkSpeed *= 0.5625f; // 1.75, 2.5
 			runSpeed *= 0.5625f;
-			
 
 			switch (GameManager.Instance.GameStage)
             {
 				case 1:
 					break;
 				case 2:
-					walkSpeed *= 1.75f;
-					runSpeed *= 1.75f;
+					walkSpeed *= 1.3f;
+					runSpeed *= 1.3f;
 					break;
 				case 3:
-					walkSpeed *= 2.5f;
-					runSpeed *= 2.5f;
+					walkSpeed *= 1.3f;
+					runSpeed *= 1.3f;
 					break;
 				case 4:
-					// walkSpeed *= 3.25f;
-					// runSpeed *= 3.25f;
+					walkSpeed *= 1.6f;
+					runSpeed *= 1.6f;
 					break;
 				case 5:
-					walkSpeed *= 1.75f;
-					runSpeed *= 1.75f;
+					walkSpeed *= 1.6f;
+					runSpeed *= 1.6f;
 					break;
 				case 6:
-					walkSpeed *= 2.5f;
-					runSpeed *= 2.5f;
-					break;
-				case 7:
-					// walkSpeed *= 5.25f;
-					// runSpeed *= 5.25f;
-					break;
-				case 8:
-					walkSpeed *= 1.75f;
-					runSpeed *= 1.75f;
-					break;
-				case 9:
-					walkSpeed *= 2.5f;
-					runSpeed *= 2.5f;
+					walkSpeed *= 1.8f;
+					runSpeed *= 1.8f;
 					break;
 				default:
-					walkSpeed *= 1f;
-					runSpeed *= 1f;
+					walkSpeed *= 1.8f;
+					runSpeed *= 1.8f;
 					break;
 
-            }
+            }	
+
+			// switch (GameManager.Instance.GameStage)
+            // {
+			// 	case 1:
+			// 		break;
+			// 	case 2:
+			// 		walkSpeed *= 1.75f;
+			// 		runSpeed *= 1.75f;
+			// 		break;
+			// 	case 3:
+			// 		walkSpeed *= 2.5f;
+			// 		runSpeed *= 2.5f;
+			// 		break;
+			// 	case 4:
+			// 		// walkSpeed *= 3.25f;
+			// 		// runSpeed *= 3.25f;
+			// 		break;
+			// 	case 5:
+			// 		walkSpeed *= 1.75f;
+			// 		runSpeed *= 1.75f;
+			// 		break;
+			// 	case 6:
+			// 		walkSpeed *= 2.5f;
+			// 		runSpeed *= 2.5f;
+			// 		break;
+			// 	case 7:
+			// 		// walkSpeed *= 5.25f;
+			// 		// runSpeed *= 5.25f;
+			// 		break;
+			// 	case 8:
+			// 		walkSpeed *= 1.75f;
+			// 		runSpeed *= 1.75f;
+			// 		break;
+			// 	case 9:
+			// 		walkSpeed *= 2.5f;
+			// 		runSpeed *= 2.5f;
+			// 		break;
+			// 	default:
+			// 		walkSpeed *= 1f;
+			// 		runSpeed *= 1f;
+			// 		break;
+
+            // }
         }
 
 		void UpdateState()

@@ -652,21 +652,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MapUI
       objectReference: {fileID: 0}
-    - target: {fileID: 3130981576083180499, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4419527757973382499, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0.5882353
-      objectReference: {fileID: 0}
-    - target: {fileID: 9218024283005024642, guid: 1f053a8e9b368094ca80c911e0bcc657,
-        type: 3}
-      propertyPath: m_PixelPerfect
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

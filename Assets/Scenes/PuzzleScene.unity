@@ -3012,7 +3012,7 @@ PrefabInstance:
     - target: {fileID: 8305429328802560581, guid: 99a76bdd46f1d28469ca67c5909d7ef5,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3334,7 +3334,7 @@ PrefabInstance:
     - target: {fileID: 6760770678316607297, guid: e8127ebfecce08645bde4588b05757c1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.070001
+      value: 14.569997
       objectReference: {fileID: 0}
     - target: {fileID: 6760770678316607297, guid: e8127ebfecce08645bde4588b05757c1,
         type: 3}
@@ -3344,7 +3344,7 @@ PrefabInstance:
     - target: {fileID: 6760770678316607297, guid: e8127ebfecce08645bde4588b05757c1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.4850024
+      value: 0.48500407
       objectReference: {fileID: 0}
     - target: {fileID: 6760770678316607297, guid: e8127ebfecce08645bde4588b05757c1,
         type: 3}
@@ -3354,17 +3354,17 @@ PrefabInstance:
     - target: {fileID: 6760770678316607297, guid: e8127ebfecce08645bde4588b05757c1,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6760770678316607297, guid: e8127ebfecce08645bde4588b05757c1,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.00000081956375
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6760770678316607297, guid: e8127ebfecce08645bde4588b05757c1,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6760770678316607297, guid: e8127ebfecce08645bde4588b05757c1,
         type: 3}
@@ -3475,7 +3475,7 @@ PrefabInstance:
     - target: {fileID: 6256603860697395203, guid: 0f44bd6f5a0a96948abb38732cd04c58,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7775971850036899291, guid: 0f44bd6f5a0a96948abb38732cd04c58,
         type: 3}
@@ -3953,7 +3953,7 @@ PrefabInstance:
     - target: {fileID: 6468387687461501776, guid: b28adfc4e2ce971409c5aaee1cf1e991,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8261655206311752711, guid: b28adfc4e2ce971409c5aaee1cf1e991,
         type: 3}

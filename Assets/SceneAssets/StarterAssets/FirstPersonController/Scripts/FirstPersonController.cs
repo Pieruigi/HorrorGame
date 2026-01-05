@@ -34,9 +34,9 @@ namespace StarterAssets
 
 		float speedDebuff = 1f;
 
-		float walkNoiseRange = 6;
+		float walkNoiseRange = 3f;
 
-		float runNoiseRange = 10;
+		float runNoiseRange = 6f;
 
 		float noiseRange;
 		public float NoiseRange

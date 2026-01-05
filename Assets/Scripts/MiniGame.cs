@@ -120,7 +120,7 @@ namespace TMM
 			if (activated)
 			{
 #if UNITY_EDITOR				
-				if (Input.GetKeyDown(KeyCode.Q))
+				if (Input.GetKeyDown(KeyCode.LeftControl))
 #else
 				if (Input.GetKeyDown(KeyCode.Escape))
 #endif
