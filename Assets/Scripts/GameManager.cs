@@ -9,12 +9,17 @@ namespace TMM
 {
 	public class GameManager : SingletonPersistent<GameManager>
 	{
-
+#if UNITY_EDITOR
+		int gameStage = 2;
+#else
 		int gameStage = 1;
+#endif
 		public int GameStage
-        {
-            get{ return gameStage; }
-        }
+		{
+			get { return gameStage; }
+		}
+		
+
 
 	    // Start is called before the first frame update
 	    void Start()
@@ -56,6 +61,7 @@ namespace TMM
 		public void StartNewGame()
 		{
 			gameStage = 1;
+
 
 			StartCoroutine(DoLoadGameScene());
 			//SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);

@@ -64,7 +64,7 @@ namespace TMM
 			
 
 #if UNITY_EDITOR
-			lastChosen = availables.Find(m => "tetris".Equals(m.name.ToLower()));
+			lastChosen = availables.Find(m => "memory".Equals(m.name.ToLower()));
 #endif
 
 			var smg = spawnedMiniGames.Find(m => m.asset == lastChosen);

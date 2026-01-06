@@ -58,7 +58,16 @@ namespace TMM
 		// Update is called once per frame
 		void Update()
 		{
+#if UNITY_EDITOR
+			// if (Input.GetKeyDown(KeyCode.X))
+			// {
+			// 	if(type == VendingMachineType.Map)
+			// 	{
+			// 		Map.Instance.SetTimer(60);
+			// 	}
+			// }
 
+#endif
 		}
 
 		void OnEnable()
