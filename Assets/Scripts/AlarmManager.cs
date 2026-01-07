@@ -22,6 +22,8 @@ namespace TMM
 
 		CRTSettings crt;
 
+		Tween tween;
+
 		
 
 		protected override void Awake()
@@ -81,23 +83,23 @@ namespace TMM
 		void StartFx()
 		{
 			// Kill any previous tween
-			DOTween.KillAll();
+			tween?.Kill();
 
 			// Set initial color by default for safety
 			crt.tintColor.value = Color.white;
 
 			// Start tween
-			DOTween.To(() => crt.tintColor.value, c => crt.tintColor.value = c, Color.red, .25f).SetLoops(-1, LoopType.Yoyo);
+			tween = DOTween.To(() => crt.tintColor.value, c => crt.tintColor.value = c, Color.red, .25f).SetLoops(-1, LoopType.Yoyo);
 
 		}
 		
 		void StopFx()
 		{
 			// Kill any previous tween
-			DOTween.KillAll();
+			tween?.Kill();
 
 			// Reset color
-			DOTween.To(() => crt.tintColor.value, c => crt.tintColor.value = c, Color.white, 0.25f);
+			tween = DOTween.To(() => crt.tintColor.value, c => crt.tintColor.value = c, Color.white, 0.25f);
 		}
 
 		public bool IsActive()

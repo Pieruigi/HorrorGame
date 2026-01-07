@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fc4ccf10307f334a8f14ce8941a8411, type: 3}
-  m_Name: SpiderwebTrigger
+  m_Name: PiggyTrigger
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7523969129687615024, guid: 2fdcc811d1d64ad46a3c3a667c0d747e, type: 3}
-  minStage: 2
-  weight: 60
+  prefab: {fileID: 6259704979334576125, guid: 42ebcea8432a5d14da7e61abdc14ba6c, type: 3}
+  minStage: 3
+  weight: 30
