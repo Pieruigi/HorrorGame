@@ -171,6 +171,8 @@ namespace TMM
 
 			CreateMaze();
 
+			OptimizeMaze();
+
 			AddInAndOut();
 
 			AddFloorTriggers();
@@ -198,6 +200,12 @@ namespace TMM
 #endif
 		}
 
+		void OptimizeMaze()
+		{
+			var specials = blocks.Where(b => b.data.blockType > 0); // Blocks 1 or 2 are minigames and vending machines
+
+			 
+		}
 
 		void AddFloorTriggers()
 		{

@@ -57,14 +57,14 @@ namespace TMM
 			LoadMiniGameFromResourcesAll();
 			var availables = miniGames.Where(m => (m.MinLevel < 0 || m.MinLevel <= level) && (m.MaxLevel < 0 || m.MaxLevel >= level)).ToList();
 
-			if (!lastChosen)
+			if (lastChosen)
 				availables.Remove(lastChosen);
 
 			lastChosen = availables[Random.Range(0, availables.Count)];
 			
 
 #if UNITY_EDITOR
-			lastChosen = availables.Find(m => "memory".Equals(m.name.ToLower()));
+			//lastChosen = availables.Find(m => "memory".Equals(m.name.ToLower()));
 #endif
 
 			var smg = spawnedMiniGames.Find(m => m.asset == lastChosen);

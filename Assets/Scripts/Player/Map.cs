@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMM.UI;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -13,6 +14,10 @@ namespace TMM
 	{
 
 		float timer = 0;
+
+		bool firstTime = true;
+
+		bool showMessage = false;
 
 
 
@@ -42,6 +47,12 @@ namespace TMM
 
 			if (MapUI.Instance.IsOpen)
 				timer -= Time.deltaTime;
+
+			if (showMessage && !MessageManager.Instance.IsMessageVisible())
+			{
+				showMessage = false;
+				MessageManager.Instance.ShowCustomMessage(4);
+			}
 	
 		}
 
@@ -83,6 +94,12 @@ namespace TMM
 		public void SetTimer(float amount)
 		{
 			timer = amount;
+
+			if (firstTime)
+			{
+				firstTime = false;
+				showMessage = true;
+			}
 		}
 		
 		public float GetTimer()

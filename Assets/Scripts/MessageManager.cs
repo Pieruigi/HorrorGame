@@ -47,10 +47,15 @@ namespace TMM
 			Debug.Log("Show custom message:" + messageId);
 			MessageUI.Instance.ShowMessage(messages[messageId], keepOn);
 		}
-		
+
 		public void HideMessage()
 		{
 			MessageUI.Instance.HideMessage();
+		}
+		
+		public bool IsMessageVisible()
+		{
+			return MessageUI.Instance.Visible;
 		}
     }
 }

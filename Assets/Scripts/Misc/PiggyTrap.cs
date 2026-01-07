@@ -1,11 +1,10 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations;
 
 namespace TMM
 {
-	public class SpiderwebTrap : MonoBehaviour
+	public class PiggyTrap : MonoBehaviour
 	{
 		[SerializeField]
 		FloorTrigger floorTrigger;
@@ -17,8 +16,8 @@ namespace TMM
 
 		bool triggered = false;
 
-	
-	    // Start is called before the first frame update
+		
+	     // Start is called before the first frame update
 	    void Start()
 	    {
 	        if (TriggerTileManager.Instance.TriggerTilesDisabled)
@@ -44,13 +43,13 @@ namespace TMM
 			TriggerTileManager.OnChanged += HandleOnTriggerTileManagerChanged;
 		}
 
-        void OnDisable()
-        {
+		void OnDisable()
+		{
 			floorTrigger.OnTriggered -= HandleOnTriggered;
 			TriggerTileManager.OnChanged -= HandleOnTriggerTileManagerChanged;
-        }
-
-        private void HandleOnTriggerTileManagerChanged()
+		}
+		
+		private void HandleOnTriggerTileManagerChanged()
         {
            if (TriggerTileManager.Instance.TriggerTilesDisabled)
 				floorTrigger.SwitchOff();
@@ -62,11 +61,11 @@ namespace TMM
 		{
 			elapsed = 0;
 			triggered = true;
-			PlayerSpeedDebuff.Instance.Apply();
+			//PlayerSpeedDebuff.Instance.Apply();
 
+			// Remove coins
+			Wallet.Instance.TryUseCoins(1);
 		
 		}
-		
-	
-    }
+	}
 }

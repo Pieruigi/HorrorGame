@@ -19,6 +19,10 @@ namespace TMM.UI
 		TMP_Text escField;
 
 		bool visible = false;
+		public bool Visible
+		{
+			get{ return visible; }
+		}
 
 		float fadeTime = .1f;
 

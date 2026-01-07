@@ -32,6 +32,10 @@ namespace TMM
 		CharacterController characterController;
 
 		bool triggered = false;
+		public bool Triggered
+		{
+			get{ return triggered; }
+		}
 
 		bool[] stepDirections = new bool[4];
 

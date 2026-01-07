@@ -15,5 +15,5 @@ MonoBehaviour:
   prefabs:
   - {fileID: 6419829726046342541, guid: 744b5b92d7c1cdc4e8b3c8ca668d501c, type: 3}
   createFlippedVariant: 0
-  min: 1
-  weight: 10
+  min: 5
+  weight: 25
