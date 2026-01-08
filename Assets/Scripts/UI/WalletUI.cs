@@ -59,7 +59,8 @@ namespace TMM.UI
 
 		private void HandleOnBalanceUpdated(int amount)
 		{
-			balanceField.text = Wallet.Instance.Balance.ToString("00");
+
+			PlayBalanceEffect(amount);
 			ShowAndHide();
 		}
 
@@ -87,8 +88,29 @@ namespace TMM.UI
 			seq.Append(canvasGroup.DOFade(0, fadeTime));
 			seq.onComplete += ()=>{ busy = false; };
 		}
+
+		void PlayBalanceEffect(int amount)
+		{
+			Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+			var oldScale = balanceField.transform.localScale;
+			var color = Color.yellow;
+			if (amount < 0)
+				color = Color.red;	
+			
+			StartCoroutine(UpdateBalanceDelayed(fadeTime*2 + .25f));
+			balanceField.DOKill();
+			Sequence seq = DOTween.Sequence();
+			seq.AppendInterval(fadeTime * 2);
+			seq.Append(balanceField.transform.DOShakeScale(.5f).OnComplete(() => { balanceField.transform.localScale = oldScale; }));
+			seq.Join(balanceField.DOColor(color, .25f).SetLoops(2, LoopType.Yoyo));
+			//balanceField.text = Wallet.Instance.Balance.ToString("00");
+		}
 		
-		
+		IEnumerator UpdateBalanceDelayed(float delay)
+		{
+			yield return new WaitForSeconds(delay);
+			balanceField.text = Wallet.Instance.Balance.ToString("00");
+		}
 		
     }
 }

@@ -12,6 +12,18 @@ namespace TMM
 		[SerializeField]
 		GameObject coin;
 
+		[SerializeField]
+		AudioSource shakeSource;
+
+		[SerializeField]
+		AudioSource throwCoinSource;
+
+		[SerializeField]
+		AudioSource coinSource;
+
+		[SerializeField]
+		AudioSource pigDeath;
+
 		FirstPersonController player;
 
 		FloorTrigger floorTrigger;
@@ -79,13 +91,16 @@ namespace TMM
 
 		void StartTriggeredTween()
 		{
+			
 			seq?.Kill();
 			//transform.parent.localEulerAngles = new Vector3(0, eulers.y, 0);
 			float time = .5f;
 			seq = DOTween.Sequence();
 			seq.Append(transform.DOLocalRotate(new Vector3(90, 180, 0), time).SetEase(Ease.OutBounce));
 			seq.Join(transform.DOLocalMoveY(0.45f, time).SetEase(Ease.OutBounce));
-
+			pigDeath.Play();
+			if (shakeSource.isPlaying) shakeSource.Stop();
+			
 		}
 
 		void StartNotTriggeredTween()
@@ -98,9 +113,9 @@ namespace TMM
 			seq.OnComplete(() =>
 			{
 				seq = DOTween.Sequence();
-				seq.AppendInterval(2f);
-				seq.AppendCallback(() => { ResetCoin(); });
-				seq.Append(transform.DOShakeRotation(1f).OnComplete(()=> { ThrowCoin(); }));
+				seq.AppendInterval(.5f);
+				seq.AppendCallback(() => { ResetCoin(); shakeSource.Play(); });
+				seq.Append(transform.DOShakeRotation(3f,fadeOut:false).OnComplete(()=> { ThrowCoin(); }));
 				seq.SetLoops(-1);
 			});
 
@@ -117,6 +132,8 @@ namespace TMM
 		
 		void ThrowCoin()
 		{
+			throwCoinSource.Play();
+			coinSource.Play();
 			coinRB.isKinematic = false;
 			coinRB.interpolation = RigidbodyInterpolation.Interpolate;
 			var dirErr = .5f;
