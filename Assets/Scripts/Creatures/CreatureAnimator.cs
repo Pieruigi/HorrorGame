@@ -8,15 +8,15 @@ namespace TMM
 {
 	public class CreatureAnimator : MonoBehaviour
 	{
-		Creature creature;
+		ClownA creature;
 
 		Animator animator;
 
-		CreatureState state;
+		ClownAState state;
 
         void Awake()
         {
-			creature = GetComponentInParent<Creature>();
+			creature = GetComponentInParent<ClownA>();
 			animator = GetComponent<Animator>();
         }
 
@@ -35,12 +35,12 @@ namespace TMM
 
 		void OnEnable()
 		{
-			Creature.OnStateChanged += HandleOnStateChanged;
+			ClownA.OnStateChanged += HandleOnStateChanged;
 		}
 
         void OnDisable()
         {
-            Creature.OnStateChanged -= HandleOnStateChanged;
+            ClownA.OnStateChanged -= HandleOnStateChanged;
         }
 
 
@@ -50,29 +50,29 @@ namespace TMM
 			UpdateAnimatorSpeed();
 		}
 		
-		private void HandleOnStateChanged(Creature creature, CreatureState oldState, CreatureState newState)
+		private void HandleOnStateChanged(ClownA creature, ClownAState oldState, ClownAState newState)
 		{
 			state = newState;
             switch (newState)
             {
-				case CreatureState.Idle:
+				case ClownAState.Idle:
 					animator.SetFloat("SpeedMul", 1);
 					animator.SetTrigger("Idle");
 					break;
-				case CreatureState.Patrol:
-				case CreatureState.Search:
-				case CreatureState.Chase:
-					if (oldState == CreatureState.Idle)
+				case ClownAState.Patrol:
+				case ClownAState.Search:
+				case ClownAState.Chase:
+					if (oldState == ClownAState.Idle)
 					{
 						animator.SetInteger("WalkType", 0);
 						animator.SetTrigger("Walk");
 					}
-					if(newState == CreatureState.Patrol)
+					if(newState == ClownAState.Patrol)
                     {
 						animator.SetFloat("SpeedMul", 1);
                     }
 					break;
-				case CreatureState.Attack:
+				case ClownAState.Attack:
 					animator.SetFloat("SpeedMul", 1);
 					animator.SetTrigger("Idle");
 					break;
@@ -83,8 +83,8 @@ namespace TMM
         {
             switch (state)
             {
-				case CreatureState.Chase:
-				case CreatureState.Search:
+				case ClownAState.Chase:
+				case ClownAState.Search:
 					//animator.speed = creature.RunSpeed / creature.WalkSpeed;
 					animator.SetFloat("SpeedMul", creature.RunSpeed / creature.WalkSpeed);
 					

@@ -11,7 +11,7 @@ namespace TMM
 
 		AudioSource audioSource;
 
-		Creature creature;
+		ClownA creature;
 
 		float timer = 5;
 
@@ -21,7 +21,7 @@ namespace TMM
 
         void Awake()
         {
-			creature = GetComponentInParent<Creature>();
+			creature = GetComponentInParent<ClownA>();
 			audioSource = GetComponent<AudioSource>();
         }
 
@@ -46,15 +46,15 @@ namespace TMM
 
 		void OnEnable()
 		{
-			Creature.OnPlayerSpotted += HandleOnPlayerSpotted;
+			ClownA.OnPlayerSpotted += HandleOnPlayerSpotted;
 		}
 
         void OnDisable()
         {
-            Creature.OnPlayerSpotted -= HandleOnPlayerSpotted;
+            ClownA.OnPlayerSpotted -= HandleOnPlayerSpotted;
         }
 
-		private void HandleOnPlayerSpotted(Creature creature, bool spotted)
+		private void HandleOnPlayerSpotted(ClownA creature, bool spotted)
 		{
 			if (creature != this.creature) return;
 			if (_spotted == spotted) return;

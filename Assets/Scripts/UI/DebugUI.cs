@@ -7,7 +7,7 @@ namespace TMM
 {
 	public class DebugUI : MonoBehaviour
 	{
-		Creature creature;
+		ClownA creature;
 
 		float lastSpeed = 0;
 

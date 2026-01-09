@@ -19,14 +19,14 @@ namespace TMM.AI
 	/// Search: is looking for something in a specific area of the maze
 	/// Chase: chasing you
     /// </summary>
-	public enum CreatureState { Idle, Patrol, Search, Chase, Attack }
+	public enum ClownAState { Idle, Patrol, Search, Chase, Attack }
 
-	public class Creature : MonoBehaviour
+	public class ClownA : MonoBehaviour
 	{
-		public delegate void StateChangedDelegate(Creature creature, CreatureState oldState, CreatureState newState);
+		public delegate void StateChangedDelegate(ClownA creature, ClownAState oldState, ClownAState newState);
 		public static StateChangedDelegate OnStateChanged;
 
-		public delegate void PlayerSpottedDelegate(Creature creature, bool spotted);
+		public delegate void PlayerSpottedDelegate(ClownA creature, bool spotted);
 		public static PlayerSpottedDelegate OnPlayerSpotted;
 
 		[SerializeField]
@@ -80,8 +80,8 @@ namespace TMM.AI
 
 		NavMeshAgent agent;
 
-		CreatureState state = CreatureState.Idle;
-		public CreatureState State
+		ClownAState state = ClownAState.Idle;
+		public ClownAState State
 		{
 			get { return state; }
 		}
@@ -123,7 +123,7 @@ namespace TMM.AI
 
 		protected virtual void Start()
 		{
-			SetState(CreatureState.Idle);
+			SetState(ClownAState.Idle);
 			player = FindFirstObjectByType<FirstPersonController>().gameObject;
 			fpc = player.GetComponent<FirstPersonController>();
 			flashlight = player.transform.parent.GetComponentInChildren<Flashlight>();
@@ -232,16 +232,16 @@ namespace TMM.AI
 		{
 			switch (state)
 			{
-				case CreatureState.Idle:
+				case ClownAState.Idle:
 					UpdateIdleState();
 					break;
-				case CreatureState.Patrol:
+				case ClownAState.Patrol:
 					UpdatePatrolState();
 					break;
-				case CreatureState.Chase:
+				case ClownAState.Chase:
 					UpdateChaseState();
 					break;
-				case CreatureState.Search:
+				case ClownAState.Search:
 					UpdateSearchState();
 					break;
 			}
@@ -252,26 +252,26 @@ namespace TMM.AI
 			lastHasPath = agent.hasPath && agent.pathStatus != NavMeshPathStatus.PathInvalid && agent.pathStatus != NavMeshPathStatus.PathPartial;
 		}
 
-		public virtual void SetState(CreatureState newState)
+		public virtual void SetState(ClownAState newState)
 		{
 			if (state == newState) return;
 			var oldState = state;
 			state = newState;
 			switch (state)
 			{
-				case CreatureState.Idle:
+				case ClownAState.Idle:
 					EnterIdleState();
 					break;
-				case CreatureState.Patrol:
+				case ClownAState.Patrol:
 					EnterPatrolState();
 					break;
-				case CreatureState.Chase:
+				case ClownAState.Chase:
 					EnterChaseState();
 					break;
-				case CreatureState.Search:
+				case ClownAState.Search:
 					EnterSearchState();
 					break;
-				case CreatureState.Attack:
+				case ClownAState.Attack:
 					EnterAttackState();
 					break;
 			}
@@ -393,7 +393,7 @@ namespace TMM.AI
 				currentTimer -= time;
 			}
 
-			SetState(CreatureState.Idle);
+			SetState(ClownAState.Idle);
 
 		}
 
@@ -401,14 +401,14 @@ namespace TMM.AI
 		{
 			if (IsTargetSpotted())
 			{
-				SetState(CreatureState.Chase);
+				SetState(ClownAState.Chase);
 				return;
 			}
 
 			currentTimer -= Time.deltaTime;
 			if (currentTimer < 0)
 			{
-				SetState(CreatureState.Patrol);
+				SetState(ClownAState.Patrol);
 			}
 		}
 
@@ -416,7 +416,7 @@ namespace TMM.AI
 		{
 			if (IsTargetSpotted())
 			{
-				SetState(CreatureState.Chase);
+				SetState(ClownAState.Chase);
 				return;
 			}
 
@@ -448,7 +448,7 @@ namespace TMM.AI
 
 			if (lastHasPath && !agent.hasPath)
 			{
-				SetState(CreatureState.Idle);
+				SetState(ClownAState.Idle);
 			}
 
 
@@ -461,14 +461,14 @@ namespace TMM.AI
 			if (!IsTargetSpotted())
 			{
 				StopAllCoroutines();
-				SetState(CreatureState.Search);
+				SetState(ClownAState.Search);
 				return;
 			}
 
 			if (CanAttackPlayer())
 			{
 				Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-				SetState(CreatureState.Attack);
+				SetState(ClownAState.Attack);
 				return;
 			}
 		}
@@ -479,7 +479,7 @@ namespace TMM.AI
 		{
 			if (CanAttackPlayer())
 			{
-				SetState(CreatureState.Attack);
+				SetState(ClownAState.Attack);
 				return;
 			}
 
@@ -600,14 +600,14 @@ namespace TMM.AI
 
 		public void ForcePatrol(Vector3 destination)
 		{
-			if (state != CreatureState.Patrol && state != CreatureState.Idle) return;
+			if (state != ClownAState.Patrol && state != ClownAState.Idle) return;
 
 			// If idle we must tell the patrol update routine to use the given destination
-			if (state == CreatureState.Idle)
+			if (state == ClownAState.Idle)
 			{
 				forcedDestination = destination;
 				useForcedDestination = true;
-				SetState(CreatureState.Patrol);
+				SetState(ClownAState.Patrol);
 			}
 			else // If patrol state just switch the destination to the given one
 			{

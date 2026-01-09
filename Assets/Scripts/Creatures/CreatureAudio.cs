@@ -23,7 +23,7 @@ namespace TMM
 
 		float laughTime = 4;
 
-		Creature creature;
+		ClownA creature;
 
 		bool chasePlaying = false;
 
@@ -31,7 +31,7 @@ namespace TMM
 
         void Awake()
         {
-			creature = GetComponent<Creature>();
+			creature = GetComponent<ClownA>();
 			chaseVolume = chaseAudioSource.volume;
 			chaseAudioSource.volume = 0;
         }
@@ -52,7 +52,7 @@ namespace TMM
 				Laugh();
             }
 
-			if ((creature.State == CreatureState.Chase || creature.State == CreatureState.Search) && creature.IsPlayerTarget())
+			if ((creature.State == ClownAState.Chase || creature.State == ClownAState.Search) && creature.IsPlayerTarget())
 			{
 
 				//if (!chaseAudioSource.isPlaying) chaseAudioSource.Play();
