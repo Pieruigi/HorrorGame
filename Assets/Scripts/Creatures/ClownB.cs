@@ -1,4 +1,5 @@
 using System.Linq;
+using DG.Tweening;
 using StarterAssets;
 using TMM.AI;
 using UnityEngine;
@@ -12,6 +13,9 @@ namespace TMM
 	{
 		[SerializeField]
 		GameObject model;
+
+		[SerializeField]
+		ParticleSystem spawnParticle;
 
 		float checkIdleTime = 10f;
 
@@ -124,7 +128,10 @@ namespace TMM
 			agent.isStopped = true;
 			agent.enabled = false;
 			randomMax = randomMaxDefault;
-			model.SetActive(false);
+
+			model.transform.DOScale(0.1f, .5f).SetEase(Ease.OutBounce).OnComplete(()=> { model.SetActive(false); });
+			
+			spawnParticle.Play();
 			Debug.Log("TEST - ClownB - EnterHiddeState()");
 		}
 		
@@ -142,6 +149,10 @@ namespace TMM
 			elapsed = 0;
 			randomMax = randomMaxDefault;
 			model.SetActive(true);
+
+			model.transform.DOScale(1f, .5f).SetEase(Ease.OutBounce);
+
+			spawnParticle.Play();
 
 			
 
