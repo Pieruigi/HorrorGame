@@ -144,8 +144,8 @@ namespace TMM
 		int doubleCreatureStage = 3;
 		int tripleCreatureStage = 6;
 
-		float doubleMultiplier = 1.75f;//1.5f;
-		float tripleMultiplier = 2.5f;//2f;
+		float doubleMultiplier = 1;// 1.75f;//1.5f;
+		float tripleMultiplier = 1; //2.5f;//2f;
 
 		public int TileCount
 		{

@@ -137,7 +137,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e8bb4abd4583b2840962314955196571, type: 3}
   - {fileID: 8300000, guid: 6082ea7f9580ab4449a73bd233f4389f, type: 3}
   - {fileID: 8300000, guid: e7d54b77f065a9d40bfece48d7fb0144, type: 3}
-  chaseAudioSource: {fileID: 5017691962048738366}
   playerDeathAudioSource: {fileID: 2409159887798362387}
 --- !u!114 &5953485540457998181
 MonoBehaviour:
@@ -713,7 +712,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8004395047833820168
 Transform:
   m_ObjectHideFlags: 0
@@ -736,7 +735,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7675397193951583933}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 1032192646533609985, guid: 2a3ec5394872b704da8fd66d46583f80,
     type: 2}

@@ -13,8 +13,8 @@ namespace TMM
 		[SerializeField]
 		List<AudioClip> laughClips;
 
-		[SerializeField]
-		AudioSource chaseAudioSource;
+		// [SerializeField]
+		// AudioSource chaseAudioSource;
 
 		[SerializeField]
 		AudioSource playerDeathAudioSource;
@@ -23,17 +23,17 @@ namespace TMM
 
 		float laughTime = 4;
 
-		ClownA creature;
+		//ClownA creature;
 
-		bool chasePlaying = false;
+		//bool chasePlaying = false;
 
-		float chaseVolume;
+		//float chaseVolume;
 
         void Awake()
         {
-			creature = GetComponent<ClownA>();
-			chaseVolume = chaseAudioSource.volume;
-			chaseAudioSource.volume = 0;
+			//creature = GetComponent<ClownA>();
+			// chaseVolume = chaseAudioSource.volume;
+			// chaseAudioSource.volume = 0;
         }
 
         // Start is called before the first frame update
@@ -52,28 +52,28 @@ namespace TMM
 				Laugh();
             }
 
-			if ((creature.State == ClownAState.Chase || creature.State == ClownAState.Search) && creature.IsPlayerTarget())
-			{
+			// if ((creature.State == ClownAState.Chase || creature.State == ClownAState.Search) && creature.IsPlayerTarget())
+			// {
 
-				//if (!chaseAudioSource.isPlaying) chaseAudioSource.Play();
-				if (!chasePlaying)
-				{
-					chasePlaying = true;
-					chaseAudioSource.DOKill();
-                    chaseAudioSource.DOFade(chaseVolume, 1f);
-                }
+			// 	//if (!chaseAudioSource.isPlaying) chaseAudioSource.Play();
+			// 	if (!chasePlaying)
+			// 	{
+			// 		chasePlaying = true;
+			// 		chaseAudioSource.DOKill();
+            //         chaseAudioSource.DOFade(chaseVolume, 1f);
+            //     }
 					
-			}
-            else
-			{
-                //if (chaseAudioSource.isPlaying) chaseAudioSource.Stop();
-                if (chasePlaying)
-                {
-					chasePlaying = false;
-					chaseAudioSource.DOKill();
-					chaseAudioSource.DOFade(0, 1f);
-                }
-            }
+			// }
+            // else
+			// {
+            //     //if (chaseAudioSource.isPlaying) chaseAudioSource.Stop();
+            //     if (chasePlaying)
+            //     {
+			// 		chasePlaying = false;
+			// 		chaseAudioSource.DOKill();
+			// 		chaseAudioSource.DOFade(0, 1f);
+            //     }
+            // }
 		}
 
 		private void Laugh()

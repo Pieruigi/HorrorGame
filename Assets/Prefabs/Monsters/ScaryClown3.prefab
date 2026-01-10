@@ -10,9 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5580163685240014792}
   - component: {fileID: 5017094153440741362}
-  - component: {fileID: 5509086406286835940}
-  - component: {fileID: 3182634506245211800}
   - component: {fileID: 8618581499149998594}
+  - component: {fileID: 2928239253395027687}
   m_Layer: 0
   m_Name: ScaryClown3
   m_TagString: Untagged
@@ -66,49 +65,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5509086406286835940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 416862036694277295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8590dc03a3dd88449b073bf5722a109, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkSpeed: 2.5
-  runSpeed: 3.5
-  sightRange: 6
-  sightAngle: 45
-  hearMultiplier: 1.5
-  smellRange: 3
-  attackRange: 1
-  attackAngle: 60
-  idleTimer: 5
-  searchTimer: 5
-  playerDeadTarget: {fileID: 2525195049264503843}
---- !u!114 &3182634506245211800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 416862036694277295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb84b86e58e7f1c489897ac19fd29211, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  laughAudioSource: {fileID: 3317800881535188828}
-  laughClips:
-  - {fileID: 8300000, guid: 0ce034cb48aadd0449baccc0f1cf3a5c, type: 3}
-  - {fileID: 8300000, guid: e8bb4abd4583b2840962314955196571, type: 3}
-  - {fileID: 8300000, guid: 6082ea7f9580ab4449a73bd233f4389f, type: 3}
-  - {fileID: 8300000, guid: e7d54b77f065a9d40bfece48d7fb0144, type: 3}
-  chaseAudioSource: {fileID: 4965485528439890669}
-  playerDeathAudioSource: {fileID: 8809098293338547037}
 --- !u!114 &8618581499149998594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,6 +85,18 @@ MonoBehaviour:
   m_IgnoreFromBuild: 1
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
+--- !u!114 &2928239253395027687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 416862036694277295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d0e4d15bd1df04ba9f0905b3d4b7bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1126647301719317070
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,7 +664,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5486867510021249321
 Transform:
   m_ObjectHideFlags: 0
@@ -719,7 +687,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5959068889979254903}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 1032192646533609985, guid: 2a3ec5394872b704da8fd66d46583f80,
     type: 2}
