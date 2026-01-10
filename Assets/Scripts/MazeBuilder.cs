@@ -7,6 +7,7 @@ using StarterAssets;
 using TMM.Scriptables;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -1160,6 +1161,7 @@ namespace TMM
 
 		}
 
+		
 		public bool IsEnterTile(int index)
 		{
 			return tiles[index] == inTile;
@@ -1205,11 +1207,24 @@ namespace TMM
 		public int GetBlockRotationType(int index)
 		{
 			return blocks[index].rotationType;
-		}	
+		}
 
 		public int GetBlockType(int index)
 		{
 			return blocks[index].data.blockType;
+		}
+		
+		public int GetClosestWalkableTileIndex(Vector3 position)
+		{
+			position /= 2f;
+			var coords = new Vector2(Mathf.Round(position.x), Mathf.Round(position.z));
+
+			Debug.Log($"TEST - TILE - PlayerPosition:{transform.position}");
+			Debug.Log($"TEST - TILE - Coords:{coords}");
+
+			Tile tile = tiles.Where(t => t.type == 0).OrderBy(t => Vector2.Distance(t.coords, coords)).ToList()[0];
+			
+			return tiles.IndexOf(tile);
 		}
 
 	}

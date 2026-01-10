@@ -135,10 +135,10 @@ namespace TMM.AI
 		protected virtual void Update()
 		{
 #if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.X))
-			{
-				smellRange = 100;
-			}
+			// if (Input.GetKeyDown(KeyCode.X))
+			// {
+			// 	smellRange = 100;
+			// }
 #endif
 
 			UpdateState();

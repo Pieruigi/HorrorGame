@@ -1,3 +1,5 @@
+using System.Linq;
+using StarterAssets;
 using TMM.AI;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,9 +10,12 @@ namespace TMM
 	
 	public class ClownB : MonoBehaviour
 	{
+		[SerializeField]
+		GameObject model;
+
 		float checkIdleTime = 10f;
 
-		float maxPlayerDistance = 3; // Number of tiles
+		float playerDistance = 4; // Number of tiles
 
 		float elapsed = 0;
 
@@ -28,9 +33,15 @@ namespace TMM
 
 		PlayerChased playerChased;
 
+		int randomMax = 4;
+		int randomMaxDefault;
+
+		FirstPersonController playerController;
+
         void Awake()
         {
 			agent = GetComponent<NavMeshAgent>();
+			randomMaxDefault = randomMax;
         }
 
         // Start is called before the first frame update
@@ -38,12 +49,21 @@ namespace TMM
 	    {
 			//clownA = FindFirstObjectByType<ClownA>(); // Already exists
 			playerChased = FindFirstObjectByType<PlayerChased>();
+			playerController = FindFirstObjectByType<FirstPersonController>();
 			EnterHiddenState();
 	    }
 
 		// Update is called once per frame
 		void Update()
 		{
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.X))
+			{
+				//GetSpawnPosition();
+				SetState(ClownBState.Chase);
+			}
+#endif
+
 			UpdateState();
 		}
 
@@ -74,8 +94,15 @@ namespace TMM
 			if(elapsed > checkIdleTime)
 			{
 				elapsed = 0;
-				if (Random.Range(0, 4) == 0)
+				if (Random.Range(0, randomMax) == 0)
+				{
 					SetState(ClownBState.Chase);
+				}
+				else
+				{
+					if (randomMax > 3) randomMax--;
+				}
+		
 			}
 
 		}
@@ -95,19 +122,33 @@ namespace TMM
 		void EnterHiddenState()
 		{
 			agent.isStopped = true;
-			agent.enabled = false;	
+			agent.enabled = false;
+			randomMax = randomMaxDefault;
+			model.SetActive(false);
 			Debug.Log("TEST - ClownB - EnterHiddeState()");
 		}
 		
 		void EnterChaseState()
 		{
+			// Get spawn position
+			var spawnPosition = GetSpawnPosition();
+			// Move clown
+			transform.position = spawnPosition;
+			// Rotate clown
+			transform.LookAt(playerController.transform.position, Vector3.up);
+
 			agent.enabled = true;
 			agent.isStopped = false;
 			elapsed = 0;
+			randomMax = randomMaxDefault;
+			model.SetActive(true);
+
+			
+
 
 			Debug.Log("TEST - ClownB - EnterChaseState()");
 		}
-		
+
 		void SetState(ClownBState newState)
 		{
 			if (state == newState) return;
@@ -121,6 +162,88 @@ namespace TMM
 					EnterChaseState();
 					break;
 			}
+		}
+
+		Vector3 GetSpawnPosition()
+		{
+			// Get the player position 
+			var playerPosition = playerController.transform.position;
+			// Get player forward
+			var playerForward = playerController.transform.forward;
+
+			var normPosition = playerPosition / 2f;
+			var coords = new Vector2(Mathf.Round(normPosition.x), Mathf.Round(normPosition.z));
+
+
+			Debug.Log($"TEST - SPAWN - PlayerPosition:{playerPosition}");
+
+			float minDist = 2;
+
+			int tileIndex = MazeBuilder.Instance.GetClosestWalkableTileIndex(playerPosition);
+
+			// Where is the player looking?
+			var lookDirection = GetPlayerLookDirection(playerForward);
+
+			// Get all walkable positions
+			var walkables = MazeBuilder.Instance.GetWalkableTilePositions();
+
+			Vector3 spawnPosition = new Vector3(coords.x, 0, coords.y);
+			switch (lookDirection)
+			{
+				case 0:
+					spawnPosition.z += minDist;
+					break;
+				case 1:
+					spawnPosition.x += minDist;
+					break;
+				case 2:
+					spawnPosition.z -= minDist;
+					break;
+				case 3:
+					spawnPosition.x -= minDist;
+					break;
+			}
+
+			spawnPosition *= MazeBuilder.CellSize;
+
+			Debug.Log($"TEST - SPAWN - SpawnPosition:{spawnPosition}");
+
+			bool exists = walkables.Exists(w => w == spawnPosition);
+
+			Debug.Log($"TEST - SPAWN - SpawnPosition Exists:{exists}");
+
+			if (!exists)
+			{
+				// Get any position close enough
+				spawnPosition = walkables.Where(w => Vector3.Distance(w, spawnPosition) > minDist).OrderBy(w => Vector3.Distance(w, spawnPosition)).ToList()[0];
+				Debug.Log($"TEST - SPAWN - New SpawnPosition:{spawnPosition}");
+			}
+
+
+			return spawnPosition;
+		}
+		
+		int GetPlayerLookDirection(Vector3 playerForward)
+		{
+			int lookDirection = 0;
+			if (Mathf.Abs(playerForward.z) > Mathf.Abs(playerForward.x))
+			{
+				// Looking forward or backward
+				if (playerForward.z > 0)
+					lookDirection = 0;
+				else
+					lookDirection = 2;
+
+			}
+			else
+			{
+				// Looking right or left
+				if (playerForward.x > 0)
+					lookDirection = 1;
+				else
+					lookDirection = 2;
+			}
+			return lookDirection;
 		}
 
 	}

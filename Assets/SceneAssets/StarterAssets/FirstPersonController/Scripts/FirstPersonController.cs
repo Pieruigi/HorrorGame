@@ -524,6 +524,8 @@ namespace StarterAssets
 			return _cinemachineTargetPitch;
 		}
 
+		
+
 		private void OnDrawGizmosSelected()
 		{
 			Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
