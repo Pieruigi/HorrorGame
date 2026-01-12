@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Linq;
 using DG.Tweening;
 using StarterAssets;
 using TMM.AI;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,7 +19,9 @@ namespace TMM
 		[SerializeField]
 		ParticleSystem spawnParticle;
 
-		float checkIdleTime = 10f;
+		ClownAttacker attacker;
+
+		float checkIdleTime = 30f;
 
 		float playerDistance = 4; // Number of tiles
 
@@ -42,16 +46,18 @@ namespace TMM
 
 		FirstPersonController playerController;
 
+
+
         void Awake()
         {
 			agent = GetComponent<NavMeshAgent>();
 			randomMaxDefault = randomMax;
+			attacker = GetComponent<ClownAttacker>();
         }
 
         // Start is called before the first frame update
         void Start()
 	    {
-			//clownA = FindFirstObjectByType<ClownA>(); // Already exists
 			playerChased = FindFirstObjectByType<PlayerChased>();
 			playerController = FindFirstObjectByType<FirstPersonController>();
 			EnterHiddenState();
@@ -113,6 +119,12 @@ namespace TMM
 
 		void UpdateChaseState()
 		{
+			if (attacker.CanAttackPlayer())
+			{
+				SetState(ClownBState.Attack);
+				return;
+			}
+
 			elapsed += Time.deltaTime;
 
 			if(elapsed > chaseTime)
@@ -121,10 +133,22 @@ namespace TMM
 			}
 		}
 
+		IEnumerator FollowPlayer()
+		{
+			yield return new WaitForSeconds(2f);
 
+			while (true)
+			{
+				agent.SetDestination(playerController.transform.position);
+
+				yield return new WaitForSeconds(.5f);
+			}
+		}
 
 		void EnterHiddenState()
 		{
+			StopAllCoroutines();
+
 			agent.isStopped = true;
 			agent.enabled = false;
 			randomMax = randomMaxDefault;
@@ -134,9 +158,11 @@ namespace TMM
 			spawnParticle.Play();
 			Debug.Log("TEST - ClownB - EnterHiddeState()");
 		}
-		
+
 		void EnterChaseState()
 		{
+			StopAllCoroutines();
+
 			// Get spawn position
 			var spawnPosition = GetSpawnPosition();
 			// Move clown
@@ -146,6 +172,7 @@ namespace TMM
 
 			agent.enabled = true;
 			agent.isStopped = false;
+			agent.ResetPath();
 			elapsed = 0;
 			randomMax = randomMaxDefault;
 			model.SetActive(true);
@@ -154,10 +181,20 @@ namespace TMM
 
 			spawnParticle.Play();
 
-			
+			StartCoroutine(FollowPlayer());
 
 
 			Debug.Log("TEST - ClownB - EnterChaseState()");
+		}
+		
+		void EnterAttackState()
+		{
+			agent.ResetPath();
+			agent.isStopped = true;
+
+			attacker.Attack();
+
+
 		}
 
 		void SetState(ClownBState newState)
@@ -171,6 +208,9 @@ namespace TMM
 					break;
 				case ClownBState.Chase:
 					EnterChaseState();
+					break;
+				case ClownBState.Attack:
+					EnterAttackState();
 					break;
 			}
 		}

@@ -412,7 +412,7 @@ namespace TMM
 				// Chooser a random monster prefab
 				var monsterPrefab = availableMonsters[Random.Range(0, availableMonsters.Count)];
 #if UNITY_EDITOR
-				//monsterPrefab = availableMonsters[2];
+				//monsterPrefab = availableMonsters[0];
 #endif
 				// Remove the chosen monster from the list
 				availableMonsters.Remove(monsterPrefab);
