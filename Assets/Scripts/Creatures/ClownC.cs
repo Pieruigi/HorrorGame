@@ -1,5 +1,4 @@
 using StarterAssets;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMM.AI;
@@ -23,15 +22,21 @@ namespace TMM
         ClownA clownA;
         ClownB clownB;
 
-        float soloChaseTimer = 5;
+       
         float elapsed;
-        bool solo = false;
+       
+        float chaseCheckTimer = 2f;
 
         NavMeshAgent agent;
+
+        ClownAttacker attacker;
+        CharacterController characterController;
 
         private void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
+            attacker = GetComponent<ClownAttacker>();
+            
             state = ClownCState.Hidden;
             EnterHiddenState();
 
@@ -47,6 +52,14 @@ namespace TMM
 	    // Update is called once per frame
 	    void Update()
 	    {
+#if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                //GetSpawnPosition();
+                Time.timeScale = 1;
+            }
+#endif
+
             UpdateState();
 	    }
 
@@ -54,16 +67,32 @@ namespace TMM
         private void OnEnable()
         {
 			MazeBuilder.OnMazeCreated += HandleOnMazeCreated;
+            AlarmManager.OnActivated += HandleOnAlarmActivated;
+            AlarmManager.OnDeactivated += HandleOnAlarmDeactivated;
+
         }
 
         private void OnDisable()
         {
             MazeBuilder.OnMazeCreated -= HandleOnMazeCreated;
+            AlarmManager.OnActivated -= HandleOnAlarmActivated;
+            AlarmManager.OnDeactivated -= HandleOnAlarmDeactivated;
+        }
+
+        private void HandleOnAlarmActivated()
+        {
+            chaseCheckTimer = 2;// 8;
+        }
+
+        private void HandleOnAlarmDeactivated()
+        {
+            chaseCheckTimer = 2;
         }
 
         private void HandleOnMazeCreated()
         {
             player = FindFirstObjectByType<FirstPersonController>();
+            characterController = player.GetComponent<CharacterController>();
             clownA = FindFirstObjectByType<ClownA>();
             clownB = FindFirstObjectByType<ClownB>();
 
@@ -86,32 +115,37 @@ namespace TMM
         {
             if(clownA.State == ClownAState.Chase || clownA.State == ClownAState.Search || clownB?.State == ClownBState.Chase)
             {
-                SetState(ClownCState.Chase);
+                elapsed += Time.deltaTime;
+                if(elapsed >= chaseCheckTimer)
+                {
+                    elapsed = 0;
+                    //if (Random.Range(0, 2) == 0)
+                    SetState(ClownCState.Chase);
+                }
+                
+                    
+            }
+            else
+            {
+                elapsed = 0;
             }
         }
 
         void UpdateChaseState()
         {
-            var oldSolo = solo;
-            solo = !(clownA.State == ClownAState.Chase || clownA.State == ClownAState.Search || clownB?.State == ClownBState.Chase);
-            if (oldSolo != solo)
+            if (attacker.CanAttackPlayer())
             {
-                elapsed = 0;
+                SetState(ClownCState.Attack);
+                return;
             }
 
-            if(solo)
-            {
-                elapsed += Time.deltaTime;
-                if (elapsed >= soloChaseTimer)
-                {
-                    elapsed = 0;
-                    SetState(ClownCState.Hidden);
-                }
-            }
+          
+            
         }
 
         void EnterHiddenState()
         {
+            StopAllCoroutines();
             // Disable ClownC's model to hide it
             model.SetActive(false);
 
@@ -124,52 +158,201 @@ namespace TMM
 
         }
 
+        void EnterAttackState()
+        {
+            StopAllCoroutines();
+            agent.ResetPath();
+            agent.isStopped = true;
+            attacker.Attack();
+        }
+
         void EnterChaseState()
         {
+            StopAllCoroutines();
+
             model.SetActive(true);
 
-            agent.ResetPath();
-            agent.isStopped = false;
+           
 
             elapsed = 0;
 
-            
 
+            // Move ClownC to spawn position
+            if(TryGetSpawnPosition(out Vector3 spawnPosition))
+            {
+                transform.position = spawnPosition;
+
+                agent.ResetPath();
+                agent.isStopped = false;
+
+               
+
+                StartCoroutine(ChasePlayer());
+                Time.timeScale = 0;
+                
+            }
+            else
+            {
+                SetState(ClownCState.Hidden);
+            }
+
+        }
+
+        bool TryGetSpawnPosition(out Vector3 spawnPosition)
+        {
+            spawnPosition = Vector3.zero;
             // Get other clowns' positions
             // Let's try with clownA
-            Vector3 otherPosition = Vector3.zero;
-            if (clownA.State == ClownAState.Chase || clownA.State == ClownAState.Search) // ClownA is chasing the player
-            {
-                otherPosition = clownA.transform.position;
-            }
-            else 
-            {
-                if(clownB.State == ClownBState.Chase) // ClownB is chasing the player
-                {
-                    otherPosition = clownB.transform.position;
-                }
-                else
-                {
-                    solo = true; // You should not be solo at this point
-                }
-            }
-
+            //Vector3 otherPosition = Vector3.zero;
+            //if (clownA.State == ClownAState.Chase || clownA.State == ClownAState.Search) // ClownA is chasing the player
+            //{
+            //    otherPosition = clownA.transform.position;
+            //}
+            //else
+            //{
+            //    if (clownB.State == ClownBState.Chase) // ClownB is chasing the player
+            //    {
+            //        otherPosition = clownB.transform.position;
+            //    }
+            //    else
+            //    {
+            //        // No other clown is chasing the player
+            //        return false;
+            //    }
+            //}
 
             // Get player position
             var playerPosition = player.transform.position;
 
-            // Get direction from other clown to player
-            var directionToPlayer = (playerPosition - otherPosition).normalized;
+            int playerTileIndex = MazeBuilder.Instance.GetClosestWalkableTileIndex(playerPosition);
+            // No tile found
+            if (playerTileIndex < 0)
+                return false;
+           
+            
+            
 
-            // We want the clown to cut the player off so we must calculate spawn position in front of player along the direction from other clown to player
-            var spawnDistanceFromPlayer = 10f; // Distance in front of player to spawn
+            // Get the player move direction
+            var moveDirection = characterController.velocity;
+            
+            
+            moveDirection.y = 0;
+            if(moveDirection.magnitude < 0.01f)
+                return false;
+            
+            moveDirection.Normalize();
 
-            var allPositions = MazeBuilder.Instance.GetWalkableTilePositions();
+            if(Mathf.Abs(moveDirection.z) - Mathf.Abs(moveDirection.x) < 0.2f)
+                return false; // Diagonal movement, skip
+
+            Debug.Log($"TEST - ClownC - MoveDirection:{moveDirection}");
+            Debug.Log($"TEST - ClownC - PlayerPosition:{player.transform.position}");
 
 
+            int dir = 0;
+            if(Mathf.Abs(moveDirection.z) > Mathf.Abs(moveDirection.x)) // North or south
+            {
+                if (moveDirection.z > 0)
+                    dir = 0;
+                else
+                    dir = 2;
+            }
+            else // East or west
+            {
+                if(moveDirection.x > 0)
+                    dir = 1;
+                else
+                    dir = 3;
+            }
 
-            // Get spawn position away from player and other clowns and in front of player in order to cut them off
-            //var spawnPosition = 
+            // Try get a spawn tile
+            var playerTileCoords = MazeBuilder.Instance.GetTileCoords(playerTileIndex);
+            List<Vector2> newCoords = new List<Vector2>();
+            switch (dir)
+            {
+                case 0:
+                    if(MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up) != 0)
+                        newCoords.Add(playerTileCoords + Vector2.up * 2);
+
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2 + Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up + Vector2.right) != 0)
+                        newCoords.Add(playerTileCoords + Vector2.up * 2 + Vector2.right);
+
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2 - Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up - Vector2.right) != 0)
+                        newCoords.Add(playerTileCoords + Vector2.up * 2 - Vector2.right);
+
+                    
+                    break;
+                case 1:
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right) != 0)
+                        newCoords.Add(playerTileCoords + Vector2.right * 2);
+
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2 + Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right + Vector2.up) != 0)
+                        newCoords.Add(playerTileCoords + Vector2.right * 2 + Vector2.up);
+
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2 - Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right - Vector2.up) != 0)
+                        newCoords.Add(playerTileCoords + Vector2.right * 2 - Vector2.up);
+                    break;
+                case 2:
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up) != 0)
+                        newCoords.Add(playerTileCoords - Vector2.up * 2);
+
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2 + Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up + Vector2.right) != 0)
+                        newCoords.Add(playerTileCoords - Vector2.up * 2 + Vector2.right);
+
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2 - Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up - Vector2.right) != 0)
+                        newCoords.Add(playerTileCoords - Vector2.up * 2 - Vector2.right);
+                    break;
+                case 3:
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right) != 0)
+                        newCoords.Add(playerTileCoords - Vector2.right * 2);
+
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2 + Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right + Vector2.up) != 0)
+                        newCoords.Add(playerTileCoords - Vector2.right * 2 + Vector2.up);
+
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2 - Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right - Vector2.up) != 0)
+                        newCoords.Add(playerTileCoords - Vector2.right * 2 - Vector2.up);
+                    break;
+
+            }
+
+            bool found = false;
+            int spawnTileIndex = -1;
+            while (newCoords.Count > 0 && !found)
+            {
+                var coords = newCoords[Random.Range(0, newCoords.Count)];
+                newCoords.Remove(coords);
+                spawnTileIndex = MazeBuilder.Instance.GetTileIndex(coords);
+                if(spawnTileIndex >= 0)
+                    found = true;
+            }
+
+            if (!found)
+                return false;
+         
+         
+            var spawnCoords = MazeBuilder.Instance.GetTileCoords(spawnTileIndex);
+            spawnPosition = new Vector3(spawnCoords.x, 0, spawnCoords.y) * MazeBuilder.CellSize;
+            Debug.Log($"TEST - ClownC - SpawnPosition:{spawnPosition}");
+            return true;
+        }
+
+      
+
+        IEnumerator ChasePlayer()
+        {
+            int counter = 10;
+            while(state == ClownCState.Chase)
+            {
+                agent.SetDestination(player.transform.position);
+
+                yield return new WaitForSeconds(0.5f);
+
+                counter--;
+                if(counter< 0) 
+                    SetState(ClownCState.Hidden);
+
+
+            }
         }
 
         void SetState(ClownCState newState)
@@ -187,6 +370,9 @@ namespace TMM
                     break;
                 case ClownCState.Chase:
                     EnterChaseState();
+                    break;
+                case ClownCState.Attack:
+                    EnterAttackState();
                     break;
             }
         }

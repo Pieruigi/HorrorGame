@@ -396,6 +396,7 @@ namespace TMM
 			foreach (var m in monsterPrefabs)
 				availableMonsters.Add(m);
 
+			
 			for (int i = 0; i < creatureCount; i++)
 			{
 				// Choose a floor tile (type = 0) which is at a minimum distance the palayer spawn point
@@ -410,7 +411,8 @@ namespace TMM
 				candidates.RemoveAll(t => t == spawnTile || Vector3.Distance(t.coords, spawnTile.coords) < 12);
 
 				// Chooser a random monster prefab
-				var monsterPrefab = availableMonsters[Random.Range(0, availableMonsters.Count)];
+				var monsterPrefab = availableMonsters[0]; // Default clown for when only one is available
+                if (i > 0) monsterPrefab = availableMonsters[Random.Range(0, availableMonsters.Count)];
 #if UNITY_EDITOR
 				//monsterPrefab = availableMonsters[0];
 #endif

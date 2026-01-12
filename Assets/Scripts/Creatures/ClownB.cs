@@ -67,11 +67,11 @@ namespace TMM
 		void Update()
 		{
 #if UNITY_EDITOR
-			if (Input.GetKeyDown(KeyCode.X))
-			{
-				//GetSpawnPosition();
-				SetState(ClownBState.Chase);
-			}
+			//if (Input.GetKeyDown(KeyCode.X))
+			//{
+			//	//GetSpawnPosition();
+			//	SetState(ClownBState.Chase);
+			//}
 #endif
 
 			UpdateState();
@@ -137,7 +137,7 @@ namespace TMM
 		{
 			yield return new WaitForSeconds(2f);
 
-			while (true)
+			while (state == ClownBState.Chase)
 			{
 				agent.SetDestination(playerController.transform.position);
 
