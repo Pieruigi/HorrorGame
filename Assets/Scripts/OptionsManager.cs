@@ -30,6 +30,10 @@ namespace TMM
 
         public const int VolumeOptionDefault = 80;
 
+        public const string VerticalMouseOptionParam = "VerticalMouse";
+
+        public const int VerticalMouseOptionDefault = 0;
+        
         //public const string ResolutionIdOptionParam = "ResolutionId";
 
         public float MouseSpeed
@@ -50,7 +54,14 @@ namespace TMM
             }
         }
 
-
+        public bool VerticalMouse
+        {
+            get
+            {
+                var v = PlayerPrefs.GetInt("VerticalMouse", VerticalMouseOptionDefault);
+                return v != 0;
+            }
+        }
 
         protected override void Awake()
         {

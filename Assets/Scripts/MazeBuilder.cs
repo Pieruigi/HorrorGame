@@ -2,21 +2,14 @@
 #define USE_WEIGHT
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using StarterAssets;
 using TMM.Scriptables;
 using Unity.AI.Navigation;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Android;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal.Internal;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+
 
 namespace TMM
 {

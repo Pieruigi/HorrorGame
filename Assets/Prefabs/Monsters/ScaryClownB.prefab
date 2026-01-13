@@ -1381,6 +1381,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: FX_ArtilleryStrike_01
       objectReference: {fileID: 0}
+    - target: {fileID: 2070011812139733835, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.11792451
+      objectReference: {fileID: 0}
+    - target: {fileID: 2070011812139733835, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.62719005
+      objectReference: {fileID: 0}
+    - target: {fileID: 2070011812139733835, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2070011812139733835, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2070011812139733835, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2267189945842467051, guid: 278f75b3643f2d044b639d78e1bfad9e,
         type: 3}
       propertyPath: playOnAwake
@@ -1461,10 +1486,40 @@ PrefabInstance:
       propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6689206958801451411, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.5518868
+      objectReference: {fileID: 0}
+    - target: {fileID: 6689206958801451411, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.8594155
+      objectReference: {fileID: 0}
+    - target: {fileID: 6689206958801451411, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8428586039201302296, guid: 278f75b3643f2d044b639d78e1bfad9e,
         type: 3}
       propertyPath: playOnAwake
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8428586039201302296, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.5330188
+      objectReference: {fileID: 0}
+    - target: {fileID: 8428586039201302296, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.84970725
+      objectReference: {fileID: 0}
+    - target: {fileID: 8428586039201302296, guid: 278f75b3643f2d044b639d78e1bfad9e,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

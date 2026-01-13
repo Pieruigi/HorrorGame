@@ -125,10 +125,11 @@ namespace StarterAssets
 		float _playerHeight;
 
 		float mouseSensitivity = 1f;
+		bool verticalMouse  = false;	
 
-	
+
 #if ENABLE_INPUT_SYSTEM
-		private PlayerInput _playerInput;
+        private PlayerInput _playerInput;
 #endif
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
@@ -184,6 +185,7 @@ namespace StarterAssets
 			Cursor.visible = false;
 
 			UpdateMouseSensitivity();
+			UpdateVerticalMouse();
 
             //InputDisabled = true;
         }
@@ -246,6 +248,7 @@ namespace StarterAssets
         private void HandleOnOptionsChnaged()
         {
 			UpdateMouseSensitivity();
+			UpdateVerticalMouse();
         }
 
         private void HandleOnSpeedDebuffApplied(TimedBuffDebuff arg)
@@ -263,6 +266,11 @@ namespace StarterAssets
 		void UpdateMouseSensitivity()
 		{
             mouseSensitivity = .5f + OptionsManager.Instance.MouseSpeed / OptionsManager.MouseSpeedOptionMax;
+        }
+
+		void UpdateVerticalMouse()
+		{
+			verticalMouse = OptionsManager.Instance.VerticalMouse;
         }
 
         void ComputeNoiseRange()
@@ -296,7 +304,7 @@ namespace StarterAssets
 				//Don't multiply mouse input by Time.deltaTime
 				//float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-				_cinemachineTargetPitch += _input.look.y * RotationSpeed * mouseSensitivity;//  * deltaTimeMultiplier;
+				_cinemachineTargetPitch += _input.look.y * RotationSpeed * mouseSensitivity * (verticalMouse ? -1f : 1f);//  * deltaTimeMultiplier;
 				_rotationVelocity = _input.look.x * RotationSpeed * mouseSensitivity;// * deltaTimeMultiplier;
 
 				// clamp our pitch rotation

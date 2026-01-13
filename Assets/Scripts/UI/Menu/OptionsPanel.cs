@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,9 @@ namespace TMM.UI
 
         [SerializeField]
         Slider volumeSlider;
+
+        [SerializeField]
+        Toggle verticalMouseToggle;
 
         // Update is called once per frame
         void Update()
@@ -32,11 +36,26 @@ namespace TMM.UI
             volumeSlider.onValueChanged.AddListener(HandleOnVolumeChanged);
             v = PlayerPrefs.GetInt(OptionsManager.VolumeOptionParam, OptionsManager.VolumeOptionDefault);
             volumeSlider.value = v;
+
+            verticalMouseToggle.onValueChanged.AddListener(HandleOnVerticalMouseChanged);
+            v = PlayerPrefs.GetInt(OptionsManager.VerticalMouseOptionParam, OptionsManager.VerticalMouseOptionDefault);
+            verticalMouseToggle.isOn = v != 0;
         }
+
+        
 
         void OnDisable()
         {
             mouseSpeedSlider.onValueChanged.RemoveAllListeners();
+            volumeSlider.onValueChanged.RemoveAllListeners();
+            verticalMouseToggle.onValueChanged.RemoveAllListeners();
+        }
+
+        private void HandleOnVerticalMouseChanged(bool value)
+        {
+            if (!OptionsManager.Instance) return;
+            PlayerPrefs.SetInt(OptionsManager.VerticalMouseOptionParam, value ? 1 : 0);
+            OptionsManager.Instance.SaveOptions();
         }
 
         private void HandleOnMouseSpeedChanged(float value)

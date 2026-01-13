@@ -1,17 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design.Serialization;
 using System.Linq;
-using System.Threading.Tasks;
 using DG.Tweening;
-using Mono.Cecil;
-using NUnit.Framework.Internal;
 using StarterAssets;
 using TMM.AI;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Assertions.Must;
 
 namespace TMM
 {

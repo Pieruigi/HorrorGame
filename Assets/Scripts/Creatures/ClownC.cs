@@ -181,6 +181,7 @@ namespace TMM
             if(TryGetSpawnPosition(out Vector3 spawnPosition))
             {
                 transform.position = spawnPosition;
+                transform.forward = Vector3.ProjectOnPlane(player.transform.position - transform.position, Vector3.up).normalized;
 
                 agent.ResetPath();
                 agent.isStopped = false;
@@ -188,7 +189,7 @@ namespace TMM
                
 
                 StartCoroutine(ChasePlayer());
-                Time.timeScale = 0;
+                //Time.timeScale = 0;
                 
             }
             else
