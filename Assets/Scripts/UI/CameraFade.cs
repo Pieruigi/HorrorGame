@@ -18,6 +18,7 @@ namespace TMM.UI
 			base.Awake();
 
 			canvasGroup.alpha = 0; 
+			canvasGroup.blocksRaycasts = false;
         }
 
         // Start is called before the first frame update
@@ -35,12 +36,13 @@ namespace TMM.UI
 		public void FadeIn()
 		{
 			canvasGroup.DOKill();
-			canvasGroup.DOFade(0, fadeTime);
+			canvasGroup.DOFade(0, fadeTime).OnComplete(() => { canvasGroup.blocksRaycasts = false; });
 		}
 		
 		public void FadeOut()
         {
-			canvasGroup.DOKill();
+			canvasGroup.blocksRaycasts = true;
+            canvasGroup.DOKill();
 			canvasGroup.DOFade(1, fadeTime);
         }
 	}

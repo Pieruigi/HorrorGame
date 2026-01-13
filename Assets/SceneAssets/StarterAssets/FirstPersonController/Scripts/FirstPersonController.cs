@@ -124,6 +124,8 @@ namespace StarterAssets
 
 		float _playerHeight;
 
+		float mouseSensitivity = 1f;
+
 	
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
@@ -181,8 +183,10 @@ namespace StarterAssets
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 
-			//InputDisabled = true;
-		}
+			UpdateMouseSensitivity();
+
+            //InputDisabled = true;
+        }
 
 		private void Start()
 		{
@@ -229,12 +233,19 @@ namespace StarterAssets
 		{
 			PlayerSpeedDebuff.OnApplied += HandleOnSpeedDebuffApplied;
 			PlayerSpeedDebuff.OnExpired += HandleOnSpeedDebuffExpired;
+			OptionsManager.OnOptionsChanged += HandleOnOptionsChnaged;
 		}
 
         void OnDisable()
         {
 			PlayerSpeedDebuff.OnApplied -= HandleOnSpeedDebuffApplied;
 			PlayerSpeedDebuff.OnExpired -= HandleOnSpeedDebuffExpired;
+            OptionsManager.OnOptionsChanged -= HandleOnOptionsChnaged;
+        }
+
+        private void HandleOnOptionsChnaged()
+        {
+			UpdateMouseSensitivity();
         }
 
         private void HandleOnSpeedDebuffApplied(TimedBuffDebuff arg)
@@ -247,6 +258,11 @@ namespace StarterAssets
 		{
 			if (arg.GetType() != typeof(PlayerSpeedDebuff)) return;
 			speedDebuff = 1;
+        }
+
+		void UpdateMouseSensitivity()
+		{
+            mouseSensitivity = .5f + OptionsManager.Instance.MouseSpeed / OptionsManager.MouseSpeedOptionMax;
         }
 
         void ComputeNoiseRange()
@@ -278,10 +294,10 @@ namespace StarterAssets
 			if (_input.look.sqrMagnitude >= _threshold)
 			{
 				//Don't multiply mouse input by Time.deltaTime
-				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-				
-				_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
-				_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
+				//float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+
+				_cinemachineTargetPitch += _input.look.y * RotationSpeed * mouseSensitivity;//  * deltaTimeMultiplier;
+				_rotationVelocity = _input.look.x * RotationSpeed * mouseSensitivity;// * deltaTimeMultiplier;
 
 				// clamp our pitch rotation
 				_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
