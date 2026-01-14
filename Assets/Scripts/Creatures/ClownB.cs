@@ -13,7 +13,10 @@ namespace TMM
 	
 	public class ClownB : MonoBehaviour
 	{
-		[SerializeField]
+        public delegate void StateChangedDelegate(ClownBState oldState, ClownBState newState);
+        public static StateChangedDelegate OnStateChanged;
+
+        [SerializeField]
 		GameObject model;
 
 		[SerializeField]
@@ -21,7 +24,7 @@ namespace TMM
 
 		ClownAttacker attacker;
 
-		float checkIdleTime = 30f;
+		float checkIdleTime = 10f;
 
 		float playerDistance = 4; // Number of tiles
 
@@ -110,7 +113,7 @@ namespace TMM
 				}
 				else
 				{
-					if (randomMax > 3) randomMax--;
+					if (randomMax > 1) randomMax--;
 				}
 		
 			}
@@ -135,7 +138,7 @@ namespace TMM
 
 		IEnumerator FollowPlayer()
 		{
-			yield return new WaitForSeconds(2f);
+			yield return new WaitForSeconds(.5f);
 
 			while (state == ClownBState.Chase)
 			{
@@ -200,6 +203,7 @@ namespace TMM
 		void SetState(ClownBState newState)
 		{
 			if (state == newState) return;
+			var oldState = state;
 			state = newState;
 			switch (state)
 			{
@@ -213,7 +217,9 @@ namespace TMM
 					EnterAttackState();
 					break;
 			}
-		}
+
+			OnStateChanged?.Invoke(oldState, newState);
+        }
 
 		Vector3 GetSpawnPosition()
 		{

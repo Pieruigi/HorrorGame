@@ -51,6 +51,9 @@ namespace TMM
 
 			if(clownC)
 				ClownC.OnStateChanged += HandleOnClownCStateChanged;
+
+            if (clownB)
+                ClownB.OnStateChanged += HandleOnClownBStateChanged;
         }
 
         void OnDisable()
@@ -60,9 +63,24 @@ namespace TMM
 
             if (clownC)
                 ClownC.OnStateChanged -= HandleOnClownCStateChanged;
+
+            if (clownB)
+                ClownB.OnStateChanged -= HandleOnClownBStateChanged;
         }
 
-		private void HandleOnClownCStateChanged(ClownCState oldState, ClownCState newState)
+		private void HandleOnClownBStateChanged(ClownBState oldState, ClownBState newState)
+		{
+			if(newState == ClownBState.Chase)
+			{
+				HandleOnClownCStateChanged(ClownCState.Hidden, ClownCState.Chase);
+            }
+			else if(newState == ClownBState.Attack)
+			{
+				HandleOnClownCStateChanged(ClownCState.Chase, ClownCState.Attack);
+            }
+        }
+
+        private void HandleOnClownCStateChanged(ClownCState oldState, ClownCState newState)
 		{
 			switch (newState)
 			{

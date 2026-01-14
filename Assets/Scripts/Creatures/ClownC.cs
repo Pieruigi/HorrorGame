@@ -122,8 +122,8 @@ namespace TMM
                 if(elapsed >= chaseCheckTimer)
                 {
                     elapsed = 0;
-                    //if (Random.Range(0, 2) == 0)
-                    SetState(ClownCState.Chase);
+                    if (Random.Range(0, 4) == 0)
+                        SetState(ClownCState.Chase);
                 }
                 
                     
@@ -192,7 +192,7 @@ namespace TMM
                
 
                 StartCoroutine(ChasePlayer());
-                //Time.timeScale = 0;
+                Time.timeScale = 0;
                 
             }
             else
@@ -232,9 +232,9 @@ namespace TMM
             // No tile found
             if (playerTileIndex < 0)
                 return false;
-           
-            
-            
+
+            Debug.Log($"TEST - ClownC - PlayerTileIndex:{playerTileIndex}");
+
 
             // Get the player move direction
             var moveDirection = characterController.velocity;
@@ -246,8 +246,10 @@ namespace TMM
             
             moveDirection.Normalize();
 
-            if(Mathf.Abs(moveDirection.z) - Mathf.Abs(moveDirection.x) < 0.2f)
-                return false; // Diagonal movement, skip
+            Debug.Log($"TEST - ClownC - MoveDirection:{moveDirection}");
+
+            //if (Mathf.Abs(moveDirection.z) - Mathf.Abs(moveDirection.x) < 0.2f)
+            //    return false; // Diagonal movement, skip
 
             Debug.Log($"TEST - ClownC - MoveDirection:{moveDirection}");
             Debug.Log($"TEST - ClownC - PlayerPosition:{player.transform.position}");
@@ -272,55 +274,108 @@ namespace TMM
             // Try get a spawn tile
             var playerTileCoords = MazeBuilder.Instance.GetTileCoords(playerTileIndex);
             List<Vector2> newCoords = new List<Vector2>();
+            
+
             switch (dir)
             {
                 case 0:
-                    if(MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up) != 0)
-                        newCoords.Add(playerTileCoords + Vector2.up * 2);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 3) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2) != 0))
+                        newCoords.Add(playerTileCoords + Vector2.up * 3);
 
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2 + Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up + Vector2.right) != 0)
-                        newCoords.Add(playerTileCoords + Vector2.up * 2 + Vector2.right);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 3 + Vector2.right) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up + Vector2.right) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2 + Vector2.right) != 0))
+                        newCoords.Add(playerTileCoords + Vector2.up * 3 + Vector2.right);
 
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2 - Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up - Vector2.right) != 0)
-                        newCoords.Add(playerTileCoords + Vector2.up * 2 - Vector2.right);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 3 - Vector2.right) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up - Vector2.right) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2 - Vector2.right) != 0))
+                        newCoords.Add(playerTileCoords + Vector2.up * 3 - Vector2.right);
 
-                    
+
                     break;
                 case 1:
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right) != 0)
-                        newCoords.Add(playerTileCoords + Vector2.right * 2);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 3) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2) != 0))
+                        newCoords.Add(playerTileCoords + Vector2.right * 3);
 
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2 + Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right + Vector2.up) != 0)
-                        newCoords.Add(playerTileCoords + Vector2.right * 2 + Vector2.up);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 3 + Vector2.up) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right + Vector2.up) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2 + Vector2.up) != 0))
+                        newCoords.Add(playerTileCoords + Vector2.right * 3 + Vector2.up);
 
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2 - Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right - Vector2.up) != 0)
-                        newCoords.Add(playerTileCoords + Vector2.right * 2 - Vector2.up);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 3 - Vector2.up) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right - Vector2.up) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2 - Vector2.up) != 0))
+                        newCoords.Add(playerTileCoords + Vector2.right * 3 - Vector2.up);
                     break;
                 case 2:
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up) != 0)
-                        newCoords.Add(playerTileCoords - Vector2.up * 2);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 3) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2) != 0))
+                        newCoords.Add(playerTileCoords - Vector2.up * 3);
 
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2 + Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up + Vector2.right) != 0)
-                        newCoords.Add(playerTileCoords - Vector2.up * 2 + Vector2.right);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 3 + Vector2.right) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up + Vector2.right) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2 + Vector2.right) != 0))
+                        newCoords.Add(playerTileCoords - Vector2.up * 3 + Vector2.right);
 
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2 - Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up - Vector2.right) != 0)
-                        newCoords.Add(playerTileCoords - Vector2.up * 2 - Vector2.right);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 3 - Vector2.right) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up - Vector2.right) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2 - Vector2.right) != 0))
+                        newCoords.Add(playerTileCoords - Vector2.up * 3 - Vector2.right);
                     break;
                 case 3:
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right) != 0)
-                        newCoords.Add(playerTileCoords - Vector2.right * 2);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 3) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2) != 0))
+                        newCoords.Add(playerTileCoords - Vector2.right * 3);
 
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2 + Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right + Vector2.up) != 0)
-                        newCoords.Add(playerTileCoords - Vector2.right * 2 + Vector2.up);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 3 + Vector2.up) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right + Vector2.up) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2 + Vector2.up) != 0))
+                        newCoords.Add(playerTileCoords - Vector2.right * 3 + Vector2.up);
 
-                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2 - Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right - Vector2.up) != 0)
-                        newCoords.Add(playerTileCoords - Vector2.right * 2 - Vector2.up);
+                    if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 3 - Vector2.up) == 0 && (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right - Vector2.up) != 0 || MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2 - Vector2.up) != 0))
+                        newCoords.Add(playerTileCoords - Vector2.right * 3 - Vector2.up);
                     break;
 
             }
 
+            //if(newCoords.Count == 0)
+            //{
+            //    switch (dir)
+            //    {
+            //        case 0:
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up) != 0)
+            //                newCoords.Add(playerTileCoords + Vector2.up * 2);
+
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2 + Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up + Vector2.right) != 0)
+            //                newCoords.Add(playerTileCoords + Vector2.up * 2 + Vector2.right);
+
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up * 2 - Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.up - Vector2.right) != 0)
+            //                newCoords.Add(playerTileCoords + Vector2.up * 2 - Vector2.right);
+
+
+            //            break;
+            //        case 1:
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right) != 0)
+            //                newCoords.Add(playerTileCoords + Vector2.right * 2);
+
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2 + Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right + Vector2.up) != 0)
+            //                newCoords.Add(playerTileCoords + Vector2.right * 2 + Vector2.up);
+
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right * 2 - Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords + Vector2.right - Vector2.up) != 0)
+            //                newCoords.Add(playerTileCoords + Vector2.right * 2 - Vector2.up);
+            //            break;
+            //        case 2:
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up) != 0)
+            //                newCoords.Add(playerTileCoords - Vector2.up * 2);
+
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2 + Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up + Vector2.right) != 0)
+            //                newCoords.Add(playerTileCoords - Vector2.up * 2 + Vector2.right);
+
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up * 2 - Vector2.right) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.up - Vector2.right) != 0)
+            //                newCoords.Add(playerTileCoords - Vector2.up * 2 - Vector2.right);
+            //            break;
+            //        case 3:
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right) != 0)
+            //                newCoords.Add(playerTileCoords - Vector2.right * 2);
+
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2 + Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right + Vector2.up) != 0)
+            //                newCoords.Add(playerTileCoords - Vector2.right * 2 + Vector2.up);
+
+            //            if (MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right * 2 - Vector2.up) == 0 && MazeBuilder.Instance.GetTileType(playerTileCoords - Vector2.right - Vector2.up) != 0)
+            //                newCoords.Add(playerTileCoords - Vector2.right * 2 - Vector2.up);
+            //            break;
+
+            //    }
+            //}
+
             bool found = false;
             int spawnTileIndex = -1;
+            Debug.Log($"TEST - ClownC - NewCoords.Count:{newCoords.Count}");
             while (newCoords.Count > 0 && !found)
             {
                 var coords = newCoords[Random.Range(0, newCoords.Count)];
