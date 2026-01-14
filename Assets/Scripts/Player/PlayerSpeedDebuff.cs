@@ -9,7 +9,6 @@ namespace TMM
 {
 	public class PlayerSpeedDebuff : TimedBuffDebuff
 	{
-
 		public static PlayerSpeedDebuff Instance { get; private set; }
 
 		float value = 1;

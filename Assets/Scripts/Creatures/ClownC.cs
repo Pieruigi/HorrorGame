@@ -12,6 +12,9 @@ namespace TMM
 	public class ClownC : MonoBehaviour
 	{
 
+        public delegate void StateChangedDelegate(ClownCState oldState, ClownCState newState);
+        public static StateChangedDelegate OnStateChanged;
+
         [SerializeField]
         GameObject model;
 
@@ -362,6 +365,7 @@ namespace TMM
 
             Debug.Log($"TEST - ClownC - Setting state:{newState}");
 
+            var oldState = state;
             state = newState;
 
             switch (state)
@@ -376,6 +380,8 @@ namespace TMM
                     EnterAttackState();
                     break;
             }
+
+            OnStateChanged?.Invoke(oldState, newState);
         }
     }
 }

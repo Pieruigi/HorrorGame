@@ -1,3 +1,4 @@
+using StarterAssets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace TMM
 			}
             else
             {
-                
+                CameraFade.Instance.FadeIn();
             }
         }
 
@@ -79,6 +80,44 @@ namespace TMM
 			CameraFade.Instance.FadeOut();
 			yield return new WaitForSeconds(1f);
 			SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+        }
+
+		public void LoadMainMenu()
+		{
+			if("mainscene".Equals(SceneManager.GetActiveScene().name.ToLower()))
+				return;
+
+            // In case we are in the game menu which pauses the game
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+			Time.timeScale = 1f;
+            // Fade and load main menu
+            CameraFade.Instance.FadeOut();
+            SceneManager.LoadSceneAsync("MainScene", LoadSceneMode.Single);
+        }
+
+		public void PauseGame()
+		{
+			if (!"gamescene".Equals(SceneManager.GetActiveScene().name.ToLower())) return;
+
+			var player = FindFirstObjectByType<FirstPersonController>();
+			player.InputDisabled = true;
+			player.AimingDisabled = true;
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+			Time.timeScale = 0f;
+        }
+
+		public void UnpauseGame()
+		{
+			if (!"gamescene".Equals(SceneManager.GetActiveScene().name.ToLower())) return;
+			
+            var player = FindFirstObjectByType<FirstPersonController>();
+            player.InputDisabled = false;
+            player.AimingDisabled = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            Time.timeScale = 1f;
         }
 	}
 }

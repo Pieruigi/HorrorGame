@@ -184,8 +184,7 @@ namespace StarterAssets
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 
-			UpdateMouseSensitivity();
-			UpdateVerticalMouse();
+			
 
             //InputDisabled = true;
         }
@@ -208,7 +207,10 @@ namespace StarterAssets
 			_playerHeight = _controller.height;
 
 			speedDebuff = PlayerSpeedDebuff.Instance.Value;
-		}
+
+            UpdateMouseSensitivity();
+            UpdateVerticalMouse();
+        }
 
 		private void Update()
 		{
