@@ -21,7 +21,7 @@ namespace TMM
 
 		float laughElapsed = 0;
 
-		float laughTime = 4;
+		float laughTime = 8;
 
 		//ClownA creature;
 

@@ -3979,7 +3979,7 @@ PrefabInstance:
     - target: {fileID: 7912009849899271342, guid: ebebea8bba772084bab712244b9eed7d,
         type: 3}
       propertyPath: monsterPrefabs.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7912009849899271342, guid: ebebea8bba772084bab712244b9eed7d,
         type: 3}

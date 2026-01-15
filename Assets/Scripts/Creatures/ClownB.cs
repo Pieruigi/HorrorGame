@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using DG.Tweening;
+using Mono.Cecil;
 using StarterAssets;
 using TMM.AI;
 using UnityEditor;
@@ -9,7 +10,7 @@ using UnityEngine.AI;
 
 namespace TMM
 {
-	public enum ClownBState { Hidden, Chase, Attack }
+	public enum ClownBState { Hidden, Chase, Attack, PreChase }
 	
 	public class ClownB : MonoBehaviour
 	{
@@ -22,6 +23,12 @@ namespace TMM
 		[SerializeField]
 		ParticleSystem spawnParticle;
 
+		[SerializeField]
+		AudioSource spawnAudioSource;
+
+		[SerializeField]
+		AudioSource laughAudioSource;
+
 		ClownAttacker attacker;
 
 		float checkIdleTime = 10f;
@@ -31,6 +38,10 @@ namespace TMM
 		float elapsed = 0;
 
 		float chaseTime = 10f;
+
+		Vector3 spawnPosition;
+
+		
 
 		ClownBState state = ClownBState.Hidden;
 		public ClownBState State
@@ -107,9 +118,9 @@ namespace TMM
 			if(elapsed > checkIdleTime)
 			{
 				elapsed = 0;
-				if (Random.Range(0, randomMax) == 0)
+				if(Random.Range(0, randomMax) == 0)
 				{
-					SetState(ClownBState.Chase);
+					SetState(ClownBState.PreChase);
 				}
 				else
 				{
@@ -122,7 +133,12 @@ namespace TMM
 
 		void UpdateChaseState()
 		{
-			if (attacker.CanAttackPlayer())
+			if(model.activeSelf == false) // Not spawned yet
+			{
+				return;
+            }	
+
+            if (attacker.CanAttackPlayer())
 			{
 				SetState(ClownBState.Attack);
 				return;
@@ -152,6 +168,8 @@ namespace TMM
 		{
 			StopAllCoroutines();
 
+			elapsed = 0;
+
 			agent.isStopped = true;
 			agent.enabled = false;
 			randomMax = randomMaxDefault;
@@ -164,33 +182,77 @@ namespace TMM
 
 		void EnterChaseState()
 		{
-			StopAllCoroutines();
+            
+            // Move clown
+            transform.position = spawnPosition;
+            // Rotate clown
+            transform.LookAt(playerController.transform.position, Vector3.up);
 
-			// Get spawn position
-			var spawnPosition = GetSpawnPosition();
-			// Move clown
-			transform.position = spawnPosition;
-			// Rotate clown
-			transform.LookAt(playerController.transform.position, Vector3.up);
+            agent.enabled = true;
+            agent.isStopped = false;
+            agent.ResetPath();
+            elapsed = 0;
+            randomMax = randomMaxDefault;
+            model.SetActive(true);
 
-			agent.enabled = true;
-			agent.isStopped = false;
-			agent.ResetPath();
-			elapsed = 0;
-			randomMax = randomMaxDefault;
-			model.SetActive(true);
+            model.transform.DOScale(1f, .5f).SetEase(Ease.OutBounce);
 
-			model.transform.DOScale(1f, .5f).SetEase(Ease.OutBounce);
+            spawnParticle.Play();
 
-			spawnParticle.Play();
+            spawnAudioSource.Play();
 
-			StartCoroutine(FollowPlayer());
+			laughAudioSource.Play();
+
+            StartCoroutine(FollowPlayer());
 
 
-			Debug.Log("TEST - ClownB - EnterChaseState()");
-		}
+            Debug.Log("TEST - ClownB - EnterChaseState()");
+        }
+
+		void EnterPreChaseState()
+		{
+            elapsed = 0;
+            StopAllCoroutines();
+
+            StartCoroutine(DoGetSpawnPosition());
+        }
+
+		IEnumerator DoGetSpawnPosition()
+		{
+			bool spawnPositionFound = TryGetSpawnPosition(out spawnPosition);
+			while(!spawnPositionFound)
+			{
+				yield return new WaitForSeconds(.5f);
+
+                spawnPositionFound = TryGetSpawnPosition(out spawnPosition);
+            }
+
+            // Get spawn position
+            SetState(ClownBState.Chase);
+        }
 		
-		void EnterAttackState()
+		bool TryGetSpawnPosition(out Vector3 position)
+		{
+			position = Vector3.zero;
+
+            // Raycast to find a valid position
+			var origin = playerController.transform.position + Vector3.up;
+			var direction = playerController.transform.forward;
+			var distance = 4f;
+
+			if(!Physics.Raycast(origin, direction, distance))
+			{
+                position = origin + direction * distance;
+				position.y = 0;
+				return true;
+            }
+				
+
+
+            return false;
+        }
+
+        void EnterAttackState()
 		{
 			agent.ResetPath();
 			agent.isStopped = true;
@@ -215,6 +277,9 @@ namespace TMM
 					break;
 				case ClownBState.Attack:
 					EnterAttackState();
+					break;
+				case ClownBState.PreChase:
+					EnterPreChaseState();
 					break;
 			}
 

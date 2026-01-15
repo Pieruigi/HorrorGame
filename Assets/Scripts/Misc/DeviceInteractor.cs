@@ -11,7 +11,13 @@ namespace TMM
 		public delegate void InteractionDelegate(DeviceInteractor deviceInteractor);
 		public static InteractionDelegate OnInteraction;
 
-		[SerializeField]
+		public delegate void EnterDelegate(DeviceInteractor deviceInteractor);
+		public static EnterDelegate OnEnter;
+
+		public delegate void ExitDelegate(DeviceInteractor deviceInteractor);
+		public static ExitDelegate OnExit;
+
+        [SerializeField]
 		ActivationTrigger activationTrigger;
 
 		[SerializeField]
@@ -63,9 +69,16 @@ namespace TMM
 			if(showMessage != lastShowMessage)
 			{
 				if (showMessage)
-					MessageManager.Instance.ShowCustomMessage(messageId, true);
+				{
+                    MessageManager.Instance.ShowCustomMessage(messageId, true);
+                    OnEnter?.Invoke(this);	
+                }
 				else
-					MessageManager.Instance.HideMessage();
+				{
+                    MessageManager.Instance.HideMessage();
+					OnExit?.Invoke(this);
+                }
+					
 			}
 
 			lastShowMessage = showMessage;

@@ -81,6 +81,8 @@ namespace TMM
 		float wallHeightDefault;
 
 		CanvasGroup ruleCanvasGroup;
+
+		bool noExit = false;
 	
 
 
@@ -117,7 +119,7 @@ namespace TMM
             // }
 
 #endif
-			if (activated)
+			if (activated && !noExit)
 			{
 #if UNITY_EDITOR				
 				if (Input.GetKeyDown(KeyCode.E))
@@ -166,13 +168,32 @@ namespace TMM
 		{
 			DeviceInteractor.OnInteraction += HandleOnDeviceInteraction;
 			PlayerDeath.OnPlayerDead += HandleOnPlayerDead;
-			
-		}
+			DeviceInteractor.OnEnter += HandleOnDeviceEnter;
+			DeviceInteractor.OnExit += HandleOnDeviceExit;
+        }
 
         protected virtual void OnDisable()
         {
 			DeviceInteractor.OnInteraction -= HandleOnDeviceInteraction;
 			PlayerDeath.OnPlayerDead -= HandleOnPlayerDead;
+            DeviceInteractor.OnEnter -= HandleOnDeviceEnter;
+            DeviceInteractor.OnExit += HandleOnDeviceExit;
+        }
+
+		private void HandleOnDeviceEnter(DeviceInteractor deviceInteractor)
+		{
+			if (deviceInteractor == recharger)
+			{
+				noExit = true;
+			}
+		}
+
+        private void HandleOnDeviceExit(DeviceInteractor deviceInteractor)
+        {
+            if(deviceInteractor == recharger)
+			{
+				noExit = false;
+            }
         }
 
         private void HandleOnPlayerDead()
@@ -244,8 +265,7 @@ namespace TMM
 		{
 			if (!activated) return;
 
-			// Deactivate the device interactor back
-			deviceInteractor.SetEnable(true);
+			
 
 			// Kill any possible running tween
 			player.transform.DOKill();
@@ -270,7 +290,9 @@ namespace TMM
 					activateFlashlightOnExit = false;
 					flashlight.SetOn(true);
 				}
-			});
+                // Activate the device interactor back
+                deviceInteractor.SetEnable(true);
+            });
 
 			DoChildDeactivation();
 
