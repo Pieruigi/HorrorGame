@@ -14,6 +14,7 @@ namespace TMM
 
 		float timer = 0;
 
+		[SerializeField]
 		float timerDefault = 60;
 		
 		public float Timer

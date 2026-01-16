@@ -1156,6 +1156,10 @@ namespace TMM
 
 		}
 
+		public GameObject GetTileMainObject(int index)
+		{
+			return tiles[index].mainObject;
+		}
 		
 		public bool IsEnterTile(int index)
 		{

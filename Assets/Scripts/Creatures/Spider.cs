@@ -1,9 +1,8 @@
+using DG.Tweening;
 using StarterAssets;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace TMM
@@ -39,6 +38,21 @@ namespace TMM
 
         float modelUpDistance = 0.25f;
 
+        float minimumEight = 2.75f;
+
+        float lightTargetDistance = 6f;
+
+        float bobMax = .2f;
+
+        Animator animator;
+
+        float attackRange = 3f;
+
+        private void Awake()
+        {
+            animator = model.GetComponent<Animator>();
+        }
+
         // Start is called before the first frame update
         void Start()
 	    {
@@ -56,6 +70,9 @@ namespace TMM
 #endif
 
             currentTileIndex = GetNextTileIndex();
+            currentTileTransform = MazeBuilder.Instance.GetTileMainObject(currentTileIndex).transform;
+            SetState(SpiderState.Idle);
+
         }
 
 	    // Update is called once per frame
@@ -121,6 +138,7 @@ namespace TMM
 
         void UpdateIdleState()
         {
+            
             // Get tile to player direction
             var direction = playerController.transform.position - currentTileTransform.position;
             direction.y = 0; // Ignore height
@@ -134,17 +152,36 @@ namespace TMM
                 Vector3.right
             };
             var bestDir = cardDirs.OrderBy(d=>Vector3.Dot(d, direction)).ToList()[0];
-            bestDir *= -1;
-
-            Debug.Log("TEST - Spider - Best dir: " + bestDir);
-
-            //if (!flashlight.IsOn())
+            bool bestDirInverted = false;
+            if(!flashlight.IsOn() || !Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, lightTargetDistance, LayerMask.GetMask(new string[] { "FlashlightTarget" })))
             {
-                // Look at the player
-                Quaternion targetRotation = Quaternion.LookRotation(currentTileTransform.position + 20 * Vector3.up, bestDir);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f);
-
+                bestDir *= -1;
+                bestDirInverted = true;
             }
+                
+
+
+                Debug.Log("TEST - Spider - Best dir: " + bestDir);
+
+            // Look at the player
+            Quaternion targetRotation = Quaternion.LookRotation(Vector3.up, bestDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f);
+
+            // Check player distance
+            if(bestDirInverted && direction.magnitude < attackRange)
+            {
+                
+                if(cardDirs.OrderBy(d => Vector3.Dot(d, transform.up)).ToList()[0] == -bestDir)
+                {
+                    // Attack the player
+                    //Debug.Log("TEST - Spider - Attack!:" + cardDirs.OrderBy(d => Vector3.Dot(d, transform.up)).ToList()[0]);
+                    SetState(SpiderState.Attack);
+                }
+                
+                
+                return;
+            }
+
 
             //transform.LookAt(transform.position+Vector3.up, Vector3.right);
         }
@@ -152,13 +189,91 @@ namespace TMM
         void EnterIdleState()
         {
             StopAllCoroutines();
+            model.transform.DOKill();
+
+            model.SetActive(true);
 
             // Move the spider to the current tile
-            transform.position = currentTileTransform.position + Vector3.up * 4;
+            transform.position = currentTileTransform.position + Vector3.up * minimumEight;
             // Set spider orientation
             transform.eulerAngles = Vector3.right * 90f;
 
             model.transform.localPosition = Vector3.up * modelUpDistance;
+
+            animator.SetTrigger("Idle");
+            animator.SetFloat("Direction", 1);
+
+            // Slightly move up and down
+            SpiderBob(Random.Range(bobMax * .8f, bobMax));
+        }
+
+        void EnterAttackState()
+        {
+            StopAllCoroutines();
+            model.transform.DOKill();
+
+            // Move spider model back in position
+            model.transform.DOLocalMove(Vector3.zero, .2f);
+
+            // Jump to the player
+            float time = .25f;
+            float distance = .5f;
+            var jumpPos = Camera.main.transform.position + Camera.main.transform.forward * distance * 1.5f;
+            var seq = transform.DOJump(jumpPos, 1, 1, time);
+            seq.Join(transform.DORotateQuaternion(Quaternion.LookRotation(Camera.main.transform.up, Camera.main.transform.forward), time));
+            seq.AppendCallback(() =>
+            {
+                transform.parent = Camera.main.transform;
+                transform.position = Camera.main.transform.position + Camera.main.transform.forward * distance;
+                transform.rotation = Quaternion.LookRotation(Camera.main.transform.up, Camera.main.transform.forward);
+
+                // Apply debuff to player
+                PlayerDeaf.Instance.Apply();
+
+                StartCoroutine(SetHiddenDelayed(1f));
+            });
+
+           
+        }
+
+        IEnumerator SetHiddenDelayed(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            transform.parent = null;
+            float time = .5f;
+            Vector3 position = Camera.main.transform.position + Camera.main.transform.forward * 8f;// + Vector3.up * 7f;
+            var seq = transform.DOJump(position, 1, 1, time);
+            //seq.Join(transform.DOLocalRotate(Vector3.right * 90, time));
+            //seq.Join(model.transform.DOLocalMoveZ(modelUpDistance, time));
+            seq.AppendCallback(() =>
+            {
+                SetState(SpiderState.Hidden);
+            });
+        }
+
+        void EnterHiddenState()
+        {
+            model.SetActive(false);
+
+            StartCoroutine(SetIdleDelayed(6));
+        }
+
+        IEnumerator SetIdleDelayed(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            //currentTileIndex = GetNextTileIndex();
+            //currentTileTransform = MazeBuilder.Instance.GetTileMainObject(currentTileIndex).transform;
+            SetState(SpiderState.Idle);
+        }
+
+        void SpiderBob(float destination)
+        {
+            model.transform.DOLocalMoveZ(destination, Random.Range(.5f, 0.75f)).SetEase(Ease.InOutSine).OnComplete(() => 
+            {
+                float sign = Mathf.Sign(-destination);
+                animator.SetFloat("Direction", sign);
+                SpiderBob(sign * Random.Range(bobMax * .8f, bobMax));
+            });
         }
 
         void SetState(SpiderState newState)
@@ -171,6 +286,12 @@ namespace TMM
             {
                 case SpiderState.Idle:
                     EnterIdleState();
+                    break;
+                case SpiderState.Attack:
+                    EnterAttackState();
+                    break;
+                case SpiderState.Hidden:
+                    EnterHiddenState();
                     break;
             }
 
