@@ -1208,6 +1208,18 @@ namespace TMM
 		{
 			return blocks[index].data.blockType;
 		}
+
+		public List<int> GetTileWithLightIndices()
+		{
+			List<int> ret = new List<int>();
+			foreach(var tile in tiles)
+			{
+				if(tile.light != null)
+					ret.Add(tiles.IndexOf(tile));
+                
+            }
+			return ret;
+        }
 		
 		public int GetClosestWalkableTileIndex(Vector3 position)
 		{

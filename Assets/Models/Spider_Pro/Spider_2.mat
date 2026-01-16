@@ -104,7 +104,7 @@ Material:
     m_Ints:
     - _ColorBitDepth: 64
     - _ResolutionLimit: 256
-    - _SnapsPerUnit: 128
+    - _SnapsPerUnit: 64
     m_Floats:
     - _AddPrecomputedVelocity: 0
     - _AffineTextureStrength: 0.032
