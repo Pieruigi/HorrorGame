@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace TMM
 {
-    public enum SpiderState {Hidden, Idle, ChangingTile, Attack }
+    public enum SpiderState {Hidden, Idle, ChangeTile, Attack }
 
 	public class Spider : MonoBehaviour
 	{
@@ -48,6 +48,8 @@ namespace TMM
 
         float attackRange = 3f;
 
+        CameraShake cameraShake;
+
         private void Awake()
         {
             animator = model.GetComponent<Animator>();
@@ -61,6 +63,7 @@ namespace TMM
             {
                 playerController = FindFirstObjectByType<FirstPersonController>();
                 flashlight = FindFirstObjectByType<Flashlight>();
+                cameraShake = FindFirstObjectByType<CameraShake>(); 
                 currentTileIndex = 0;
                 currentTileTransform = _testTile;
                 SetState(SpiderState.Idle);
@@ -95,6 +98,7 @@ namespace TMM
         {
             flashlight = FindFirstObjectByType<Flashlight>();   
             playerController = FindFirstObjectByType<FirstPersonController>();
+            cameraShake = FindFirstObjectByType<CameraShake>();
 
             tileIndices = MazeBuilder.Instance.GetTileWithLightIndices();
         }
@@ -205,6 +209,41 @@ namespace TMM
 
             // Slightly move up and down
             SpiderBob(Random.Range(bobMax * .8f, bobMax));
+
+            StartCoroutine(ChangeTileDelayed(20f));
+        }
+
+        IEnumerator ChangeTileDelayed(float timer)
+        {
+            yield return new WaitForSeconds(timer);
+
+            if(state == SpiderState.Idle)
+            {
+                SetState(SpiderState.ChangeTile);
+            }
+        }
+
+        void EnterChangeTile()
+        {
+            StopAllCoroutines();
+            transform.DOKill();
+            // Climb wall
+            transform.DOMoveY(minimumEight * 10, 2).SetEase(Ease.InSine).OnComplete(() => 
+            {
+                currentTileIndex = GetNextTileIndex();
+                currentTileTransform = MazeBuilder.Instance.GetTileMainObject(currentTileIndex).transform;
+                // Move to new tile
+                transform.position = currentTileTransform.position + Vector3.up * minimumEight * 10;
+                // Descend wall
+                transform.DOMoveY(minimumEight, 2).SetEase(Ease.OutSine).OnComplete(() =>
+                {
+                    SetState(SpiderState.Idle);
+                });
+            });
+
+
+
+           
         }
 
         void EnterAttackState()
@@ -214,6 +253,8 @@ namespace TMM
 
             // Move spider model back in position
             model.transform.DOLocalMove(Vector3.zero, .2f);
+
+            
 
             // Jump to the player
             float time = .25f;
@@ -228,7 +269,9 @@ namespace TMM
                 transform.rotation = Quaternion.LookRotation(Camera.main.transform.up, Camera.main.transform.forward);
 
                 // Apply debuff to player
-                PlayerDeaf.Instance.Apply();
+                PlayerDeafDebuff.Instance.Apply();
+
+                cameraShake.PlayLetterboxJumpScare();
 
                 StartCoroutine(SetHiddenDelayed(1f));
             });
@@ -253,6 +296,7 @@ namespace TMM
 
         void EnterHiddenState()
         {
+            StopAllCoroutines();
             model.SetActive(false);
 
             StartCoroutine(SetIdleDelayed(6));
@@ -292,6 +336,9 @@ namespace TMM
                     break;
                 case SpiderState.Hidden:
                     EnterHiddenState();
+                    break;
+                case SpiderState.ChangeTile:
+                    EnterChangeTile();
                     break;
             }
 

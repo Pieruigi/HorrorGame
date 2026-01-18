@@ -50,7 +50,8 @@ namespace TMM
             get
             {
                 var v = PlayerPrefs.GetInt("Volume", VolumeOptionDefault);
-                return Mathf.Log10((float)v / 100f) * 20f;
+                return Mathf.Log10((float)v / 10000f) * 20f;
+                
             }
         }
 

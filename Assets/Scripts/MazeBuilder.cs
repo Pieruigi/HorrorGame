@@ -121,6 +121,9 @@ namespace TMM
 		[SerializeField]
 		GameObject coinPickerPrefab;
 
+		[SerializeField]
+		GameObject spiderPrefab;
+
 		int wallMax = 17; // 14
 
 		[SerializeField]
@@ -372,9 +375,20 @@ namespace TMM
 
 		void SpawnMonster()
 		{
-			//return;
+			
+
+
 			int stage = GameManager.Instance.GameStage;
-			int creatureCount = 1;
+
+            // Spawn spider if stage >= 2
+			if(stage >= 2)
+			{
+				var spider = Instantiate(spiderPrefab);
+
+            }
+
+            // Spawn clowns
+            int creatureCount = 1;
 			if (stage >= doubleCreatureStage)
 			{
 				creatureCount++;
