@@ -37,7 +37,7 @@ namespace TMM
 		// Update is called once per frame
 		void Update()
 		{
-			if (clownA.State == ClownAState.Chase || clownA.State == ClownAState.Search || clownB?.State == ClownBState.Chase)// && creature.IsPlayerTarget())
+			if (clownA?.State == ClownAState.Chase || clownA?.State == ClownAState.Search || clownB?.State == ClownBState.Chase)// && creature.IsPlayerTarget())
 			{
 
 				//if (!chaseAudioSource.isPlaying) chaseAudioSource.Play();

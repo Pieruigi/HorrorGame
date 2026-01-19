@@ -50,6 +50,8 @@ namespace TMM
 
         CameraShake cameraShake;
 
+        Transform cameraTarget;
+
         private void Awake()
         {
             animator = model.GetComponent<Animator>();
@@ -63,7 +65,8 @@ namespace TMM
             {
                 playerController = FindFirstObjectByType<FirstPersonController>();
                 flashlight = FindFirstObjectByType<Flashlight>();
-                cameraShake = FindFirstObjectByType<CameraShake>(); 
+                cameraShake = FindFirstObjectByType<CameraShake>();
+                cameraTarget = playerController.transform.Find("PlayerCameraRoot");
                 currentTileIndex = 0;
                 currentTileTransform = _testTile;
                 SetState(SpiderState.Idle);
@@ -99,7 +102,7 @@ namespace TMM
             flashlight = FindFirstObjectByType<Flashlight>();   
             playerController = FindFirstObjectByType<FirstPersonController>();
             cameraShake = FindFirstObjectByType<CameraShake>();
-
+            cameraTarget = playerController.transform.Find("PlayerCameraRoot");
             tileIndices = MazeBuilder.Instance.GetTileWithLightIndices();
         }
 
@@ -210,7 +213,7 @@ namespace TMM
             // Slightly move up and down
             SpiderBob(Random.Range(bobMax * .8f, bobMax));
 
-            StartCoroutine(ChangeTileDelayed(20f));
+            StartCoroutine(ChangeTileDelayed(200000f));
         }
 
         IEnumerator ChangeTileDelayed(float timer)
@@ -255,18 +258,19 @@ namespace TMM
             model.transform.DOLocalMove(Vector3.zero, .2f);
 
             
-
+            Debug.Log("TEST - Spider - CameraTarget:"+cameraTarget);
             // Jump to the player
             float time = .25f;
             float distance = .5f;
-            var jumpPos = Camera.main.transform.position + Camera.main.transform.forward * distance * 1.5f;
+            var jumpPos = cameraTarget.position + cameraTarget.forward * distance *1.5f;// Camera.main.transform.position + Camera.main.transform.forward * distance * 1.5f;
             var seq = transform.DOJump(jumpPos, 1, 1, time);
-            seq.Join(transform.DORotateQuaternion(Quaternion.LookRotation(Camera.main.transform.up, Camera.main.transform.forward), time));
+            //seq.Join(transform.DORotateQuaternion(Quaternion.LookRotation(Camera.main.transform.up, Camera.main.transform.forward), time));
+            seq.Join(transform.DORotateQuaternion(Quaternion.LookRotation(cameraTarget.up, cameraTarget.forward), time));
             seq.AppendCallback(() =>
             {
-                transform.parent = Camera.main.transform;
-                transform.position = Camera.main.transform.position + Camera.main.transform.forward * distance;
-                transform.rotation = Quaternion.LookRotation(Camera.main.transform.up, Camera.main.transform.forward);
+                transform.parent = cameraTarget;// Camera.main.transform;
+                transform.position = cameraTarget.position + cameraTarget.forward * distance;//  Camera.main.transform.position + Camera.main.transform.forward * distance;
+                transform.rotation = Quaternion.LookRotation(cameraTarget.up, cameraTarget.forward);
 
                 // Apply debuff to player
                 PlayerDeafDebuff.Instance.Apply();
