@@ -38,7 +38,7 @@ namespace TMM
         {
             mixer.SetFloat("FXVolume", -80f);
             mixer.SetFloat("DeafVolume", 0f);
-            jumpSource.Play();
+            //jumpSource.Play();
             deafSource.Play();
         }
 

@@ -271,6 +271,8 @@ namespace TMM
                 // Apply debuff to player
                 PlayerDeafDebuff.Instance.Apply();
 
+                JumpscareManager.Instance.PlayAudio();
+
                 cameraShake.PlayLetterboxJumpScare();
 
                 StartCoroutine(SetHiddenDelayed(1f));
