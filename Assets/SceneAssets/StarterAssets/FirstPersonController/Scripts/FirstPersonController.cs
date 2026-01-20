@@ -5,6 +5,8 @@ using TMM;
 using TMM.Interfaces;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -17,6 +19,7 @@ namespace StarterAssets
 #endif
 	public class FirstPersonController : MonoBehaviour
 	{
+		public static UnityAction OnOutOfBreath;
 
 		public const float InteractionDistance = 1.5f;
 
@@ -370,7 +373,7 @@ namespace StarterAssets
 			if (_input.sprint)
 			{
 				// Check stamina
-				if (stamina > 0)
+				if (stamina > 0 && !OutOfBreathDebuff.Instance.Value)
 				{
 					staminaRecheargeDelay = staminaRecheargeDelayMax;
 					stamina -= staminaDepleteSpeed * Time.deltaTime;
@@ -378,6 +381,9 @@ namespace StarterAssets
 				}
 				else
 				{
+					if (OutOfBreathDebuff.Instance.Value)
+						OnOutOfBreath?.Invoke();
+					
 					_input.sprint = false;
 				}
 			}

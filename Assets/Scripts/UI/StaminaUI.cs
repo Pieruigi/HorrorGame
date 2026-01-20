@@ -33,6 +33,8 @@ namespace TMM.UI
 
 		bool visible = false;
 
+		Color fillColor;
+
         void Awake()
         {
 			maxWidth = fillImage.rectTransform.rect.width;
@@ -40,6 +42,7 @@ namespace TMM.UI
 			player = FindFirstObjectByType<FirstPersonController>();
 			lastStamina = player.Stamina;
 			canvasGroup.alpha = 0;
+			fillColor = fillImage.color;
         }
 
         // Start is called before the first frame update
@@ -112,6 +115,15 @@ namespace TMM.UI
         {
 			gaspAudioSource.clip = gaspClips[Random.Range(0, gaspClips.Count)];
 			gaspAudioSource.Play();
+        }
+
+		public void Shake()
+		{
+			canvasGroup.alpha = 1;
+			fillImage.color = Color.red;
+            panel.transform.DOKill();
+			panel.transform.DOShakePosition(.5f, 5, 10, 90, false, true).OnComplete(() => { canvasGroup.alpha = 0; fillImage.color = fillColor; });
+
         }
     }
 }

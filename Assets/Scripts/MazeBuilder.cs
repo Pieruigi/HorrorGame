@@ -1,10 +1,11 @@
 //#define USE_HELPERS
 #define USE_WEIGHT
+using StarterAssets;
 using System.Collections.Generic;
 using System.Linq;
-using StarterAssets;
 using TMM.Scriptables;
 using Unity.AI.Navigation;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -266,8 +267,24 @@ namespace TMM
 		
 			}
 
+            // First we add one trigger per type
+			foreach(var t in all)
+			{
+                // Choose a random tile
+                var tile = floors[Random.Range(0, floors.Count)];
 
-			bool noRoom = false;
+                // Remove current tile and closest ones
+                floors.RemoveAll(t => t == tile || Vector3.Distance(t.coords, tile.coords) < 3);
+
+                // Add the asset
+                tile.asset = t;
+
+                // Decrease counter
+                count--;
+            }
+
+            // Fill remaining using weighted random
+            bool noRoom = false;
 			while(count > 0 && noRoom == false)
 			{
 				// Choose a random tile

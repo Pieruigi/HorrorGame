@@ -11,7 +11,7 @@ namespace TMM
 	public class GameManager : SingletonPersistent<GameManager>
 	{
 #if UNITY_EDITOR
-		int gameStage = 2;
+		int gameStage = 4;
 #else
 		int gameStage = 1;
 #endif

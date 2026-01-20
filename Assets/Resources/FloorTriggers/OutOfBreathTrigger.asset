@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fc4ccf10307f334a8f14ce8941a8411, type: 3}
-  m_Name: PiggyTrigger
+  m_Name: OutOfBreathTrigger
   m_EditorClassIdentifier: 
-  prefab: {fileID: 6259704979334576125, guid: 42ebcea8432a5d14da7e61abdc14ba6c, type: 3}
-  minStage: 4
-  weight: 30
+  prefab: {fileID: 6216882736516585802, guid: b88b402eca5b6d84987a148d81e5259c, type: 3}
+  minStage: 3
+  weight: 60

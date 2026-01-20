@@ -311,8 +311,8 @@ namespace TMM
         IEnumerator SetIdleDelayed(float delay)
         {
             yield return new WaitForSeconds(delay);
-            //currentTileIndex = GetNextTileIndex();
-            //currentTileTransform = MazeBuilder.Instance.GetTileMainObject(currentTileIndex).transform;
+            currentTileIndex = GetNextTileIndex();
+            currentTileTransform = MazeBuilder.Instance.GetTileMainObject(currentTileIndex).transform;
             SetState(SpiderState.Idle);
         }
 
