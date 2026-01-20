@@ -15,6 +15,12 @@ namespace TMM
         [SerializeField]
         AudioSource breathAudioSource;
 
+        [SerializeField]
+        List<GameObject> syringes;
+
+        [SerializeField]
+        AudioSource slipAudioSource;
+
         
         Vignette vignette;
 
@@ -23,6 +29,19 @@ namespace TMM
         float maxIntensity = .75f;
 
         StaminaUI staminaUI;
+
+        List<Vector3> originalPositions = new List<Vector3>();
+        List<Quaternion> originalRotations = new List<Quaternion>();
+
+        private void Awake()
+        {
+            foreach(var s in syringes)
+            {
+                originalPositions.Add(s.transform.localPosition);
+                originalRotations.Add(s.transform.localRotation);
+                s.gameObject.SetActive(false);
+            }
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -78,6 +97,9 @@ namespace TMM
 
             // Play sound
             breathAudioSource.Play();
+
+            // Activate syringes
+            StartCoroutine(ActivateSyringes());
         }
 
         private void OnBuffExpired(TimedBuffDebuff arg0)
@@ -90,6 +112,39 @@ namespace TMM
 
             // Stop sound
             breathAudioSource.Stop();
+        }
+
+        IEnumerator ActivateSyringes()
+        { 
+            foreach(var s in syringes)
+            {
+                s.transform.parent = Camera.main.transform;
+                s.transform.localPosition = originalPositions[syringes.IndexOf(s)] + Vector3.up * .5f;
+                s.transform.localRotation = originalRotations[syringes.IndexOf(s)];
+
+                s.transform.DOLocalMove(originalPositions[syringes.IndexOf(s)], .25f).SetEase(Ease.OutBack).OnComplete(() => 
+                {
+                    
+                });
+                s.transform.DOShakeRotation(.5f, new Vector3(15f, 15f, 15f), 10, 90f).OnComplete(() => 
+                {
+                    s.transform.DOLocalMove(originalPositions[syringes.IndexOf(s)] - Vector3.up*.5f, .5f).SetEase(Ease.InSine);
+                });
+
+                s.SetActive(true);
+
+            }
+
+            slipAudioSource.Play();
+
+            yield return new WaitForSeconds(1.1f);
+
+
+            foreach (var s in syringes)
+            {
+
+                s.SetActive(false);
+            }
         }
     }
 }
