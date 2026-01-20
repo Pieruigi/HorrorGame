@@ -125,7 +125,7 @@ namespace TMM
 		[SerializeField]
 		GameObject spiderPrefab;
 
-		int wallMax = 17; // 14
+		int wallMax = 21;////17; // 14
 
 		[SerializeField]
 		List<Tile> tiles = new List<Tile>();
@@ -214,14 +214,14 @@ namespace TMM
 			float mul = .05f;
 			int stage = GameManager.Instance.GameStage;
 			// Increase pressure plates when stage increases
-			if (stage >= doubleCreatureStage && stage < tripleCreatureStage)
-			{
-				mul = 0.06f;
-			}
-			else if (stage >= tripleCreatureStage)
-			{
-				mul = 0.07f;
-			}
+			//if (stage >= doubleCreatureStage && stage < tripleCreatureStage)
+			//{
+			//	mul = 0.06f;
+			//}
+			//else if (stage >= tripleCreatureStage)
+			//{
+			//	mul = 0.07f;
+			//}
 
 			int count = Mathf.CeilToInt((float)mul * (float)tileCount); // Max number of pressure plates to add
 

@@ -68,6 +68,7 @@ namespace TMM.AI
 		[SerializeField]
 		float idleTimer = 3;
 		float currentTimer;
+		float idleTimerDefault;
 
 		[SerializeField]
 		float searchTimer = 2;
@@ -109,15 +110,16 @@ namespace TMM.AI
 		protected virtual void Awake()
 		{
 			agent = GetComponent<NavMeshAgent>();
+			idleTimerDefault = idleTimer;
 
 #if UNITY_EDITOR
-			// walkSpeed *= 0.75f; // Max 1.75
-			// runSpeed *= 0.75f; // Max 1.75
+            // walkSpeed *= 0.75f; // Max 1.75
+            // runSpeed *= 0.75f; // Max 1.75
 
-			//idleTimer = 30000;
+            //idleTimer = 30000;
 #endif
 
-			InitByStage();
+            InitByStage();
 
 		}
 
@@ -148,7 +150,29 @@ namespace TMM.AI
 
 		}
 
-		void InitByStage()
+        private void OnEnable()
+        {
+			MiniGame.OnStartPlaying += HandleOnMiniGameStartPlaying;
+			MiniGame.OnStopPlaying += HandleOnMiniGameStopPlaying;
+        }
+
+        private void OnDisable()
+        {
+            MiniGame.OnStartPlaying -= HandleOnMiniGameStartPlaying;
+			MiniGame.OnStopPlaying -= HandleOnMiniGameStopPlaying;
+        }
+
+        private void HandleOnMiniGameStartPlaying()
+        {
+            //idleTimer = idleTimerDefault * 2;
+        }
+
+        private void HandleOnMiniGameStopPlaying()
+        {
+            //idleTimer = idleTimerDefault;
+        }
+
+        void InitByStage()
 		{
 		
 			//switch (GameManager.Instance.GameStage)

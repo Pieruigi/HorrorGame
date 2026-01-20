@@ -202,8 +202,8 @@ MonoBehaviour:
   smellRange: 4
   attackRange: 1
   attackAngle: 60
-  idleTimer: 5
-  searchTimer: 5
+  idleTimer: 8
+  searchTimer: 3
   playerDeadTarget: {fileID: 6327229666058265861}
 --- !u!114 &4694489374838300666
 MonoBehaviour:

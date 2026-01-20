@@ -379,7 +379,7 @@ namespace TMM
             StopAllCoroutines();
             model.SetActive(false);
 
-            StartCoroutine(SetIdleDelayed(6));
+            StartCoroutine(SetIdleDelayed(20));
         }
 
         IEnumerator SetIdleDelayed(float delay)

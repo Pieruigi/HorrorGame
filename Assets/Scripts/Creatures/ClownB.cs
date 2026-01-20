@@ -31,7 +31,7 @@ namespace TMM
 
 		ClownAttacker attacker;
 
-		float checkIdleTime = 10f;
+		float checkIdleTime = 20f;
 
 		float playerDistance = 4; // Number of tiles
 

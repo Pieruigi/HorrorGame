@@ -4,6 +4,7 @@ using DG.Tweening.Core.Easing;
 using StarterAssets;
 using TMM.UI;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal.Internal;
 
 
@@ -14,7 +15,10 @@ namespace TMM
 		public delegate void MiniGameBeatenDelegate(MiniGame miniGame);
 		public static MiniGameBeatenDelegate OnMiniGameBeaten;
 
-		[SerializeField]
+		public static UnityAction OnStartPlaying;
+        public static UnityAction OnStopPlaying;
+
+        [SerializeField]
 		Transform playerTarget;
 
 		[SerializeField]
@@ -259,7 +263,9 @@ namespace TMM
 			seq.OnComplete(() => { activated = true; if (activateDot) DotCanvas.Instance.Show(); });
 
 			DoChildActivation();
-		}
+
+			OnStartPlaying?.Invoke();
+        }
 
 		public void Deactivate()
 		{
@@ -296,7 +302,9 @@ namespace TMM
 
 			DoChildDeactivation();
 
-		}
+			OnStopPlaying?.Invoke();
+
+        }
 
 		public virtual void DoChildActivation()
 		{
