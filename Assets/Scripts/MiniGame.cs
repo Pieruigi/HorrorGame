@@ -3,6 +3,7 @@ using StarterAssets;
 using TMM.UI;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 
 
@@ -85,14 +86,14 @@ namespace TMM
 		CanvasGroup ruleCanvasGroup;
 
 		bool noExit = false;
+
+		bool stopTimer = false;
 	
 
 
 		protected virtual void Awake()
         {
-			timer = 45 - (GameManager.Instance.GameStage - 1) * 5f;
 			
-            timeLeft = timer;
 			mainCanvas.worldCamera = Camera.main;
 			mainCanvas.planeDistance = .1f;
 			
@@ -101,7 +102,9 @@ namespace TMM
 	    // Start is called before the first frame update
 	    protected virtual void Start()
 	    {
-			player = FindFirstObjectByType<FirstPersonController>();
+            timer = 45 - (GameManager.Instance.GameStage - 1) * 5f;
+            timeLeft = timer;
+            player = FindFirstObjectByType<FirstPersonController>();
 			//cameraRoot = player.GetComponent<CameraShake>().transform;
 			flashlight = player.transform.parent.GetComponentInChildren<Flashlight>();
 			wall = transform.Find("Wall").gameObject;
@@ -135,7 +138,9 @@ namespace TMM
 					return;
 				}
 
-				timeLeft -= Time.deltaTime;
+				if(!stopTimer)
+					timeLeft -= Time.deltaTime;
+				
 				if (timeLeft < 0)
 				{
 					timeLeft = 0;
@@ -168,7 +173,22 @@ namespace TMM
            
 		}
 
-		protected virtual void OnEnable()
+        private void LateUpdate()
+        {
+			if (IsActive)
+			{
+                // Stop timer when player is looking away
+				// Get looking direction 
+				var lookDir = Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up).normalized;
+				// Get angle between looking direction and this object forward axis
+				var angle = Vector3.Angle(lookDir, transform.forward);
+
+				stopTimer = angle > 60f;
+
+            }
+        }
+
+        protected virtual void OnEnable()
 		{
 			DeviceInteractor.OnInteraction += HandleOnDeviceInteraction;
 			PlayerDeath.OnPlayerDead += HandleOnPlayerDead;
@@ -237,10 +257,11 @@ namespace TMM
 				flashlight.SetOn(false);
 				activateFlashlightOnExit = true;
             }
-				
+			
+			stopTimer = false;
 
-			// Deactivate the device interactor
-			deviceInteractor.SetEnable(false);
+            // Deactivate the device interactor
+            deviceInteractor.SetEnable(false);
 
 			// Kill any possible running tween
 			player.transform.DOKill();
@@ -254,13 +275,16 @@ namespace TMM
 			lastPlayerPosition = player.transform.position;
 			lastPlayerRotation = player.transform.rotation;
 
-			// Move the controller to the target position
-			Sequence seq = DOTween.Sequence();
+			CharacterController cc = player.GetComponent<CharacterController>();
+			cc.enabled = false;	
+
+            // Move the controller to the target position
+            Sequence seq = DOTween.Sequence();
 			seq.Append(player.transform.DOMove(playerTarget.position, moveTime));
 			seq.Join(player.transform.DORotateQuaternion(playerTarget.rotation, moveTime));
 			seq.Join(wall.transform.DOLocalMoveY(wallHeightDefault * 5f, moveTime));
 			seq.Join(ruleCanvasGroup.DOFade(1, moveTime));
-			seq.OnComplete(() => { activated = true; if (activateDot) DotCanvas.Instance.Show(); });
+			seq.OnComplete(() => { activated = true; if (activateDot) DotCanvas.Instance.Show(); player.transform.position = playerTarget.position; player.transform.rotation = playerTarget.rotation; cc.enabled = true; });
 
 			DoChildActivation();
 
@@ -271,10 +295,10 @@ namespace TMM
 		{
 			if (!activated) return;
 
-			
+			stopTimer = false;
 
-			// Kill any possible running tween
-			player.transform.DOKill();
+            // Kill any possible running tween
+            player.transform.DOKill();
 			wall.transform.DOKill();
 			ruleCanvasGroup.DOKill();
 
@@ -282,7 +306,10 @@ namespace TMM
 
 			if (activateDot) DotCanvas.Instance.Hide();
 
-			Sequence seq = DOTween.Sequence();
+            CharacterController cc = player.GetComponent<CharacterController>();
+            cc.enabled = false;
+
+            Sequence seq = DOTween.Sequence();
 			seq.Append(player.transform.DOMove(lastPlayerPosition, moveTime));
 			seq.Join(player.transform.DORotateQuaternion(lastPlayerRotation, moveTime));
 			if(!beaten)
@@ -298,6 +325,7 @@ namespace TMM
 				}
                 // Activate the device interactor back
                 deviceInteractor.SetEnable(true);
+				cc.enabled = true;
             });
 
 			DoChildDeactivation();

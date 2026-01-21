@@ -178,18 +178,21 @@ namespace TMM
                 
                 KillSpiderBob();
                 float moveSpeed = 5f;
-                transform.position += Vector3.up * moveSpeed * Time.deltaTime;
+                //transform.position += Vector3.up * moveSpeed * Time.deltaTime;
+                transform.position = Vector3.MoveTowards(transform.position, transform.position + Vector3.up, moveSpeed * Time.deltaTime);
             }
             else
             {
                 float moveSpeed = 3f;
                 if(transform.position.y != minimumEight)
-                    transform.position -= Vector3.up * moveSpeed * Time.deltaTime;
+                    //transform.position -= Vector3.up * moveSpeed * Time.deltaTime;
+                    transform.position = Vector3.MoveTowards(transform.position, transform.position - Vector3.up, moveSpeed * Time.deltaTime);
 
-                if(transform.position.y < minimumEight)
+                if (transform.position.y < minimumEight)
                 {
                     transform.position = new Vector3(transform.position.x, minimumEight, transform.position.z);
-                    
+                    //transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, minimumEight, transform.position.z), moveSpeed * Time.deltaTime);
+
                     SpiderBob(Random.Range(bobMax * .8f, bobMax));
                 }
             }
