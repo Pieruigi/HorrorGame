@@ -43,10 +43,12 @@ namespace TMM
 		[SerializeField]
 		List<AudioClip> switchClips;
 
-		
+		int messageId = -1;
+
+
         void Awake()
         {
-		
+			messageId = deviceInteractor.MessageId;
         }
 
         // Start is called before the first frame update
@@ -154,7 +156,8 @@ namespace TMM
 		void InitDescription(bool disabled)
 		{
 			descriptionField.color = disabled ? enabledColor : disabledColor;
-		}
+			deviceInteractor.MessageId = disabled ? -1 : messageId;
+        }
 
 		// public void SetType(VendingMachineType type)
 		// {

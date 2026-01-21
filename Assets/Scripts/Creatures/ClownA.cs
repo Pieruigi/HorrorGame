@@ -105,12 +105,15 @@ namespace TMM.AI
 
 		FirstPersonController fpc;
 
+		float activeAlarmSpeedMul = 1f;//1.3f;
 
 
-		protected virtual void Awake()
+
+        protected virtual void Awake()
 		{
 			agent = GetComponent<NavMeshAgent>();
 			idleTimerDefault = idleTimer;
+		
 
 #if UNITY_EDITOR
             // walkSpeed *= 0.75f; // Max 1.75
@@ -152,17 +155,37 @@ namespace TMM.AI
 
         private void OnEnable()
         {
-			MiniGame.OnStartPlaying += HandleOnMiniGameStartPlaying;
+			AlarmManager.OnActivated += HandleOnAlarmActivated;
+			AlarmManager.OnDeactivated += HandleOnAlarmDeactivated;
+            MiniGame.OnStartPlaying += HandleOnMiniGameStartPlaying;
 			MiniGame.OnStopPlaying += HandleOnMiniGameStopPlaying;
         }
 
         private void OnDisable()
         {
+			AlarmManager.OnActivated -= HandleOnAlarmActivated;
+			AlarmManager.OnDeactivated -= HandleOnAlarmDeactivated;
             MiniGame.OnStartPlaying -= HandleOnMiniGameStartPlaying;
 			MiniGame.OnStopPlaying -= HandleOnMiniGameStopPlaying;
         }
 
-        private void HandleOnMiniGameStartPlaying()
+		private void HandleOnAlarmActivated()
+		{
+            if (state == ClownAState.Chase || state == ClownAState.Search)
+                agent.speed = runSpeed * activeAlarmSpeedMul;
+            
+        }
+
+		private void HandleOnAlarmDeactivated()
+		{
+			if (state == ClownAState.Chase || state == ClownAState.Search)
+				agent.speed = runSpeed;
+			else
+				agent.speed = walkSpeed;
+
+		}
+
+		private void HandleOnMiniGameStartPlaying()
         {
             //idleTimer = idleTimerDefault * 2;
         }
@@ -310,9 +333,10 @@ namespace TMM.AI
 		{
 			ResetPath();
 			if (agent.isStopped) agent.isStopped = false;
-			agent.speed = runSpeed;
-			// Kill any previous coroutine
-			StopAllCoroutines();
+			agent.speed = runSpeed * (AlarmManager.Instance.IsActive() ? activeAlarmSpeedMul : 1f);
+			
+            // Kill any previous coroutine
+            StopAllCoroutines();
 
 			// Start chasing player
 			StartCoroutine(DoChaseTarget());
@@ -328,8 +352,8 @@ namespace TMM.AI
 		protected virtual void EnterSearchState()
 		{
 			if (agent.isStopped) agent.isStopped = false;
-			agent.speed = runSpeed;
-			currentTimer = searchTimer;
+            agent.speed = runSpeed * (AlarmManager.Instance.IsActive() ? activeAlarmSpeedMul : 1f);
+            currentTimer = searchTimer;
 
 			StopAllCoroutines();
 			StartCoroutine(DoSearchForPlayer());
@@ -450,7 +474,6 @@ namespace TMM.AI
 
 			if (CanAttackPlayer())
 			{
-				Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 				SetState(ClownAState.Attack);
 				return;
 			}

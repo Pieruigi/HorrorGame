@@ -38,7 +38,7 @@ namespace TMM
 
         float modelUpDistance = 0.25f;
 
-        float minimumEight = 2.75f;
+        float minimumEight = 2.5f;
 
         float lightTargetDistance = 10f;
 
@@ -46,7 +46,7 @@ namespace TMM
 
         Animator animator;
 
-        float attackRange = 3f;
+        float attackRange = 1.75f;
 
         CameraShake cameraShake;
 
@@ -54,6 +54,7 @@ namespace TMM
 
         Tween bobTween;
 
+      
         private void Awake()
         {
             animator = model.GetComponent<Animator>();
@@ -105,7 +106,7 @@ namespace TMM
             playerController = FindFirstObjectByType<FirstPersonController>();
             cameraShake = FindFirstObjectByType<CameraShake>();
             cameraTarget = playerController.transform.Find("PlayerCameraRoot");
-            tileIndices = MazeBuilder.Instance.GetTileWithLightIndices();
+            tileIndices = MazeBuilder.Instance.GetTileWithPillarIndices();
         }
 
         int GetNextTileIndex()
@@ -287,7 +288,7 @@ namespace TMM
             // Slightly move up and down
             SpiderBob(Random.Range(bobMax * .8f, bobMax));
 
-            StartCoroutine(ChangeTileDelayed(20f));
+            StartCoroutine(ChangeTileDelayed(60f));
         }
 
         IEnumerator ChangeTileDelayed(float timer)
@@ -312,15 +313,11 @@ namespace TMM
                 // Move to new tile
                 transform.position = currentTileTransform.position + Vector3.up * minimumEight * 10;
                 // Descend wall
-                transform.DOMoveY(minimumEight, 2).SetEase(Ease.OutSine).OnComplete(() =>
+                transform.DOMoveY(minimumEight, 2).SetEase(Ease.OutSine).SetDelay(1).OnComplete(() =>
                 {
                     SetState(SpiderState.Idle);
                 });
             });
-
-
-
-           
         }
 
         void EnterAttackState()
@@ -379,7 +376,7 @@ namespace TMM
             StopAllCoroutines();
             model.SetActive(false);
 
-            StartCoroutine(SetIdleDelayed(20));
+            StartCoroutine(SetIdleDelayed(60)); // We only move to hidded state after attacking, so we can set idle after some time
         }
 
         IEnumerator SetIdleDelayed(float delay)

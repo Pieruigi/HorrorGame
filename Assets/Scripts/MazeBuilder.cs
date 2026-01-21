@@ -1,5 +1,6 @@
 //#define USE_HELPERS
 #define USE_WEIGHT
+using JetBrains.Annotations;
 using StarterAssets;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,8 @@ namespace TMM
 			public GameObject mainObject;
 
 			public Light light;
+
+			public bool hasPillar = false;
 
 			public CoinPicker coin;
 
@@ -318,7 +321,7 @@ namespace TMM
 			availables.RemoveAll(t => t == inTile || Vector3.Distance(t.coords, inTile.coords) < 3);
 			availables.RemoveAll(t => t == outTile || Vector3.Distance(t.coords, outTile.coords) < 3);
 
-			int maxCoins = Random.Range(1, 4);
+			int maxCoins = Random.Range(1, 3);
 			int count = 0;
 
 			while (availables.Count > 0 && count < maxCoins)
@@ -359,6 +362,7 @@ namespace TMM
 				var light = InstantiateObject(floorLightPrefab, tile.coords);
 
 				tile.light = light.GetComponentInChildren<Light>();
+				tile.hasPillar = true;
 
 				// Remove current tile and other too closed
 				availables.RemoveAll(t => t == tile || Vector2.Distance(t.coords, tile.coords) < 3);
@@ -1244,12 +1248,12 @@ namespace TMM
 			return blocks[index].data.blockType;
 		}
 
-		public List<int> GetTileWithLightIndices()
+		public List<int> GetTileWithPillarIndices()
 		{
 			List<int> ret = new List<int>();
 			foreach(var tile in tiles)
 			{
-				if(tile.light != null)
+				if(tile.hasPillar)
 					ret.Add(tiles.IndexOf(tile));
                 
             }
@@ -1268,6 +1272,13 @@ namespace TMM
 			
 			return tiles.IndexOf(tile);
 		}
+
+		public Vector2 PositionToCoords(Vector3 position)
+		{
+            position /= 2f;
+            var coords = new Vector2(Mathf.Round(position.x), Mathf.Round(position.z));
+			return coords;
+        }
 
 	}
 }

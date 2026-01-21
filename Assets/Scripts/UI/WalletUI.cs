@@ -1,7 +1,6 @@
+using DG.Tweening;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -18,13 +17,16 @@ namespace TMM.UI
 		[SerializeField]
 		bool keepVisible = false;
 
+		[SerializeField]
+		AudioSource notEnoughAudioSource;
+
 		bool visible = false;
 
 		float fadeTime = .1f;
 
 		bool busy = false;
 
-
+		Vector3 originalScale;
 
 		
         void Awake()
@@ -32,6 +34,7 @@ namespace TMM.UI
 			if(!keepVisible)
 				canvasGroup.alpha = 0;
 			
+			originalScale = balanceField.transform.localScale;
         }
 
         // Start is called before the first frame update
@@ -52,14 +55,30 @@ namespace TMM.UI
 		void OnEnable()
 		{
 			Wallet.OnBalanceUpdated += HandleOnBalanceUpdated;
+			Wallet.OnNotEnoughMoney += HandleOnNotEnoughMoney;
 		}
 
         void OnDisable()
         {
             Wallet.OnBalanceUpdated -= HandleOnBalanceUpdated;
+            Wallet.OnNotEnoughMoney -= HandleOnNotEnoughMoney;
         }
 
-		private void HandleOnBalanceUpdated(int amount)
+        private void HandleOnNotEnoughMoney()
+        {
+			
+            balanceField.DOKill();
+            Sequence seq = DOTween.Sequence();
+            seq.Append(canvasGroup.DOFade(1, fadeTime));
+            seq.Append(balanceField.transform.DOShakeScale(.5f).OnComplete(() => { balanceField.transform.localScale = originalScale; }));
+            seq.Join(balanceField.DOColor(Color.red, .25f).SetLoops(2, LoopType.Yoyo));
+            seq.Append(canvasGroup.DOFade(0, fadeTime));
+
+			notEnoughAudioSource.Play();
+
+        }
+
+        private void HandleOnBalanceUpdated(int amount)
 		{
 
 			PlayBalanceEffect(amount);
@@ -93,8 +112,7 @@ namespace TMM.UI
 
 		void PlayBalanceEffect(int amount)
 		{
-			Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-			var oldScale = balanceField.transform.localScale;
+			
 			var color = Color.yellow;
 			if (amount < 0)
 				color = Color.red;	
@@ -103,10 +121,12 @@ namespace TMM.UI
 			balanceField.DOKill();
 			Sequence seq = DOTween.Sequence();
 			seq.AppendInterval(fadeTime * 2);
-			seq.Append(balanceField.transform.DOShakeScale(.5f).OnComplete(() => { balanceField.transform.localScale = oldScale; }));
+			seq.Append(balanceField.transform.DOShakeScale(.5f).OnComplete(() => { balanceField.transform.localScale = originalScale; }));
 			seq.Join(balanceField.DOColor(color, .25f).SetLoops(2, LoopType.Yoyo));
 			//balanceField.text = Wallet.Instance.Balance.ToString("00");
 		}
+
+		
 		
 		IEnumerator UpdateBalanceDelayed(float delay)
 		{

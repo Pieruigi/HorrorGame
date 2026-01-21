@@ -1,11 +1,9 @@
-using System;
 using DG.Tweening;
-using DG.Tweening.Core.Easing;
 using StarterAssets;
 using TMM.UI;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering.Universal.Internal;
+
 
 
 namespace TMM
@@ -92,7 +90,9 @@ namespace TMM
 
 		protected virtual void Awake()
         {
-			timeLeft = timer;
+			timer = 45 - (GameManager.Instance.GameStage - 1) * 5f;
+			
+            timeLeft = timer;
 			mainCanvas.worldCamera = Camera.main;
 			mainCanvas.planeDistance = .1f;
 			
@@ -340,7 +340,7 @@ namespace TMM
 		
 		public void Recharge()
         {
-			timeLeft += timer / 3f;
+			timeLeft += 15;// timer / 3f;
         }
 	}
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 namespace TMM
@@ -10,6 +11,8 @@ namespace TMM
 	{
 		public delegate void BalanceUpdatedDelegate(int amount);
 		public static BalanceUpdatedDelegate OnBalanceUpdated;
+
+		public static UnityAction OnNotEnoughMoney;
 
 		[SerializeField]
 		AudioSource addCoinAudioSource;
@@ -68,7 +71,12 @@ namespace TMM
 
 		public bool TryUseCoins(int amount)
 		{
-			if (balance < amount) return false;
+			if (balance < amount)
+			{
+				OnNotEnoughMoney?.Invoke();
+                return false;
+            }
+			
 
 			balance -= amount;
 			removeCoinAudioSource.Play();

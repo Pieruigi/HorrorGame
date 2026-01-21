@@ -7,24 +7,25 @@ namespace TMM
 {
 	public class MiniGameManager : SingletonPersistent<MiniGameManager>
 	{
-		[System.Serializable]
-		public class SpawnedMiniGame
-        {
-			public MiniGameAsset asset;
+		//[System.Serializable]
+		//public class SpawnedMiniGame
+  //      {
+		//	public MiniGameAsset asset;
 
-			public int count = 0; // How many times we played this minigame since we launched the game
+		//	public int count = 0; // How many times we played this minigame since we launched the game
 
-			public SpawnedMiniGame(MiniGameAsset asset)
-            {
-				this.asset = asset;
-            }
-        }
+		//	public SpawnedMiniGame(MiniGameAsset asset)
+  //          {
+		//		this.asset = asset;
+  //          }
+  //      }
 
-		List<SpawnedMiniGame> spawnedMiniGames = new List<SpawnedMiniGame>();
+		//List<SpawnedMiniGame> spawnedMiniGames = new List<SpawnedMiniGame>();
 
 		List<MiniGameAsset> miniGames;
 
-		MiniGameAsset lastChosen;
+		//MiniGameAsset lastChosen;
+		List<MiniGameAsset> lastChosenAssets = new List<MiniGameAsset>();
 
         protected override void Awake()
         {
@@ -57,23 +58,24 @@ namespace TMM
 			LoadMiniGameFromResourcesAll();
 			var availables = miniGames.Where(m => (m.MinLevel < 0 || m.MinLevel <= level) && (m.MaxLevel < 0 || m.MaxLevel >= level)).ToList();
 
-			if (lastChosen)
-				availables.Remove(lastChosen);
-
-			lastChosen = availables[Random.Range(0, availables.Count)];
-			
+			foreach(var last in lastChosenAssets)
+				availables.Remove(last);
+        
+    
+			var lastChosen = availables[Random.Range(0, availables.Count)];
+			lastChosenAssets.Add(lastChosen);
 
 #if UNITY_EDITOR
-			//lastChosen = availables.Find(m => "memory".Equals(m.name.ToLower()));
+            //lastChosen = availables.Find(m => "memory".Equals(m.name.ToLower()));
 #endif
 
-			var smg = spawnedMiniGames.Find(m => m.asset == lastChosen);
-			if (smg == null)
-                spawnedMiniGames.Add(smg = new SpawnedMiniGame(lastChosen));
-           
-			smg.count++;
+            //var smg = spawnedMiniGames.Find(m => m.asset == lastChosen);
+            //if (smg == null)
+            //             spawnedMiniGames.Add(smg = new SpawnedMiniGame(lastChosen));
 
-			return lastChosen;
+            //smg.count++;
+
+            return lastChosen;
 
 		}
 		

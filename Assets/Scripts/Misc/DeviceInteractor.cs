@@ -31,8 +31,9 @@ namespace TMM
 
 		[SerializeField]
 		int messageId = -1;
+		public int MessageId { get { return messageId; } set { messageId = value; } }
 
-		bool inside = false;
+        bool inside = false;
 
 		bool lastShowMessage = false;
 
@@ -116,5 +117,9 @@ namespace TMM
 		{
 			interactionCollider = collider;
 		}
+
+		
+
+
     }
 }

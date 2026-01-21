@@ -31,7 +31,10 @@ namespace TMM
 		{
 			if(timer <= 0)
 			{
-				if (MapUI.Instance.IsOpen)
+                if (Input.GetKeyDown(KeyCode.Q))
+					MessageManager.Instance.ShowCustomMessage(5);
+
+                if (MapUI.Instance.IsOpen)
 					Close();
 				return;
 			}
@@ -79,6 +82,7 @@ namespace TMM
         void Open()
 		{
 			if (MapUI.Instance.IsOpen) return;
+
 
 			MapUI.Instance.Open();
 		}

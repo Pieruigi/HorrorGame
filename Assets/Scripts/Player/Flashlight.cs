@@ -40,10 +40,12 @@ namespace TMM
         // Start is called before the first frame update
         void Start()
 	    {
-            // if (!available || !isOn)
-            // {
+			// if (!available || !isOn)
+			// {
 			// 	_light.gameObject.SetActive(false);
-            // }
+			// }
+
+			SetOn(true);
 	    }
 
 		// Update is called once per frame

@@ -1,10 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
-using Mono.Cecil;
 using StarterAssets;
-using TMM.AI;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -60,6 +58,8 @@ namespace TMM
 
 		FirstPersonController playerController;
 
+		MiniGame miniGame;
+
 
 
         void Awake()
@@ -91,7 +91,22 @@ namespace TMM
 			UpdateState();
 		}
 
-		void UpdateState()
+        private void OnEnable()
+        {
+            MazeBuilder.OnMazeCreated += HandleOnMazeCreated;
+        }
+
+        private void OnDisable()
+        {
+            MazeBuilder.OnMazeCreated -= HandleOnMazeCreated;
+        }
+
+        private void HandleOnMazeCreated()
+        {
+            miniGame = FindFirstObjectByType<MiniGame>();
+        }
+
+        void UpdateState()
 		{
 			switch (state)
 			{
@@ -233,24 +248,68 @@ namespace TMM
 		
 		bool TryGetSpawnPosition(out Vector3 position)
 		{
+
 			position = Vector3.zero;
 
-            // Raycast to find a valid position
-			var origin = playerController.transform.position + Vector3.up;
-			var direction = playerController.transform.forward;
-			var distance = 4f;
-
-			if(!Physics.Raycast(origin, direction, distance))
+			if (!miniGame.IsActive)
 			{
-                position = origin + direction * distance;
-				position.y = 0;
-				return true;
+                // Raycast to find a valid position
+                var origin = playerController.transform.position + Vector3.up;
+                var direction = playerController.transform.forward;
+                var distance = 6f;
+
+                if (!Physics.Raycast(origin, direction, distance))
+                {
+                    position = origin + direction * distance;
+                    position.y = 0;
+                    return true;
+                }
+
+                return false;
             }
+			else
+			{
 				
+				float minDist = 6;
+				List<Vector2> validCoords = new List<Vector2>();
+                for (int i = 0; i < 3; i++)
+				{
+					var pos = playerController.transform.position;
 
+                    switch (i)
+					{
+						case 0: // Right
+                            pos += playerController.transform.right * minDist;
+							break;
+                        case 1: // Back
+                            pos -= playerController.transform.forward * minDist;
+                            break;
+                        case 2: // Left
+                            pos -= playerController.transform.right * minDist;
+                            break;
 
-            return false;
-        }
+                    }
+
+                    var coords = MazeBuilder.Instance.PositionToCoords(pos);
+					var type = MazeBuilder.Instance.GetTileType(coords);
+                    if(type == 0) // Walkable
+                        validCoords.Add(coords);
+                }
+
+				if(validCoords.Count > 0)
+				{
+					var coords = validCoords[Random.Range(0, validCoords.Count)];
+                    position = new Vector3(coords.x, 0, coords.y) * MazeBuilder.CellSize;
+					return true;
+                }
+
+                return false;
+            }
+
+                
+		}
+            
+        
 
         void EnterAttackState()
 		{

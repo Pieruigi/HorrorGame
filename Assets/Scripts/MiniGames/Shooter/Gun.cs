@@ -139,7 +139,7 @@ namespace TMM
 				transform.localRotation = Quaternion.identity;
 				gunRoot.SetActive(true);
 
-				transform.DOLocalMoveZ(.321f, moveTime).OnComplete(()=> { cooldown = 1f / rate; });
+				transform.DOLocalMoveZ(.321f, moveTime).OnComplete(()=> { cooldown = 0.1f;  /*1f / rate;*/ });
 				//transform.localPosition = Vector3.down * .136f + Vector3.forward * .321f;
 				
             }
