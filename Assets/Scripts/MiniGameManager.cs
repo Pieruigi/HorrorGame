@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMM.Scriptables;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TMM
 {
@@ -46,7 +47,26 @@ namespace TMM
 
 		}
 
-		void LoadMiniGameFromResourcesAll()
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+        {
+			if ("gamescene".Equals(arg0.name.ToLower()))
+			{
+				if (GameManager.Instance.GameStage == 1)
+					lastChosenAssets.Clear();
+            }
+        }
+
+        void LoadMiniGameFromResourcesAll()
 		{
 			if (miniGames != null) return;
             string theme = "Default";

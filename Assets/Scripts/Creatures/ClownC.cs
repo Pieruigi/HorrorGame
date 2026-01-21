@@ -192,8 +192,10 @@ namespace TMM
                
 
                 StartCoroutine(ChasePlayer());
-                Time.timeScale = 0;
-                
+#if UNITY_EDITOR
+                //Time.timeScale = 0;
+#endif
+
             }
             else
             {
