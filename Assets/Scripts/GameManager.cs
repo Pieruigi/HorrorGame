@@ -71,7 +71,12 @@ namespace TMM
 		public void RestartGame()
 		{
             gameStage = 1;
-            SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+		    SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+        }
+
+		public void YouLose()
+		{
+            SceneManager.LoadSceneAsync("LoserScene", LoadSceneMode.Single);
         }
 
         public void StartNextStage()

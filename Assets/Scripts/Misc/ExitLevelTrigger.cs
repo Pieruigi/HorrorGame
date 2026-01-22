@@ -39,13 +39,18 @@ namespace TMM
 
 			yield return new WaitForSeconds(2f);
 
-			//Time.timeScale = 0;
-			//_PrototypeMessage.Instance.Show();
-
-			//yield return new WaitForSeconds(.1f); // Just to stop the coroutine after the proto message has opened
-			// GameManager.Instance.IncreaseGameStage();	
-			// SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-			GameManager.Instance.StartNextStage();
+			if("gamescene" == SceneManager.GetActiveScene().name.ToLower())
+			{
+                GameManager.Instance.StartNextStage();
+            }
+			else
+			{
+				if("loserscene" == SceneManager.GetActiveScene().name.ToLower())
+				{
+					GameManager.Instance.StartNewGame();
+                }
+			}
+			
         }
 
     }
