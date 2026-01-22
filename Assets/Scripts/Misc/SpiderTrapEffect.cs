@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using StarterAssets;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace TMM
 {
@@ -21,13 +22,29 @@ namespace TMM
 		[SerializeField]
 		List<AudioClip> clips;
 
-		
+		[SerializeField]
+		List<GameObject> tileSpiders;
 
-		// Start is called before the first frame update
-		void Start()
+		List<Vector3> tileSpiderOriginalPositions = new List<Vector3>();
+
+
+        private void Awake()
+        {
+            foreach(var s in tileSpiders)
+			{
+				tileSpiderOriginalPositions.Add(s.transform.localPosition);
+            }
+        }
+
+        // Start is called before the first frame update
+        void Start()
 	    {
-		
-	    }
+			if(!floorTrigger.Triggered)
+				StartJumping();
+			else
+				KillJumpingSpiders();
+
+        }
 
 		// Update is called once per frame
 		void Update()
@@ -38,16 +55,25 @@ namespace TMM
 		void OnEnable()
 		{
 			floorTrigger.OnTriggered += HandleOnTriggered;
-		}
+			floorTrigger.OnUnTriggered += HandleOnUnTriggered; 
+
+        }
 
         void OnDisable()
         {
             floorTrigger.OnTriggered -= HandleOnTriggered;
+			floorTrigger.OnUnTriggered -= HandleOnUnTriggered; 
         }
 
-		private void HandleOnTriggered()
+        private void HandleOnUnTriggered()
+        {
+            StartJumping();
+        }
+
+        private void HandleOnTriggered()
 		{
 			ApplySpiderEffect();
+			KillJumpingSpiders();
 		}
 		
 		void ApplySpiderEffect()
@@ -94,6 +120,31 @@ namespace TMM
 			audioSource.clip = clips[Random.Range(0, clips.Count)];
 			audioSource.PlayDelayed(.5f);
 
+		}
+
+		void KillJumpingSpiders()
+		{
+			foreach(var s in tileSpiders)
+			{
+				s.transform.DOKill();
+				var index = tileSpiders.IndexOf(s);
+				s.transform.DOLocalMoveY(tileSpiderOriginalPositions[index].y, .25f).OnComplete(() => { s.transform.localPosition = tileSpiderOriginalPositions[index]; });
+				Animator animator = s.GetComponent<Animator>();
+				//if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Dead"))
+				s.GetComponent<Animator>().SetTrigger("Dead");
+            }
+        }
+
+		void StartJumping()
+		{
+			foreach(var s in tileSpiders)
+			{
+				s.transform.DOKill();
+				s.transform.DOLocalMoveY(0.5f, .5f).SetDelay(Random.Range(.1f, 1f)).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+				Animator animator = s.GetComponent<Animator>();
+				if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+                    s.GetComponent<Animator>().SetTrigger("Jump");
+            }
 		}
 	}
 }

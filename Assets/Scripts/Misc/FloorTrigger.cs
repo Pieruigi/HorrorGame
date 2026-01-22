@@ -14,6 +14,7 @@ namespace TMM
 	{
 		//public delegate void TriggeredDelegate();
 		public UnityAction OnTriggered;
+		public UnityAction OnUnTriggered;
 
 		[SerializeField]
 		ActivationTrigger activationTrigger;
@@ -169,7 +170,7 @@ namespace TMM
 			seq.Append(transform.DOMoveY(height, time));
 			// seq.Join(tileMaterial.DOVector(new Vector4(1, 1, 1, 1) * materialIntensity, "_BaseColor", time));
 			// seq.Join(stepMaterial.DOVector(new Vector4(1, 1, 1, 1) * materialIntensity, "_BaseColor", time));
-			seq.OnComplete(() => { triggered = false; /*MazeBuilder.Instance.BuildNavMesh();*/ });
+			seq.OnComplete(() => { triggered = false; OnUnTriggered?.Invoke(); /*MazeBuilder.Instance.BuildNavMesh();*/ });
 
 			// Play audio
 			audioSource.Play();

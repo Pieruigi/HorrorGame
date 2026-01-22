@@ -38,7 +38,7 @@ namespace TMM
 
         float modelUpDistance = 0.25f;
 
-        float minimumEight = 2.5f;
+        float minimumEight = 2.75f;
 
         float lightTargetDistance = 10f;
 

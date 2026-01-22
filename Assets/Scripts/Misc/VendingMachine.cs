@@ -78,13 +78,28 @@ namespace TMM
 
 
 			TriggerTileManager.OnChanged += HandleOnTriggerTileManagerChanged;
-		}
+			AlarmManager.OnActivated += HandleOnAlarmActivated;
+			AlarmManager.OnDeactivated += HandleOnAlarmDeactivated;
+        }
 
         void OnDisable()
         {
 			DeviceInteractor.OnInteraction -= HandleOnInteraction;
 
 			TriggerTileManager.OnChanged -= HandleOnTriggerTileManagerChanged;
+            AlarmManager.OnActivated -= HandleOnAlarmActivated;
+			AlarmManager.OnDeactivated -= HandleOnAlarmDeactivated;
+        }
+
+        private void HandleOnAlarmActivated()
+        {
+            InitButton(true);
+        }
+
+        private void HandleOnAlarmDeactivated()
+        {
+            if(type != VendingMachineType.NoTriggerTiles || !TriggerTileManager.Instance.TriggerTilesDisabled)
+				InitButton(false);
         }
 
         private void HandleOnTriggerTileManagerChanged()
@@ -98,7 +113,9 @@ namespace TMM
 		{
 			if (this.deviceInteractor != deviceInteractor) return;
 
-			switch (type)
+			if (AlarmManager.Instance.IsActive()) return; // Cannot use while alarm is active
+
+            switch (type)
 			{
 				case VendingMachineType.NoTriggerTiles:
 					if (TriggerTileManager.Instance.TriggerTilesDisabled) return; // Already disabled (unless we want to give the player the change to buy more time)
