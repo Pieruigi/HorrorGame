@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: 5785969163329915583}
   - component: {fileID: 2776777460339028056}
   - component: {fileID: 4694489374838300666}
+  - component: {fileID: 3406897012681439392}
   - component: {fileID: 5953485540457998181}
   m_Layer: 0
   m_Name: ScaryClownA
@@ -224,6 +225,21 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6082ea7f9580ab4449a73bd233f4389f, type: 3}
   - {fileID: 8300000, guid: e7d54b77f065a9d40bfece48d7fb0144, type: 3}
   playerDeathAudioSource: {fileID: 2409159887798362387}
+--- !u!114 &3406897012681439392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5131694905864375828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41ffcf385a1ebfb42a5eb7d7715bbb80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 1
+  attackAngle: 60
+  playerDeadTarget: {fileID: 6327229666058265861}
 --- !u!114 &5953485540457998181
 MonoBehaviour:
   m_ObjectHideFlags: 0

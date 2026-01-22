@@ -57,12 +57,12 @@ namespace TMM.AI
 		[SerializeField]
 		float smellRange;
 
-		[SerializeField]
-		float attackRange;
+		//[SerializeField]
+		//float attackRange;
 
-		[SerializeField]
-		[Range(0, 180)]
-		float attackAngle;
+		//[SerializeField]
+		//[Range(0, 180)]
+		//float attackAngle;
 
 
 		[SerializeField]
@@ -74,8 +74,8 @@ namespace TMM.AI
 		float searchTimer = 2;
 
 
-		[SerializeField]
-		Transform playerDeadTarget;
+		//[SerializeField]
+		//Transform playerDeadTarget;
 
 
 
@@ -107,13 +107,15 @@ namespace TMM.AI
 
 		float activeAlarmSpeedMul = 1f;//1.3f;
 
+		ClownAttacker attacker;
+
 
 
         protected virtual void Awake()
 		{
 			agent = GetComponent<NavMeshAgent>();
 			idleTimerDefault = idleTimer;
-		
+			attacker  = GetComponent<ClownAttacker>();
 
 #if UNITY_EDITOR
             // walkSpeed *= 0.75f; // Max 1.75
@@ -293,25 +295,28 @@ namespace TMM.AI
 
 		protected virtual void EnterAttackState()
 		{
-			ResetPath();
-			agent.isStopped = true;
-			player.GetComponent<PlayerDeath>().Die(gameObject);
+            //ResetPath();
+            //agent.isStopped = true;
+            //player.GetComponent<PlayerDeath>().Die(gameObject);
 
-			player.transform.parent = playerDeadTarget;
+            //player.transform.parent = playerDeadTarget;
 
-			StartCoroutine(PlayJumpScare());
+            //StartCoroutine(PlayJumpScare());
 
-			var seq = DOTween.Sequence();
-			seq.Append(player.transform.DOLocalMove(Vector3.zero, .5f));
-			seq.Join(player.transform.DOLocalRotateQuaternion(Quaternion.identity, .5f));
-			seq.OnComplete(() =>
-			{
-				// Fade and restart	
-				GameManager.Instance.StartNewGame();
-			});
+            //var seq = DOTween.Sequence();
+            //seq.Append(player.transform.DOLocalMove(Vector3.zero, .5f));
+            //seq.Join(player.transform.DOLocalRotateQuaternion(Quaternion.identity, .5f));
+            //seq.OnComplete(() =>
+            //{
+            //	// Fade and restart	
+            //	GameManager.Instance.StartNewGame();
+            //});
+            agent.ResetPath();
+            agent.isStopped = true;
 
+            attacker.Attack();
 
-		}
+        }
 
 		IEnumerator PlayJumpScare()
 		{
@@ -472,8 +477,8 @@ namespace TMM.AI
 				return;
 			}
 
-			if (CanAttackPlayer())
-			{
+			if(attacker.CanAttackPlayer())
+            {
 				SetState(ClownAState.Attack);
 				return;
 			}
@@ -483,7 +488,7 @@ namespace TMM.AI
 
 		protected virtual void UpdateSearchState()
 		{
-			if (CanAttackPlayer())
+			if (attacker.CanAttackPlayer())
 			{
 				SetState(ClownAState.Attack);
 				return;
@@ -587,21 +592,21 @@ namespace TMM.AI
 			return true;
 		}
 
-		bool CanAttackPlayer()
-		{
-			// Check distance
-			if (Vector3.Distance(player.transform.position, transform.position) > attackRange)
-				return false;
+		//bool CanAttackPlayer()
+		//{
+		//	// Check distance
+		//	if (Vector3.Distance(player.transform.position, transform.position) > attackRange)
+		//		return false;
 
-			// Compute direction
-			var pDir = player.transform.position - transform.position;
-			if (Vector3.Angle(transform.forward, pDir) > attackAngle)
-				return false;
+		//	// Compute direction
+		//	var pDir = player.transform.position - transform.position;
+		//	if (Vector3.Angle(transform.forward, pDir) > attackAngle)
+		//		return false;
 
 
 
-			return true;
-		}
+		//	return true;
+		//}
 
 
 		public void ForcePatrol(Vector3 destination)

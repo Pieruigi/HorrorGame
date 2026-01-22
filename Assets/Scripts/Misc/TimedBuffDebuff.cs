@@ -63,6 +63,10 @@ namespace TMM
 					ResetAll();
 
 			}
+			else if("loserscene".Equals(arg0.name.ToLower()) || "winnerscene".Equals(arg0.name.ToLower()))
+			{
+				ResetAll();
+            };
 		}
 		
 		protected virtual void ResetAll()

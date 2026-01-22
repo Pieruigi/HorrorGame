@@ -11,7 +11,7 @@ namespace TMM
 	public class GameManager : SingletonPersistent<GameManager>
 	{
 #if UNITY_EDITOR
-		int gameStage = 2;
+		int gameStage = 1;
 #else
 		int gameStage = 1;
 #endif
@@ -67,8 +67,14 @@ namespace TMM
 			StartCoroutine(DoLoadGameScene());
 			//SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
 		}
-		
-		public void StartNextStage()
+
+		public void RestartGame()
+		{
+            gameStage = 1;
+            SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+        }
+
+        public void StartNextStage()
         {
 			gameStage++;
 

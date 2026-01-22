@@ -61,7 +61,7 @@ namespace TMM
         {
             elapsed = 0;
             triggered = true;
-            //OutOfBreathDebuff.Instance.Apply();
+            DeathTrapDebuff.Instance.Apply();
 
 
 

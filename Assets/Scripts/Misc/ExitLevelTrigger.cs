@@ -10,6 +10,9 @@ namespace TMM
 		[SerializeField]
 		GameObject tile;
 
+		[SerializeField]
+		AudioSource screamAudioSource;
+
 	    // Start is called before the first frame update
 	    void Start()
 	    {
@@ -26,12 +29,14 @@ namespace TMM
 			if (other.CompareTag("Player"))
 			{
 				tile.SetActive(false);
-				StartCoroutine(LoadNextLevelDelayed());
+				screamAudioSource.PlayDelayed(.7f);
+                StartCoroutine(LoadNextLevelDelayed());
 			}
 		}
 		
 		IEnumerator LoadNextLevelDelayed()
         {
+
 			yield return new WaitForSeconds(2f);
 
 			//Time.timeScale = 0;

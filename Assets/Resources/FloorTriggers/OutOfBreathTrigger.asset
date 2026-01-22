@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: OutOfBreathTrigger
   m_EditorClassIdentifier: 
   prefab: {fileID: 6216882736516585802, guid: b88b402eca5b6d84987a148d81e5259c, type: 3}
-  minStage: 3
-  weight: 60
+  minStage: 4
+  weight: 50

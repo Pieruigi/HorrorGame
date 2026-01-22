@@ -310,7 +310,7 @@ namespace StarterAssets
 				//float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
 				_cinemachineTargetPitch += _input.look.y * RotationSpeed * mouseSensitivity * (verticalMouse ? -1f : 1f);//  * deltaTimeMultiplier;
-				_rotationVelocity = _input.look.x * RotationSpeed * mouseSensitivity;// * deltaTimeMultiplier;
+				_rotationVelocity = _input.look.x * RotationSpeed * mouseSensitivity * (DeathTrapDebuff.Instance.Value ? -1f : 1f);// * deltaTimeMultiplier;
 
 				// clamp our pitch rotation
 				_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);

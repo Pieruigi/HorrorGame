@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using StarterAssets;
+using TMM.UI;
 using UnityEngine;
 
 namespace TMM
@@ -61,10 +62,14 @@ namespace TMM
 			var seq = DOTween.Sequence();
 			seq.Append(player.transform.DOLocalMove(Vector3.zero, .5f));
 			seq.Join(player.transform.DOLocalRotateQuaternion(Quaternion.identity, .5f));
-			seq.OnComplete(() =>
+			seq.AppendCallback(() => { CameraFade.Instance.FadeOut(); });
+			seq.AppendInterval(2f);
+
+            seq.OnComplete(() =>
 			{
+				
 				// Fade and restart	
-				GameManager.Instance.StartNewGame();
+				GameManager.Instance.RestartGame();
 			});
 
 		}

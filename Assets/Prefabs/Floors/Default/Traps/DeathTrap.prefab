@@ -139,6 +139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 966705062188668767}
+  - component: {fileID: 8497450577747164806}
   m_Layer: 0
   m_Name: DeathTrap
   m_TagString: Untagged
@@ -163,6 +164,20 @@ Transform:
   - {fileID: 7162059667621692757}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8497450577747164806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8363522960809883529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8fb5a588fcbb054e9bc3649d54db32b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floorTrigger: {fileID: 8996194798277335881}
+  duration: 10
 --- !u!1 &8670368338243651117
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,3 +392,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 252612975757299681}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8996194798277335881 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9176525870446318760, guid: 972b017bb169c6544bce78a36717fa5d,
+    type: 3}
+  m_PrefabInstance: {fileID: 252612975757299681}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a13002cdb57ebea4d8a4449f0dd8c3b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

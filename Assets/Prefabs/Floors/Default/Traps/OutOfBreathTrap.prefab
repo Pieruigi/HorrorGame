@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floorTrigger: {fileID: 5535997501423881426}
-  duration: 10
+  duration: 15
 --- !u!1 &6432284121832571080
 GameObject:
   m_ObjectHideFlags: 0

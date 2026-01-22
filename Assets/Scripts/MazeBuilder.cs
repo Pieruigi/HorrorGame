@@ -714,7 +714,7 @@ namespace TMM
 			outTile = candidates[Random.Range(0, candidates.Count)];
 
 			var fpc = FindFirstObjectByType<FirstPersonController>();
-			fpc.transform.root.position = new Vector3(inTile.coords.x, 5f, inTile.coords.y) * CellSize;
+			fpc.transform.root.position = new Vector3(inTile.coords.x, 7f, inTile.coords.y) * CellSize;
 			fpc.transform.root.rotation = Quaternion.identity;
 			fpc.GetComponent<CharacterController>().enabled = false;
 			fpc.transform.localPosition = Vector3.zero;

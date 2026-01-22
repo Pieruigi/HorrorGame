@@ -1251,7 +1251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floorTrigger: {fileID: 2503825536818230748}
-  duration: 10
+  duration: 15
 --- !u!114 &737676116834848014
 MonoBehaviour:
   m_ObjectHideFlags: 0

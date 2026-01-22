@@ -37,9 +37,10 @@ namespace TMM
 
 		void SendFlashlightMessage()
 		{
+			return;
 			var seq = DOTween.Sequence();
 			seq.AppendInterval(2f);
-			seq.OnComplete(() => { MessageUI.Instance.ShowMessage("F: flashlight on/off\nTAB: show wallet"); });
+			seq.OnComplete(() => { MessageUI.Instance.ShowMessage("\nLShift: sprint\nSpace: jump\nF: flashlight on/off\nTAB: show wallet"); });
 		}
 
 		public void ShowCustomMessage(int messageId, bool keepOn = false)
