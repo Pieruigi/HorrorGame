@@ -109,6 +109,8 @@ namespace TMM.AI
 
 		ClownAttacker attacker;
 
+		Pig pig;
+
 
 
         protected virtual void Awake()
@@ -161,6 +163,7 @@ namespace TMM.AI
 			AlarmManager.OnDeactivated += HandleOnAlarmDeactivated;
             MiniGame.OnStartPlaying += HandleOnMiniGameStartPlaying;
 			MiniGame.OnStopPlaying += HandleOnMiniGameStopPlaying;
+			MazeBuilder.OnMazeCreated += HandleOnMazeCreated;
         }
 
         private void OnDisable()
@@ -169,9 +172,15 @@ namespace TMM.AI
 			AlarmManager.OnDeactivated -= HandleOnAlarmDeactivated;
             MiniGame.OnStartPlaying -= HandleOnMiniGameStartPlaying;
 			MiniGame.OnStopPlaying -= HandleOnMiniGameStopPlaying;
+			MazeBuilder.OnMazeCreated -= HandleOnMazeCreated;
         }
 
-		private void HandleOnAlarmActivated()
+        private void HandleOnMazeCreated()
+        {
+            pig = FindFirstObjectByType<Pig>();
+        }
+
+        private void HandleOnAlarmActivated()
 		{
             if (state == ClownAState.Chase || state == ClownAState.Search)
                 agent.speed = runSpeed * activeAlarmSpeedMul;
@@ -445,6 +454,9 @@ namespace TMM.AI
 				}
 				else
 				{
+					//if(pig != null && pig.State == PigState.Chasing)
+					//	list.Add(pig.transform.position);
+     //               else
 					list = MazeBuilder.Instance.GetWalkableTilePositions().Where(t => Vector3.Distance(transform.position, t) > minDist).ToList();
 				}
 
@@ -611,10 +623,11 @@ namespace TMM.AI
 
 		public void ForcePatrol(Vector3 destination)
 		{
-			if (state != ClownAState.Patrol && state != ClownAState.Idle) return;
+			//if (state != ClownAState.Patrol && state != ClownAState.Idle) return;
+			if(state == ClownAState.Chase || state == ClownAState.Search || state == ClownAState.Attack) return; 
 
-			// If idle we must tell the patrol update routine to use the given destination
-			if (state == ClownAState.Idle)
+            // If idle we must tell the patrol update routine to use the given destination
+            if (state == ClownAState.Idle)
 			{
 				forcedDestination = destination;
 				useForcedDestination = true;

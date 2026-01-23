@@ -128,6 +128,9 @@ namespace TMM
 		[SerializeField]
 		GameObject spiderPrefab;
 
+		[SerializeField]
+		GameObject pigPrefab;
+
 		int wallMax = 21;////17; // 14
 
 		[SerializeField]
@@ -406,6 +409,18 @@ namespace TMM
 			{
 				var spider = Instantiate(spiderPrefab);
 
+            }
+
+            // Spawn pig if stage >= 4
+			if(stage >= 1)
+			{
+                var tl = tiles.Where(t => t.type == 0 && Vector2.Distance(t.coords, inTile.coords) > 6).ToList();
+                var t = tl[Random.Range(0, tl.Count)];
+                var pos = new Vector3(t.coords.x, 0, t.coords.y) * CellSize;
+				var rot = Quaternion.Euler(0, Random.Range(0, 360), 0);
+                var pig = Instantiate(pigPrefab, pos, rot);
+				
+				//pig.transform.position = pos;
             }
 
             // Spawn clowns

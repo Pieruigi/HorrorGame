@@ -1,0 +1,182 @@
+fileFormatVersion: 2
+guid: 7187010fe972bac439d8695ea92c7374
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: dfa52cf0d6bad324ab62074f15593a49, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 15
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: PS1 Pig(Clone)
+      parentName: 
+      position: {x: 0.0000021097358, y: 0.002206211, z: -0.00041661283}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Cube001
+      parentName: PS1 Pig(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone
+      parentName: PS1 Pig(Clone)
+      position: {x: -0.0008626151, y: 0.00082508614, z: 0.001742283}
+      rotation: {x: 0.99662185, y: -0.051577598, z: 0.00330297, w: 0.063825764}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone001
+      parentName: Bone
+      position: {x: -1.01979813e-10, y: 0.0015591194, z: 1.385104e-11}
+      rotation: {x: 0.03941618, y: -0.0055750464, z: 0.037060518, w: 0.99851984}
+      scale: {x: 1, y: 1, z: 0.99999994}
+    - name: Bone002
+      parentName: PS1 Pig(Clone)
+      position: {x: 0.00077712064, y: 0.00082508614, z: 0.001742283}
+      rotation: {x: 0.99662185, y: 0.051577564, z: -0.0033033052, w: 0.06382578}
+      scale: {x: 1, y: 0.9999998, z: 0.9999999}
+    - name: Bone003
+      parentName: Bone002
+      position: {x: -2.7939673e-11, y: 0.0015591197, z: -2.429097e-10}
+      rotation: {x: 0.03941623, y: 0.005575244, z: -0.037060533, w: 0.99851984}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone004
+      parentName: PS1 Pig(Clone)
+      position: {x: -0.0008626151, y: 0.00082508614, z: -0.003014517}
+      rotation: {x: 0.99223775, y: -0.08019573, z: 0.008878182, w: -0.094626136}
+      scale: {x: 1, y: 1.0000002, z: 1}
+    - name: Bone005
+      parentName: Bone004
+      position: {x: -1.0826624e-10, y: 0.0015869533, z: 3.3807007e-10}
+      rotation: {x: -0.13273385, y: 0.0042926883, z: 0.013721886, w: 0.99104744}
+      scale: {x: 1, y: 1, z: 0.99999994}
+    - name: Bone006
+      parentName: PS1 Pig(Clone)
+      position: {x: 0.00077712064, y: 0.00082508614, z: -0.003014517}
+      rotation: {x: 0.99198526, y: 0.07700895, z: 0.02407894, w: -0.097237304}
+      scale: {x: 1, y: 1.0000001, z: 1.0000001}
+    - name: Bone007
+      parentName: Bone006
+      position: {x: -0, y: 0.0015869531, z: 4.9173826e-10}
+      rotation: {x: -0.13229552, y: -0.042249803, z: -0.017448407, w: 0.99015576}
+      scale: {x: 1.0000001, y: 0.9999999, z: 1}
+    - name: Bone008
+      parentName: PS1 Pig(Clone)
+      position: {x: -0.0000021097358, y: 0.0014033582, z: 0.0037618128}
+      rotation: {x: 0.7214284, y: 0, z: -0, w: 0.69248915}
+      scale: {x: 1, y: 0.99999994, z: 1.0000006}
+    - name: Bone009
+      parentName: PS1 Pig(Clone)
+      position: {x: -0.0000021097358, y: 0.0014033582, z: 0.0037618128}
+      rotation: {x: -0.7229038, y: 0, z: 0, w: 0.6909487}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone010
+      parentName: Bone009
+      position: {x: -0, y: 0.002429877, z: 2.4028116e-10}
+      rotation: {x: 0.5516824, y: -0, z: -0, w: 0.8340543}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Bone011
+      parentName: Bone010
+      position: {x: -0, y: 0.002527365, z: -1.6763803e-10}
+      rotation: {x: 0.02247424, y: 0, z: -0, w: 0.99974746}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 0.14999999
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -4879,6 +4879,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7912009849899271342, guid: ebebea8bba772084bab712244b9eed7d,
         type: 3}
+      propertyPath: pigPrefab
+      value: 
+      objectReference: {fileID: 1222642708961184596, guid: be21e5fd17474dc4da747f2dda6a7baa,
+        type: 3}
+    - target: {fileID: 7912009849899271342, guid: ebebea8bba772084bab712244b9eed7d,
+        type: 3}
       propertyPath: spiderPrefab
       value: 
       objectReference: {fileID: 6049295711057049854, guid: 41c9ce65b026c2c4c9e0fa5dcd5b26de,
