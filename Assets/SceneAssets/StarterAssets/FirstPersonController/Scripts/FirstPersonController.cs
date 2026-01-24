@@ -223,9 +223,9 @@ namespace StarterAssets
 #endif
 			if (isDead) return;
 
-			JumpAndGravity();
-			GroundedCheck();
-			CrouchCheck();
+            GroundedCheck();
+            JumpAndGravity();
+            CrouchCheck();
 			CheckStamina();
 			Move();
 			ComputeNoiseRange();
@@ -294,8 +294,9 @@ namespace StarterAssets
 		{
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
-		}
+			//Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+			Grounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, 0.1f, GroundLayers, QueryTriggerInteraction.Ignore);
+        }
 
 		private void CameraRotation()
 		{
@@ -469,63 +470,108 @@ namespace StarterAssets
 			}
 
 			// move the player
-			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-
-			// To fix a strange behaviour on edge collision
-			// if (Grounded)
-			// 	transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-				
+			_controller.Move(inputDirection.normalized * _speed * Time.deltaTime + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 			
-		}
+			//if(_verticalVelocity != 0f)
+			//	 transform.position += _verticalVelocity * Time.deltaTime * Vector3.up;
+
+            // To fix a strange behaviour on edge collision
+            // if (Grounded)
+            // 	transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+
+
+        }
 
 		private void JumpAndGravity()
 		{
+
 			if (Grounded)
 			{
-				// reset the fall timeout timer
-				_fallTimeoutDelta = FallTimeout;
-
-				// stop our velocity dropping infinitely when grounded
 				if (_verticalVelocity < 0.0f)
-				{
-					_verticalVelocity = -2f;
-				}
+					_verticalVelocity = 0.0f;
 
-				// Jump
-				if (_input.jump && _jumpTimeoutDelta <= 0.0f && CanJump)
+				if (_jumpTimeoutDelta > 0.0f)
 				{
-					// the square root of H * -2 * G = how much velocity needed to reach desired height
-					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-					
-				}
-
-				// jump timeout
-				if (_jumpTimeoutDelta >= 0.0f)
-				{
+					_input.jump = false;
 					_jumpTimeoutDelta -= Time.deltaTime;
 				}
+
+
+
+				if (_input.jump && CanJump && _jumpTimeoutDelta <= 0)
+				{
+					_input.jump = false;
+					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+				}
+
 			}
 			else
 			{
-				// reset the jump timeout timer
 				_jumpTimeoutDelta = JumpTimeout;
-
-				// fall timeout
-				if (_fallTimeoutDelta >= 0.0f)
-				{
-					_fallTimeoutDelta -= Time.deltaTime;
-				}
-
-				// if we are not grounded, do not jump
-				_input.jump = false;
-			}
-
-			// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-			if (_verticalVelocity < _terminalVelocity)
-			{
 				_verticalVelocity += Gravity * Time.deltaTime;
 			}
-		}
+
+			//return;
+			
+			//if (Grounded)
+			//{
+				
+			//	// reset the fall timeout timer
+			//	_fallTimeoutDelta = FallTimeout;
+
+			//	// stop our velocity dropping infinitely when grounded
+			//	if (_verticalVelocity < 0.0f)
+			//	{
+			//		_verticalVelocity = -2f;
+			//	}
+
+				
+			//	// Jump
+			//	if (_input.jump && _jumpTimeoutDelta <= 0.0f && CanJump)
+			//	{
+					
+			//		// the square root of H * -2 * G = how much velocity needed to reach desired height
+			//		_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+					
+			//	}
+
+               
+
+   //             // jump timeout
+   //             if (_jumpTimeoutDelta >= 0.0f)
+			//	{
+			//		_jumpTimeoutDelta -= Time.deltaTime;
+			//	}
+			//}
+			//else
+			//{
+				
+			//	// reset the jump timeout timer
+			//	_jumpTimeoutDelta = JumpTimeout;
+
+			//	// fall timeout
+			//	if (_fallTimeoutDelta >= 0.0f)
+			//	{
+			//		_fallTimeoutDelta -= Time.deltaTime;
+			//	}
+
+			//	// if we are not grounded, do not jump
+			//	_input.jump = false;
+
+   //             // if vertical speed is positive then decrease it
+			//	//if(_verticalVelocity > 0f)
+			//	{
+			//		_verticalVelocity += Gravity * Time.deltaTime;
+   //             }
+				
+   //         }
+
+            // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+            //if (_verticalVelocity < _terminalVelocity)
+            //{
+            //	_verticalVelocity += Gravity * Time.deltaTime;
+            //}
+        }
 
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
 		{

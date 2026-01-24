@@ -82,12 +82,11 @@ namespace TMM
 		void Update()
 		{
 #if UNITY_EDITOR
-			// if (Input.GetKeyDown(KeyCode.X))
-			// {
-			// 		triggered = true;
-			// 		MoveDown();
-			// 		OnTriggered?.Invoke();
-			// }
+			//if (Input.GetKeyDown(KeyCode.X))
+			//{
+			//	Time.timeScale = 1;
+			//}
+
 #endif
 
 			if (!inside || triggered) return;
@@ -95,16 +94,16 @@ namespace TMM
 			var center = characterController.transform.position + characterController.center;
 			var distance = characterController.height / 2f + .05f;
 			RaycastHit hit;
-			Debug.Log("Center:" + center);
-			Debug.Log("Distance:" + distance);
-			if(Physics.Raycast(center, Vector3.down, out hit, distance, LayerMask.GetMask(new string[] { "Floor" })))
-			{
-				Debug.Log("Hit:" + hit.collider.gameObject);
+		    if(Physics.Raycast(center, Vector3.down, out hit, distance, LayerMask.GetMask(new string[] { "Floor" })))
+            {
 				if(hit.collider.gameObject == gameObject)
 				{
 					triggered = true;
 					MoveDown();
 					OnTriggered?.Invoke();
+#if UNITY_EDITOR
+					//Time.timeScale = 0;
+#endif
 				}
 			}
 		}
