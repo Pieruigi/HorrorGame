@@ -30,8 +30,9 @@ namespace TMM
 		ClownAttacker attacker;
 
 		float checkIdleTime = 20f;
+		float checkIdleTimeDefault;
 
-		float playerDistance = 4; // Number of tiles
+        float playerDistance = 4; // Number of tiles
 
 		float elapsed = 0;
 
@@ -67,6 +68,7 @@ namespace TMM
 			agent = GetComponent<NavMeshAgent>();
 			randomMaxDefault = randomMax;
 			attacker = GetComponent<ClownAttacker>();
+			checkIdleTimeDefault = checkIdleTime;
         }
 
         // Start is called before the first frame update
@@ -94,11 +96,25 @@ namespace TMM
         private void OnEnable()
         {
             MazeBuilder.OnMazeCreated += HandleOnMazeCreated;
+			MiniGame.OnStartPlaying += HandleOnMinigameStartPlaying;
+			MiniGame.OnStopPlaying += HandleOnMinigameStopPlaying;
         }
 
         private void OnDisable()
         {
             MazeBuilder.OnMazeCreated -= HandleOnMazeCreated;
+			MiniGame.OnStartPlaying -= HandleOnMinigameStartPlaying;
+			MiniGame.OnStopPlaying -= HandleOnMinigameStopPlaying;
+        }
+
+        private void HandleOnMinigameStartPlaying()
+        {
+            checkIdleTime = checkIdleTime * 2f;
+        }
+
+        private void HandleOnMinigameStopPlaying()
+        {
+            checkIdleTime = checkIdleTimeDefault;
         }
 
         private void HandleOnMazeCreated()

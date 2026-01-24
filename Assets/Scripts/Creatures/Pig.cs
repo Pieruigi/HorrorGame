@@ -1,5 +1,6 @@
 using StarterAssets;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,7 +21,7 @@ namespace TMM.AI
 
 		FirstPersonController player;
 
-		float range = 4f;
+		float range = 8f;
 
 		[SerializeField]
 		Animator animator;
@@ -33,7 +34,7 @@ namespace TMM.AI
 
 		float idleSpeed = 1;
 
-		float chaseSpeed = 3;
+		float chaseSpeed = 2.5f;
 
         ClownA clownA;
 
@@ -131,18 +132,28 @@ namespace TMM.AI
         IEnumerator UpdateChasingState()
 		{
 
-            
-
+            float waitTime = .2f;
+            float keepTime = 0.0005f;
+            float keepElapsed = 0f;
             animator.SetTrigger("Walk");
 
             while (state == PigState.Chasing)
 			{
                 // Check player distance	
                 var playerDistance = Vector3.ProjectOnPlane(player.transform.position - transform.position, Vector3.up).magnitude;
-                if (playerDistance > range * 1.2f)
+                if (playerDistance > range * 1.5f)
                 {
-                    SetState(PigState.Idle); // Reset pig state to idle
-                    yield break;
+                    keepElapsed += waitTime;
+                    if(keepElapsed >= keepTime)
+                    {
+                        SetState(PigState.Idle); // Reset pig state to idle
+                        yield break;
+                    }
+                    
+                }
+                else
+                {
+                    keepElapsed = 0f;
                 }
 
                 // Move towards player
@@ -152,7 +163,7 @@ namespace TMM.AI
                 clownA.ForcePatrol(transform.position); 
 
                 // Wait a bit before next update
-                yield return new WaitForSeconds(.2f);
+                yield return new WaitForSeconds(waitTime);
             }
         }
 
@@ -162,8 +173,8 @@ namespace TMM.AI
 			if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                 animator.SetTrigger("Idle");
 
-			float minTime = 10f;
-			float maxTime = 20f;
+			float minTime = 400f;
+			float maxTime = 600f;
             float idleTimer = UnityEngine.Random.Range(minTime, maxTime);
 			float elapsedTime = 0f;
 			float waitTime = .5f;
@@ -182,8 +193,17 @@ namespace TMM.AI
 				elapsedTime += waitTime;
 				if(elapsedTime >= idleTimer)
 				{
+                    if(playerDistance > 14)
+                    {
+                        elapsedTime = 0f;
+                        var posList = MazeBuilder.Instance.GetWalkableTilePositions().Where(p=>Vector3.ProjectOnPlane(player.transform.position-p, Vector3.up).magnitude > 14).ToList();
+                        var randomPos = posList[UnityEngine.Random.Range(0, posList.Count())];
+                        var randomRot = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
+                        transform.position = randomPos;
+                        transform.rotation = randomRot;
+                    }
 
-					elapsedTime = 0f;
+					
                 }
 
 

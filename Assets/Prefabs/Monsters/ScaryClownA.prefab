@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 4694489374838300666}
   - component: {fileID: 3406897012681439392}
   - component: {fileID: 5953485540457998181}
+  - component: {fileID: -6122361827560772953}
   m_Layer: 0
   m_Name: ScaryClownA
   m_TagString: Untagged
@@ -201,11 +202,8 @@ MonoBehaviour:
   sightAngle: 45
   hearMultiplier: 1
   smellRange: 4
-  attackRange: 1
-  attackAngle: 60
   idleTimer: 8
   searchTimer: 3
-  playerDeadTarget: {fileID: 6327229666058265861}
 --- !u!114 &4694489374838300666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +258,18 @@ MonoBehaviour:
   m_IgnoreFromBuild: 1
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
+--- !u!114 &-6122361827560772953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5131694905864375828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8aa587d4504b284fa5dca732da5034a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5444345203739787454
 GameObject:
   m_ObjectHideFlags: 0

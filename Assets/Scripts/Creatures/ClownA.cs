@@ -197,13 +197,12 @@ namespace TMM.AI
 		}
 
 		private void HandleOnMiniGameStartPlaying()
-        {
-            //idleTimer = idleTimerDefault * 2;
-        }
-
+		{
+			idleTimer = idleTimerDefault * 2;
+		}
         private void HandleOnMiniGameStopPlaying()
         {
-            //idleTimer = idleTimerDefault;
+            idleTimer = idleTimerDefault;
         }
 
         void InitByStage()
@@ -339,7 +338,7 @@ namespace TMM.AI
 		{
 			ResetPath();
 			float ratio = idleTimer * .25f;
-			currentTimer = Random.Range(idleTimer - ratio, idleTimer + ratio);
+			currentTimer = idleTimer;// Random.Range(idleTimer - ratio, idleTimer + ratio);
 			agent.speed = walkSpeed;
 		}
 

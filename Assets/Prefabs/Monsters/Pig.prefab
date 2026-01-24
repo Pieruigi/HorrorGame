@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3065481129202462312}
   - component: {fileID: 4044903653679516558}
   - component: {fileID: 5045438081209240652}
+  - component: {fileID: 6004647299482531368}
   m_Layer: 0
   m_Name: Pig
   m_TagString: Untagged
@@ -45,7 +46,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1222642708961184596}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.2
   m_Speed: 1
   m_Acceleration: 4
   avoidancePriority: 50
@@ -73,6 +74,18 @@ MonoBehaviour:
   animator: {fileID: 1411083022803472952}
   gruntAudioSource: {fileID: 5356547592409545587}
   oinkAudioSource: {fileID: 6962555789054138981}
+--- !u!114 &6004647299482531368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222642708961184596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8aa587d4504b284fa5dca732da5034a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3134321484835690511
 GameObject:
   m_ObjectHideFlags: 0

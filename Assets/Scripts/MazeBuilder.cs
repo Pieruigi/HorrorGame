@@ -412,7 +412,7 @@ namespace TMM
             }
 
             // Spawn pig if stage >= 4
-			if(stage >= 1)
+			if(stage >= 4)
 			{
                 var tl = tiles.Where(t => t.type == 0 && Vector2.Distance(t.coords, inTile.coords) > 6).ToList();
                 var t = tl[Random.Range(0, tl.Count)];
@@ -729,7 +729,7 @@ namespace TMM
 			outTile = candidates[Random.Range(0, candidates.Count)];
 
 			var fpc = FindFirstObjectByType<FirstPersonController>();
-			fpc.transform.root.position = new Vector3(inTile.coords.x, 7f, inTile.coords.y) * CellSize;
+			fpc.transform.root.position = new Vector3(inTile.coords.x, 5f, inTile.coords.y) * CellSize;
 			fpc.transform.root.rotation = Quaternion.identity;
 			fpc.GetComponent<CharacterController>().enabled = false;
 			fpc.transform.localPosition = Vector3.zero;
