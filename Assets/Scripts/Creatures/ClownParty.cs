@@ -8,7 +8,7 @@ namespace TMM
 	public class ClownParty : MonoBehaviour
 	{
 		[SerializeField]
-		List<WinnerLoserClown> clowns;
+		List<LoserClown> clowns;
 
         private void Awake()
         {

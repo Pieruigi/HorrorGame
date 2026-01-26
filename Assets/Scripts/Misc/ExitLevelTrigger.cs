@@ -41,7 +41,15 @@ namespace TMM
 
 			if("gamescene" == SceneManager.GetActiveScene().name.ToLower())
 			{
-                GameManager.Instance.StartNextStage();
+#if UNITY_EDITOR
+				//GameManager.Instance.YouWin();
+				//yield break;
+#endif
+
+				if (GameManager.Instance.GameStage < 5)
+					GameManager.Instance.StartNextStage();
+				else
+					GameManager.Instance.YouWin();
             }
 			else
 			{

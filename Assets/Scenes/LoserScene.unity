@@ -4081,7 +4081,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 528102687}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fa4e7d98d346a841adf074a564a87d4, type: 3}
+  m_Script: {fileID: 11500000, guid: c345b00075404f9428530005114308e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   jumpscareAudioSource: {fileID: 1962341110}
@@ -5824,7 +5824,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 410136422}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fa4e7d98d346a841adf074a564a87d4, type: 3}
+  m_Script: {fileID: 11500000, guid: c345b00075404f9428530005114308e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   jumpscareAudioSource: {fileID: 1962341110}
@@ -7963,7 +7963,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1919231079}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fa4e7d98d346a841adf074a564a87d4, type: 3}
+  m_Script: {fileID: 11500000, guid: c345b00075404f9428530005114308e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   jumpscareAudioSource: {fileID: 1962341110}

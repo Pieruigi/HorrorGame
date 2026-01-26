@@ -11,7 +11,7 @@ namespace TMM
 	public class GameManager : SingletonPersistent<GameManager>
 	{
 #if UNITY_EDITOR
-		int gameStage = 1;
+		int gameStage = 4;
 #else
 		int gameStage = 1;
 #endif
@@ -64,7 +64,7 @@ namespace TMM
 			gameStage = 1;
 
 
-			StartCoroutine(DoLoadGameScene());
+			StartCoroutine(DoLoadGameScene("GameScene"));
 			//SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
 		}
 
@@ -79,18 +79,24 @@ namespace TMM
             SceneManager.LoadSceneAsync("LoserScene", LoadSceneMode.Single);
         }
 
+		public void YouWin()
+		{
+            //SceneManager.LoadSceneAsync("WinnerScene", LoadSceneMode.Single);
+            StartCoroutine(DoLoadGameScene("WinnerScene"));
+        }
+
         public void StartNextStage()
         {
 			gameStage++;
 
-			StartCoroutine(DoLoadGameScene());
+			StartCoroutine(DoLoadGameScene("GameScene"));
         }
 
-		IEnumerator DoLoadGameScene()
+		IEnumerator DoLoadGameScene(string sceneName)
         {
 			CameraFade.Instance.FadeOut();
 			yield return new WaitForSeconds(1f);
-			SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Single);
+			SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         }
 
 		public void LoadMainMenu()
