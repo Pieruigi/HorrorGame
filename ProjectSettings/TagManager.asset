@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineTarget
   - Floor
+  - Ship
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - FlashlightTarget
   - Spider
   - Coin
-  - 
+  - MiniGamePhysics
   - 
   - 
   - 

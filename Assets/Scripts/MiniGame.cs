@@ -89,7 +89,7 @@ namespace TMM
 
 		bool stopTimer = false;
 	
-
+		
 
 		protected virtual void Awake()
         {
@@ -134,8 +134,18 @@ namespace TMM
 				if (Input.GetKeyDown(KeyCode.E))
 #endif
 				{
-					Deactivate();
-					return;
+					bool fail = Random.Range(0, 10) == 0; // A change the minigame fails on exit
+					fail = true;
+					if (!fail)
+					{
+                        Deactivate();
+                        return;
+                    }
+					else
+					{
+						timeLeft = -1f;
+					}
+					
 				}
 
 				if(!stopTimer)

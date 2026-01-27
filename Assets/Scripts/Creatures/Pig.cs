@@ -183,7 +183,7 @@ namespace TMM.AI
 			{
                 // Check player distace
 				var playerDistance = Vector3.ProjectOnPlane(player.transform.position-transform.position, Vector3.up).magnitude;
-				Debug.Log("TEST - PIG - PlayerDistance:" + playerDistance);
+				
                 if (playerDistance < range)
                 {
 					SetState(PigState.Chasing); // Set pig state to chasing

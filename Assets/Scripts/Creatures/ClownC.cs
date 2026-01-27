@@ -56,11 +56,11 @@ namespace TMM
 	    void Update()
 	    {
 #if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                //GetSpawnPosition();
-                Time.timeScale = 1;
-            }
+            //if (Input.GetKeyDown(KeyCode.X))
+            //{
+            //    //GetSpawnPosition();
+            //    Time.timeScale = 1;
+            //}
 #endif
 
             UpdateState();
