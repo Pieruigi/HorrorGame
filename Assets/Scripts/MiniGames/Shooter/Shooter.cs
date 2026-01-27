@@ -79,7 +79,7 @@ namespace TMM
 
         void ChooseRandomTargets()
         {
-            int remCount = targetListA.Count - Mathf.RoundToInt((float)targetListA.Count * .25f);
+            int remCount = targetListA.Count - Mathf.RoundToInt((float)targetListA.Count * .30f);
             //List<GameObject> toRemove = new List<GameObject>();
             for (int i=0; i<remCount; i++)
             {

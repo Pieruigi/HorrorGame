@@ -293,9 +293,12 @@ namespace StarterAssets
 		private void GroundedCheck()
 		{
 			// set sphere position, with offset
-			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
+			//Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
 			//Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
-			Grounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, 0.1f, GroundLayers, QueryTriggerInteraction.Ignore);
+			var radius = _controller.radius * .9f;
+			var position = transform.position + Vector3.up * radius;
+            Grounded = Physics.CheckSphere(position, radius, GroundLayers, QueryTriggerInteraction.Ignore);
+            //Grounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, 0.1f, GroundLayers, QueryTriggerInteraction.Ignore);
         }
 
 		private void CameraRotation()

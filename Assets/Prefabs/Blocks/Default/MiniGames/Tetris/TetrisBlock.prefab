@@ -11450,7 +11450,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5450a4e30c2a7684fb885a7872e5b1ec, type: 3}
   - {fileID: 21300000, guid: eb0a4507b9db6a3438f384e27cdcc4fe, type: 3}
   scoreField: {fileID: 1183869979140307812}
-  score: 6
+  score: 8
   placeBlockAudioSource: {fileID: 5025614340910704564}
   placeBlockClips:
   - {fileID: 8300000, guid: b41b3a27100bb3d409b4693066113fd8, type: 3}

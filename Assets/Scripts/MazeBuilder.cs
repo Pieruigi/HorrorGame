@@ -273,8 +273,35 @@ namespace TMM
 		
 			}
 
+			// Remove vending machine adjacent tiles
+			var vendingMachines = blocks.Where(b=>b.data.blockType == 2);
+            foreach (var vm in vendingMachines)
+            {
+                Tile tile = null;
+                // Get adjacent
+                switch (vm.rotationType)
+                {
+                    case 0:
+                        tile = tiles.Find(t => t.coords == vm.origin.coords - Vector2.up);
+                        break;
+                    case 1:
+                        tile = tiles.Find(t => t.coords == vm.origin.coords - Vector2.right);
+                        break;
+                    case 2:
+                        tile = tiles.Find(t => t.coords == vm.origin.coords + Vector2.up);
+                        break;
+                    case 3:
+                        tile = tiles.Find(t => t.coords == vm.origin.coords + Vector2.right);
+                        break;
+                }
+                Debug.Log("Removing tile index:" + tiles.IndexOf(tile));
+                floors.Remove(tile);
+
+            }
+
+
             // First we add one trigger per type
-			foreach(var t in all)
+            foreach (var t in all)
 			{
                 // Choose a random tile
                 var tile = floors[Random.Range(0, floors.Count)];
@@ -897,6 +924,14 @@ namespace TMM
 					// Loop through each border to check if the candidate can be positioned rotated this way starting from a specific position
 					foreach (var borderTile in borders[borderType])
 					{
+						// We don't want minigames and vending machines to spawn too closed one another
+						if(candidate.blockType == 1 || candidate.blockType == 2)
+						{
+							// Get all minigame and vending machine tiles
+							if (blocks.Exists(b => (b.data.blockType == 1 || b.data.blockType == 2) && Vector3.Distance(b.origin.coords, borderTile.coords) < 8))
+								continue;
+						}
+
 
 						done = true;
 						var offset = borderTile.coords + borderDirs[borderType];
@@ -1290,7 +1325,7 @@ namespace TMM
 
 		public Vector2 PositionToCoords(Vector3 position)
 		{
-            position /= 2f;
+            position /= CellSize;
             var coords = new Vector2(Mathf.Round(position.x), Mathf.Round(position.z));
 			return coords;
         }

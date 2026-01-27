@@ -102,7 +102,7 @@ namespace TMM
 	    // Start is called before the first frame update
 	    protected virtual void Start()
 	    {
-            timer = 45 - (GameManager.Instance.GameStage - 1) * 5f;
+			timer = 45;// - (GameManager.Instance.GameStage - 1) * 5f;
             timeLeft = timer;
             player = FindFirstObjectByType<FirstPersonController>();
 			//cameraRoot = player.GetComponent<CameraShake>().transform;
