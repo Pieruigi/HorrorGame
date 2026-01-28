@@ -18,7 +18,22 @@ namespace TMM
 		[SerializeField]
 		ParticleSystem destroyParticle;
 
-		Rigidbody rb;
+		[SerializeField]
+		AudioSource destroyAudioSource;
+
+		[SerializeField]
+		AudioSource spawnAudioSource;
+
+		[SerializeField]
+		AudioSource brickHitAudioSource;
+
+        [SerializeField]
+        AudioSource brickHitAudioSource2;
+
+        [SerializeField]
+        AudioSource otherHitAudioSource;
+
+        Rigidbody rb;
 
         Vector3 ballPositionDefault;
 
@@ -115,11 +130,21 @@ namespace TMM
 			}
 			
 
-				vel.Normalize();
+			vel.Normalize();
             Debug.Log("TEST - ReflectedVel:" + vel);
             vel *= speed;
 			velocity = vel;
 			//rb.velocity = velocity;
+
+			if (collision.collider.GetComponent<BreakoutBrick>())
+			{
+				if(!brickHitAudioSource.isPlaying) brickHitAudioSource.Play();
+				else if (!brickHitAudioSource2.isPlaying) brickHitAudioSource2.Play();
+            }
+			else
+			{
+				if(!otherHitAudioSource.isPlaying) otherHitAudioSource.Play();
+			}
 
 			
         }
@@ -145,7 +170,7 @@ namespace TMM
             });
 			
 			
-			
+			spawnAudioSource.Play();
 		}
 
 		public void Hide()
@@ -163,6 +188,7 @@ namespace TMM
 		public void DestroyBall()
 		{
 			destroyParticle.Play();
+			destroyAudioSource.Play();
 			Hide();
 		}
 	}
