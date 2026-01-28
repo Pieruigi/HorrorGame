@@ -8,8 +8,20 @@ namespace TMM
 	{
 		[SerializeField]
 		GameObject mesh;
-	    // Start is called before the first frame update
-	    void Start()
+
+		[SerializeField]
+		ParticleSystem destroyParticle;
+
+		Breakout minigame;
+
+        private void Awake()
+        {
+            minigame = transform.root.GetComponentInChildren<Breakout>();
+			minigame.ReportBrickAdded(this);
+        }
+
+        // Start is called before the first frame update
+        void Start()
 	    {
 	        
 	    }
@@ -25,11 +37,16 @@ namespace TMM
             BreakoutBall ball = collision.collider.GetComponent<BreakoutBall>();
 			if (ball == null) return;
 
+			minigame.ReportBrickHit(this);
+
 			Explode();
+						
+
         }
 
 		void Explode()
 		{
+			destroyParticle.Play();
 			mesh.SetActive(false);
 			GetComponent<Collider>().enabled = false;
 		}

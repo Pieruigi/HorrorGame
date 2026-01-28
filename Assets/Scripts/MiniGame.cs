@@ -88,6 +88,11 @@ namespace TMM
 		bool noExit = false;
 
 		bool stopTimer = false;
+
+		public bool Paused
+		{
+			get { return stopTimer; }
+		}
 	
 		
 
@@ -135,7 +140,7 @@ namespace TMM
 #endif
 				{
 					bool fail = Random.Range(0, 10) == 0; // A change the minigame fails on exit
-					fail = true;
+					//fail = true;
 					if (!fail)
 					{
                         Deactivate();

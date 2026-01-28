@@ -6,9 +6,15 @@ namespace TMM
 {
 	public class BreakoutBottom : MonoBehaviour
 	{
+		Breakout minigame;
 
-	    // Start is called before the first frame update
-	    void Start()
+        private void Awake()
+        {
+            minigame = transform.root.GetComponentInChildren<Breakout>();
+        }
+
+        // Start is called before the first frame update
+        void Start()
 	    {
 	        
 	    }
@@ -27,15 +33,16 @@ namespace TMM
 
 			if (ball == null) return;
 
-			StartCoroutine(ResetBallDelayed(ball, 1f));
+			StartCoroutine(ResetBallDelayed(ball, .5f));
         }
 
 		IEnumerator ResetBallDelayed(BreakoutBall ball, float delay)
 		{
+			minigame.ReportBallDestroyed();
+
 			// Hide ball
-			ball.Hide();
-			// Play fx
-			PlayFx();
+			ball.DestroyBall();
+			
 
 			yield return new WaitForSeconds(delay);
 
@@ -43,9 +50,10 @@ namespace TMM
 			ball.Show();
 		}
 
-		void PlayFx()
+		
+		public void Reset()
 		{
-
+			StopAllCoroutines();
 		}
     }
 }

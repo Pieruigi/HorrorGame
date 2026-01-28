@@ -11250,7 +11250,7 @@ PrefabInstance:
 
         R - Clear
 
-        ESC - Exit'
+        E - Exit'
       objectReference: {fileID: 0}
     - target: {fileID: 5940175035330977217, guid: f66842e2a5a95fc40a0ff38983a2fa9f,
         type: 3}
