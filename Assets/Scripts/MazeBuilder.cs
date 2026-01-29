@@ -147,9 +147,12 @@ namespace TMM
 
 		int doubleCreatureStage = 3;
 		int tripleCreatureStage = 6;
+		int secondClownIndexOnFirstDoubleStage = -1;
 
 		float doubleMultiplier = 1;// 1.75f;//1.5f;
 		float tripleMultiplier = 1; //2.5f;//2f;
+
+
 
 		public int TileCount
 		{
@@ -466,6 +469,9 @@ namespace TMM
 			foreach (var m in monsterPrefabs)
 				availableMonsters.Add(m);
 
+			if(stage == 4) // We don't want the same clown we had on stage 3 
+				availableMonsters.RemoveAt(secondClownIndexOnFirstDoubleStage);
+		
 			
 			for (int i = 0; i < creatureCount; i++)
 			{
@@ -486,6 +492,9 @@ namespace TMM
 #if UNITY_EDITOR
 				//monsterPrefab = availableMonsters[0];
 #endif
+				if (stage == 3 && i == 1)
+					secondClownIndexOnFirstDoubleStage = availableMonsters.IndexOf(monsterPrefab) + 1; // We already removed clown at index 0, which is the first one
+
 				// Remove the chosen monster from the list
 				availableMonsters.Remove(monsterPrefab);
 

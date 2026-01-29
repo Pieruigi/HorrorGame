@@ -131,6 +131,14 @@ namespace TMM
 			
 
 			vel.Normalize();
+			var xMax = .65f;
+			if(Mathf.Abs(vel.x) > xMax)
+			{
+				vel.x = Mathf.Sign(vel.x) * xMax;
+				vel.y = Mathf.Sign(vel.y) * (1f - xMax);
+				vel.Normalize();
+			}
+
             Debug.Log("TEST - ReflectedVel:" + vel);
             vel *= speed;
 			velocity = vel;
