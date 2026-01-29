@@ -109,12 +109,12 @@ namespace TMM
 
         private void HandleOnMinigameStartPlaying()
         {
-            checkIdleTime = checkIdleTime * 2f;
+            //checkIdleTime = checkIdleTime * 2f;
         }
 
         private void HandleOnMinigameStopPlaying()
         {
-            checkIdleTime = checkIdleTimeDefault;
+            //checkIdleTime = checkIdleTimeDefault;
         }
 
         private void HandleOnMazeCreated()
@@ -140,7 +140,7 @@ namespace TMM
 			// Don't show up if player is chased
 			if (playerChased.IsPlayerChased())
 			{
-				elapsed = 0;
+				//elapsed = 0;
 				return;	
 			};
 
@@ -149,7 +149,9 @@ namespace TMM
 			if(elapsed > checkIdleTime)
 			{
 				elapsed = 0;
-				if(Random.Range(0, randomMax) == 0)
+				int rand = miniGame.IsActive ? randomMaxDefault : randomMax;
+				
+				if(Random.Range(0, rand) == 0)
 				{
 					SetState(ClownBState.PreChase);
 				}
@@ -286,7 +288,7 @@ namespace TMM
 			else
 			{
 				
-				float minDist = 6;
+				float minDist = 8;
 				List<Vector2> validCoords = new List<Vector2>();
                 for (int i = 0; i < 3; i++)
 				{

@@ -11,7 +11,7 @@ namespace TMM
 	public class GameManager : SingletonPersistent<GameManager>
 	{
 #if UNITY_EDITOR
-		int gameStage = 4;
+		int gameStage = 3;
 #else
 		int gameStage = 1;
 #endif
@@ -32,8 +32,8 @@ namespace TMM
 		void Update()
 		{
 #if !UNITY_WEBGL
-			if (Input.GetKeyDown(KeyCode.Escape))
-				Application.Quit();
+			//if (Input.GetKeyDown(KeyCode.Escape))
+			//	Application.Quit();
 #endif
 		}
 

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TMM.Scriptables;
 using Unity.AI.Navigation;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -490,7 +489,8 @@ namespace TMM
 				var monsterPrefab = availableMonsters[0]; // Default clown for when only one is available
                 if (i > 0) monsterPrefab = availableMonsters[Random.Range(0, availableMonsters.Count)];
 #if UNITY_EDITOR
-				//monsterPrefab = availableMonsters[0];
+				
+				if(i>0) monsterPrefab = availableMonsters[0];
 #endif
 				if (stage == 3 && i == 1)
 					secondClownIndexOnFirstDoubleStage = availableMonsters.IndexOf(monsterPrefab) + 1; // We already removed clown at index 0, which is the first one

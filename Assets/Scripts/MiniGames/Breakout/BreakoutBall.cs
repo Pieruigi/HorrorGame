@@ -1,9 +1,6 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.WSA;
+
 
 namespace TMM
 {
@@ -96,12 +93,11 @@ namespace TMM
         private void OnCollisionEnter(Collision collision)
         {
 			var vel = velocity.normalized;
-            Debug.Log($"TEST - ----------------------- {collision.collider.transform.parent.gameObject.name}/{collision.collider.transform.gameObject.name} -----------------------------------");
+           
 			
-            Debug.Log("TEST - Vel:" + vel);
+           
             var normal = collision.contacts[0].normal;
-			Debug.Log("TEST - Normal:" + normal);
-
+			
 			if (Vector3.Dot(vel, normal) > 0) return;
 
             vel = Vector3.Reflect(vel, normal);
@@ -139,7 +135,7 @@ namespace TMM
 				vel.Normalize();
 			}
 
-            Debug.Log("TEST - ReflectedVel:" + vel);
+         
             vel *= speed;
 			velocity = vel;
 			//rb.velocity = velocity;
