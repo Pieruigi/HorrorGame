@@ -44,8 +44,8 @@ namespace TMM
             base.Update();
 
 #if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.X))
-                Time.timeScale = 0;
+            //if (Input.GetKeyDown(KeyCode.X))
+            //    Time.timeScale = 0;
 
 #endif
 
@@ -108,11 +108,15 @@ namespace TMM
 
         IEnumerator ResetOnExit()
         {
+            boBall.DestroyBall();
+
             yield return new WaitForSeconds(.25f);
 
             ship.transform.localPosition = shipPositionDefault;
         
-            boBall.Hide();
+            //boBall.Hide();
+            
+            
 
         }
 

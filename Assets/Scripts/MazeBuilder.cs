@@ -145,11 +145,13 @@ namespace TMM
 		int minigameBlockIndex;
 
 		int doubleCreatureStage = 3;
-		int tripleCreatureStage = 6;
-		int secondClownIndexOnFirstDoubleStage = -1;
+		int tripleCreatureStage = 5;
+		static int secondClownIndexOnFirstDoubleStage = -1;
 
 		float doubleMultiplier = 1;// 1.75f;//1.5f;
 		float tripleMultiplier = 1; //2.5f;//2f;
+
+		static bool usingPig = false;
 
 
 
@@ -238,6 +240,19 @@ namespace TMM
 
 			// Load all assets
 			var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).Where(r => (r.MinStage < 0 || r.MinStage <= stage)).ToList();
+
+			// Choose if we want to use pig or spider starting from stage 2
+			if(stage >= 2 && stage < 4)
+			{
+				if(stage == 2) // Decide on stage 2 and then keep it
+					usingPig = Random.Range(0, 2) == 0;
+				
+				if (!usingPig)
+					all.RemoveAll(f => "piggytrigger".Equals(f.name.ToLower()));
+				else
+                    all.RemoveAll(f => "spiderwebtrigger".Equals(f.name.ToLower()));
+            }
+
 			// Create a list of candidates depending of their weight
 			List<FloorTriggerAsset> triggers = new List<FloorTriggerAsset>();
 			foreach (var fta in all)
@@ -429,28 +444,65 @@ namespace TMM
 		void SpawnMonster()
 		{
 			
-
-
 			int stage = GameManager.Instance.GameStage;
 
-            // Spawn spider if stage >= 2
+			bool pigOk = false;
+			bool spiderOk = false;
+
 			if(stage >= 2)
 			{
-				var spider = Instantiate(spiderPrefab);
+				if(stage >= 4) // We spawn both spider and pig
+				{
+					pigOk = true;
+					spiderOk = true;
+                }
+				else // Stage 2 or 3
+				{
+					if (usingPig)
+					{
+						pigOk = true;
+					}
+					else
+					{
+						spiderOk = true;
+					}
+				}
+			}
 
-            }
-
-            // Spawn pig if stage >= 4
-			if(stage >= 4)
-			{
+            if (pigOk) // We spawn both spider and pig
+            {
+                // Spawn pig
                 var tl = tiles.Where(t => t.type == 0 && Vector2.Distance(t.coords, inTile.coords) > 6).ToList();
                 var t = tl[Random.Range(0, tl.Count)];
                 var pos = new Vector3(t.coords.x, 0, t.coords.y) * CellSize;
-				var rot = Quaternion.Euler(0, Random.Range(0, 360), 0);
+                var rot = Quaternion.Euler(0, Random.Range(0, 360), 0);
                 var pig = Instantiate(pigPrefab, pos, rot);
-				
-				//pig.transform.position = pos;
             }
+
+			if (spiderOk)
+			{
+                // Spawn spider
+                var spider = Instantiate(spiderPrefab);
+            }
+
+            //         // Spawn spider if stage >= 2
+            //if(stage >= 2)
+            //{
+            //	var spider = Instantiate(spiderPrefab);
+
+            //         }
+
+            //         // Spawn pig if stage >= 4
+            //if(stage >= 4)
+            //{
+            //             var tl = tiles.Where(t => t.type == 0 && Vector2.Distance(t.coords, inTile.coords) > 6).ToList();
+            //             var t = tl[Random.Range(0, tl.Count)];
+            //             var pos = new Vector3(t.coords.x, 0, t.coords.y) * CellSize;
+            //	var rot = Quaternion.Euler(0, Random.Range(0, 360), 0);
+            //             var pig = Instantiate(pigPrefab, pos, rot);
+
+            //	//pig.transform.position = pos;
+            //         }
 
             // Spawn clowns
             int creatureCount = 1;
@@ -490,7 +542,7 @@ namespace TMM
                 if (i > 0) monsterPrefab = availableMonsters[Random.Range(0, availableMonsters.Count)];
 #if UNITY_EDITOR
 				
-				if(i>0) monsterPrefab = availableMonsters[0];
+				//if(i>0) monsterPrefab = availableMonsters[0];
 #endif
 				if (stage == 3 && i == 1)
 					secondClownIndexOnFirstDoubleStage = availableMonsters.IndexOf(monsterPrefab) + 1; // We already removed clown at index 0, which is the first one

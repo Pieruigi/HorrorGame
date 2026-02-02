@@ -79,7 +79,8 @@ namespace TMM
 		{
 			yield return new WaitForSeconds(.25f);
 			player.transform.root.GetComponentInChildren<CameraShake>().PlayLetterboxJumpScare();
-			GetComponent<CreatureAudio>()?.PlayPlayerDeath();
+			//GetComponent<CreatureAudio>()?.PlayPlayerDeath();
+			JumpscareManager.Instance?.PlayAudio();
 		}
 
 	}

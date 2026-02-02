@@ -17,15 +17,31 @@ namespace TMM
 		void OnEnable()
 		{
 			SceneManager.sceneLoaded += HandleOnSceneLoaded;
+			MiniGame.OnMiniGameBeaten += HandleOnMiniGameBeaten;
 		}
 
         void OnDisable()
         {
             SceneManager.sceneLoaded -= HandleOnSceneLoaded;
+            MiniGame.OnMiniGameBeaten -= HandleOnMiniGameBeaten;
         }
 
-		private void HandleOnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+        private void HandleOnMiniGameBeaten(MiniGame miniGame)
+        {
+			StartCoroutine(DoShowMessage());
+
+			// Local function 
+			IEnumerator DoShowMessage()
+			{
+				yield return new WaitForSeconds(2f);
+                ShowCustomMessage(7, false);
+            } 
+			
+        }
+
+        private void HandleOnSceneLoaded(Scene arg0, LoadSceneMode arg1)
 		{
+            
 			if (arg0.name == "GameScene")
 			{
 				if (GameManager.Instance.GameStage == 1)
@@ -37,10 +53,10 @@ namespace TMM
 
 		void SendFlashlightMessage()
 		{
-			return;
+			//return;
 			var seq = DOTween.Sequence();
 			seq.AppendInterval(2f);
-			seq.OnComplete(() => { MessageUI.Instance.ShowMessage("\nLShift: sprint\nSpace: jump\nF: flashlight on/off\nTAB: show wallet"); });
+			seq.OnComplete(() => { MessageUI.Instance.ShowMessage("F: flashlight on/off\nTAB: show wallet"); });
 		}
 
 		public void ShowCustomMessage(int messageId, bool keepOn = false)

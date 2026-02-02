@@ -22,7 +22,15 @@ namespace TMM
 		// Update is called once per frame
 		void Update()
 		{
-		}
+#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.X))
+			{
+                screamAudioSource.PlayDelayed(.7f);
+                StartCoroutine(LoadNextLevelDelayed());
+            }
+            
+#endif
+        }
 
 		void OnTriggerEnter(Collider other)
 		{
