@@ -46,7 +46,7 @@ namespace TMM
 
         Animator animator;
 
-        float attackRange = 1.75f;
+        float attackRange = 2.0f;
 
         CameraShake cameraShake;
 

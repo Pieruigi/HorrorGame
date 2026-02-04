@@ -122,6 +122,8 @@ namespace TMM
 
 			if (!value)
 			{
+				DestroyBulletAll();
+
 				transform.DOLocalMoveZ(0, moveTime).OnComplete(() =>
                 {
                 	transform.parent = parentDefault;
@@ -144,5 +146,12 @@ namespace TMM
 				
             }
         }
+
+		void DestroyBulletAll()
+		{
+			var list = FindObjectsByType<Bullet>(FindObjectsSortMode.None);
+			foreach (Bullet bullet in list)
+				Destroy(bullet.gameObject);
+		}
 	}
 }

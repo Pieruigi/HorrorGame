@@ -339,9 +339,10 @@ namespace TMM
 					activateFlashlightOnExit = false;
 					flashlight.SetOn(true);
 				}
-                // Activate the device interactor back
-                deviceInteractor.SetEnable(true);
-				cc.enabled = true;
+				// Activate the device interactor back
+				if (!beaten) deviceInteractor.SetEnable(true);
+                // Activate character controller    
+                cc.enabled = true;
             });
 
 			DoChildDeactivation();
