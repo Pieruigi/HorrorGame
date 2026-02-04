@@ -62,7 +62,7 @@ namespace TMM
 
 
 			// Set random jumpscares
-			int count = Random.Range(0, 3);
+			int count = Random.Range(0, 2);
 			//count = 4;
 
 			for (int i = 0; i < count && jsl.Count > 0; i++)

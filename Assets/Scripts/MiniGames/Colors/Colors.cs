@@ -42,6 +42,8 @@ namespace TMM
 
 		bool busy;
 
+		int jumpscareScore = -1;
+
 		protected override void Awake()
 		{
 			base.Awake();
@@ -93,6 +95,13 @@ namespace TMM
 						selected = null;
 
 						PlaySwoosh();
+
+						if(jumpscareScore > 0)
+						{
+							jumpscareScore--;
+							if(jumpscareScore == 0)
+								MiniJumpscare.Play();
+						}
 						
 					}
 				}
@@ -419,5 +428,15 @@ namespace TMM
 				selected = null;
             }
         }
-	}
+
+        public override void InitMiniJumpscare(MiniJumpscare miniJumpscare)
+        {
+            Debug.Log("TEST - Minijumpscare initialization");
+
+            base.InitMiniJumpscare(miniJumpscare);
+
+            // Play jumpscare at a specific move
+            jumpscareScore = Random.Range(20, 36);
+        }
+    }
 }

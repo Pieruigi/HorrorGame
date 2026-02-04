@@ -75,6 +75,8 @@ namespace TMM
 
 		CanvasGroup miniCanvas;
 
+		int jumpscareScore = -1;
+
 		protected override void Awake()
 		{
 			base.Awake();
@@ -431,6 +433,9 @@ namespace TMM
 					if (score < 0) score = 0;
 					scoreField.text = score.ToString("00");
 
+					if (jumpscareScore > 0)
+						MiniJumpscare.Play();
+
 				}
 			}
 
@@ -482,5 +487,15 @@ namespace TMM
 			nextBlockImage.sprite = sprite;
 
 		}
+
+        public override void InitMiniJumpscare(MiniJumpscare miniJumpscare)
+        {
+            Debug.Log("TEST - Minijumpscare initialization");
+
+            base.InitMiniJumpscare(miniJumpscare);
+
+            // Play jumpscare at a specific score
+            jumpscareScore = Random.Range(2, score-2);
+        }
     }
 }

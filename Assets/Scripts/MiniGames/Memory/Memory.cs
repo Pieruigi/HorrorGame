@@ -27,6 +27,8 @@ namespace TMM
 
 		bool checkingTiles = false;
 
+		int jumpscareScore = -1;
+
         protected override void Awake()
         {
 			base.Awake();
@@ -142,6 +144,15 @@ namespace TMM
 				selectedTiles[1].GetComponent<MemoryTile>().Select(false);
 				//yield return new WaitForSeconds(.25f);
 			}
+			else
+			{
+				if(jumpscareScore > 0)
+				{
+					jumpscareScore--;
+					if (jumpscareScore == 0)
+						MiniJumpscare.Play();
+				}
+			}
 
 			selectedTiles[0] = null;
 			selectedTiles[1] = null;
@@ -163,6 +174,16 @@ namespace TMM
 			swooshAudioSource.clip = swooshClips[Random.Range(0, swooshClips.Count)];
 			swooshAudioSource.Play();
         }
-		
-	}
+
+        public override void InitMiniJumpscare(MiniJumpscare miniJumpscare)
+        {
+            Debug.Log("TEST - Minijumpscare initialization");
+
+            base.InitMiniJumpscare(miniJumpscare);
+
+            // Play jumpscare at a specific move
+            jumpscareScore = Random.Range(2, 6);
+        }
+
+    }
 }

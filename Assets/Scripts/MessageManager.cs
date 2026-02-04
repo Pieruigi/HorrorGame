@@ -100,7 +100,7 @@ namespace TMM
 
 			IEnumerator Do()
 			{
-				yield return new WaitForSeconds(1);
+				yield return new WaitForSeconds(1f);
 
 				if(!IsMessageVisible())
                     MessageUI.Instance.ShowMessage("TAB: show wallet");

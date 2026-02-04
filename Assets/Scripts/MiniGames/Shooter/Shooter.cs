@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace TMM
 {
@@ -33,6 +34,8 @@ namespace TMM
         float targetSpeed = .8f;
 
         int count = 50;
+
+        int jumpscareScore = -1;
 
         protected override void Awake()
         {
@@ -166,6 +169,19 @@ namespace TMM
             counterUI.text = count.ToString("00");
             if (count == 0)
                 ReportBeaten();
+
+            if (count == jumpscareScore)
+                MiniJumpscare.Play();
+        }
+
+        public override void InitMiniJumpscare(MiniJumpscare miniJumpscare)
+        {
+            Debug.Log("TEST - Minijumpscare initialization");
+
+            base.InitMiniJumpscare(miniJumpscare);
+
+            // Play jumpscare at a specific move
+            jumpscareScore = Random.Range(10, count-10);
         }
 
     }

@@ -1053,6 +1053,7 @@ GameObject:
   - component: {fileID: 313385030}
   - component: {fileID: 313385032}
   - component: {fileID: 313385031}
+  - component: {fileID: 313385033}
   m_Layer: 0
   m_Name: Spot Light (1)
   m_TagString: Untagged
@@ -1159,6 +1160,21 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &313385033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313385029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07da243cde6756d4294bf3bbd4479dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minIntensity: 1
+  maxIntensity: 3
+  flickerSpeed: 0.05
 --- !u!4 &317293023 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4627377147535150397, guid: f48027b184eeaf4468e997df9c85c086,
@@ -3555,6 +3571,7 @@ GameObject:
   - component: {fileID: 830679486}
   - component: {fileID: 830679488}
   - component: {fileID: 830679487}
+  - component: {fileID: 830679489}
   m_Layer: 0
   m_Name: Spot Light (1)
   m_TagString: Untagged
@@ -3661,6 +3678,21 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &830679489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830679485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07da243cde6756d4294bf3bbd4479dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minIntensity: 1
+  maxIntensity: 3
+  flickerSpeed: 0.05
 --- !u!1 &832268806
 GameObject:
   m_ObjectHideFlags: 0
@@ -7161,6 +7193,7 @@ GameObject:
   - component: {fileID: 1730918058}
   - component: {fileID: 1730918060}
   - component: {fileID: 1730918059}
+  - component: {fileID: 1730918061}
   m_Layer: 0
   m_Name: Spot Light (1)
   m_TagString: Untagged
@@ -7267,6 +7300,21 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1730918061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730918057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07da243cde6756d4294bf3bbd4479dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minIntensity: 1
+  maxIntensity: 3
+  flickerSpeed: 0.05
 --- !u!1 &1744348291 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: dff53b237e4a307498a1a38a4d7dc5be,
@@ -12853,7 +12901,7 @@ Light:
   m_Type: 2
   m_Color: {r: 0.34229434, g: 1, b: 0, a: 1}
   m_Intensity: 1
-  m_Range: 10
+  m_Range: 16
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -12930,8 +12978,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07da243cde6756d4294bf3bbd4479dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minIntensity: 1
-  maxIntensity: 1.3
+  minIntensity: 1.4
+  maxIntensity: 1.8
   flickerSpeed: 0.05
 --- !u!1001 &8335655989737401302
 PrefabInstance:

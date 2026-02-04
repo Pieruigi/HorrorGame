@@ -111,6 +111,8 @@ namespace TMM.AI
 
 		Pig pig;
 
+		//bool miniGamePlaying = false;
+
 
 
         protected virtual void Awake()
@@ -199,10 +201,13 @@ namespace TMM.AI
 		private void HandleOnMiniGameStartPlaying()
 		{
 			idleTimer = idleTimerDefault * 2;
+			//miniGamePlaying = true;
+			
 		}
         private void HandleOnMiniGameStopPlaying()
         {
             idleTimer = idleTimerDefault;
+            //miniGamePlaying = false;
         }
 
         void InitByStage()
@@ -338,7 +343,8 @@ namespace TMM.AI
 		{
 			ResetPath();
 			//float ratio = idleTimer * .25f;
-			currentTimer = idleTimer;// Random.Range(idleTimer - ratio, idleTimer + ratio);
+			//currentTimer = idleTimer;// Random.Range(idleTimer - ratio, idleTimer + ratio);
+			currentTimer = 0;
 			agent.speed = walkSpeed;
 		}
 
@@ -425,8 +431,13 @@ namespace TMM.AI
 				return;
 			}
 
-			currentTimer -= Time.deltaTime;
-			if (currentTimer < 0)
+			//currentTimer -= Time.deltaTime;
+			//if (currentTimer < 0)
+			//{
+			//	SetState(ClownAState.Patrol);
+			//}
+			currentTimer += Time.deltaTime;
+			if(currentTimer > idleTimer)
 			{
 				SetState(ClownAState.Patrol);
 			}
@@ -457,6 +468,14 @@ namespace TMM.AI
 					//	list.Add(pig.transform.position);
      //               else
 					list = MazeBuilder.Instance.GetWalkableTilePositions().Where(t => Vector3.Distance(transform.position, t) > minDist).ToList();
+
+					//if (miniGamePlaying)
+					//{
+						
+					//	// Be sure to not clear the list
+					//	if(list.Count == 0)
+     //                       list = MazeBuilder.Instance.GetWalkableTilePositions().Where(t => Vector3.Distance(transform.position, t) > minDist).ToList();
+     //               }
 				}
 
 				// Get a random position

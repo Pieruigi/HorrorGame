@@ -127,7 +127,7 @@ namespace TMM
 			
 
 			vel.Normalize();
-			var xMax = .65f;
+			var xMax = .55f;
 			if(Mathf.Abs(vel.x) > xMax)
 			{
 				vel.x = Mathf.Sign(vel.x) * xMax;

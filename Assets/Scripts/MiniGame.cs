@@ -95,6 +95,8 @@ namespace TMM
 		}
 
 		public MiniJumpscare MiniJumpscare { get; private set; }
+
+		int activatorMessageId = -1;
 		
 
 		protected virtual void Awake()
@@ -102,6 +104,8 @@ namespace TMM
 			
 			mainCanvas.worldCamera = Camera.main;
 			mainCanvas.planeDistance = .1f;
+
+			activatorMessageId = deviceInteractor.MessageId;
 			
         }
 
@@ -162,6 +166,7 @@ namespace TMM
 					timeLeft = 0;
 					recheargeElapsed = 0;
 					Deactivate();
+					
 					return;
 				}
 
@@ -210,6 +215,8 @@ namespace TMM
 			PlayerDeath.OnPlayerDead += HandleOnPlayerDead;
 			DeviceInteractor.OnEnter += HandleOnDeviceEnter;
 			DeviceInteractor.OnExit += HandleOnDeviceExit;
+			AlarmManager.OnActivated += HandleOnAlarmActivated;
+			AlarmManager.OnDeactivated += HandleOnAlarmDeactivated;
         }
 
         protected virtual void OnDisable()
@@ -218,9 +225,21 @@ namespace TMM
 			PlayerDeath.OnPlayerDead -= HandleOnPlayerDead;
             DeviceInteractor.OnEnter -= HandleOnDeviceEnter;
             DeviceInteractor.OnExit += HandleOnDeviceExit;
+            AlarmManager.OnActivated -= HandleOnAlarmActivated;
+            AlarmManager.OnDeactivated -= HandleOnAlarmDeactivated;
         }
 
-		private void HandleOnDeviceEnter(DeviceInteractor deviceInteractor)
+        private void HandleOnAlarmActivated()
+        {
+			deviceInteractor.MessageId = -1;
+        }
+
+        private void HandleOnAlarmDeactivated()
+        {
+			if (timeLeft > 0) deviceInteractor.MessageId = activatorMessageId;
+        }
+
+        private void HandleOnDeviceEnter(DeviceInteractor deviceInteractor)
 		{
 			if (deviceInteractor == recharger)
 			{
@@ -248,13 +267,13 @@ namespace TMM
 
         private void HandleOnDeviceInteraction(DeviceInteractor deviceInteractor)
 		{
-			if (this.deviceInteractor == deviceInteractor && timeLeft > 0)
+			if (this.deviceInteractor == deviceInteractor && timeLeft > 0 && !AlarmManager.Instance.IsActive())
             {
 				Activate();
 				return;
             }
-				
-            if(recharger == deviceInteractor)
+
+			if (recharger == deviceInteractor && !AlarmManager.Instance.IsActive())
             {
 				if (Wallet.Instance.TryUseCoins(1))
 					Recharge();
@@ -322,6 +341,8 @@ namespace TMM
 
 			if (activateDot) DotCanvas.Instance.Hide();
 
+			if(timeLeft <= 0) deviceInteractor.MessageId = -1; // No time left
+
             CharacterController cc = player.GetComponent<CharacterController>();
             cc.enabled = false;
 
@@ -386,6 +407,7 @@ namespace TMM
 		public void Recharge()
         {
 			timeLeft += 15;// timer / 3f;
+			if(!AlarmManager.Instance.IsActive()) deviceInteractor.MessageId = activatorMessageId;
         }
 
         public virtual void InitMiniJumpscare(MiniJumpscare miniJumpscare)
