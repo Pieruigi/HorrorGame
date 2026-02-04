@@ -210,7 +210,7 @@ namespace TMM
 			model.transform.DOScale(0.1f, .5f).SetEase(Ease.OutBounce).OnComplete(()=> { model.SetActive(false); });
 			
 			spawnParticle.Play();
-			Debug.Log("TEST - ClownB - EnterHiddeState()");
+			
 		}
 
 		void EnterChaseState()
@@ -238,8 +238,6 @@ namespace TMM
 
             StartCoroutine(FollowPlayer());
 
-
-            Debug.Log("TEST - ClownB - EnterChaseState()");
         }
 
 		void EnterPreChaseState()
@@ -373,9 +371,7 @@ namespace TMM
 			var normPosition = playerPosition / 2f;
 			var coords = new Vector2(Mathf.Round(normPosition.x), Mathf.Round(normPosition.z));
 
-
-			Debug.Log($"TEST - SPAWN - PlayerPosition:{playerPosition}");
-
+			
 			float minDist = 2;
 
 			int tileIndex = MazeBuilder.Instance.GetClosestWalkableTileIndex(playerPosition);
@@ -405,17 +401,15 @@ namespace TMM
 
 			spawnPosition *= MazeBuilder.CellSize;
 
-			Debug.Log($"TEST - SPAWN - SpawnPosition:{spawnPosition}");
-
+			
 			bool exists = walkables.Exists(w => w == spawnPosition);
 
-			Debug.Log($"TEST - SPAWN - SpawnPosition Exists:{exists}");
-
+			
 			if (!exists)
 			{
 				// Get any position close enough
 				spawnPosition = walkables.Where(w => Vector3.Distance(w, spawnPosition) > minDist).OrderBy(w => Vector3.Distance(w, spawnPosition)).ToList()[0];
-				Debug.Log($"TEST - SPAWN - New SpawnPosition:{spawnPosition}");
+				
 			}
 
 

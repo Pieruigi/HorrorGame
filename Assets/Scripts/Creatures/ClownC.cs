@@ -235,9 +235,7 @@ namespace TMM
             if (playerTileIndex < 0)
                 return false;
 
-            Debug.Log($"TEST - ClownC - PlayerTileIndex:{playerTileIndex}");
-
-
+           
             // Get the player move direction
             var moveDirection = characterController.velocity;
             
@@ -248,15 +246,11 @@ namespace TMM
             
             moveDirection.Normalize();
 
-            Debug.Log($"TEST - ClownC - MoveDirection:{moveDirection}");
-
+         
             //if (Mathf.Abs(moveDirection.z) - Mathf.Abs(moveDirection.x) < 0.2f)
             //    return false; // Diagonal movement, skip
 
-            Debug.Log($"TEST - ClownC - MoveDirection:{moveDirection}");
-            Debug.Log($"TEST - ClownC - PlayerPosition:{player.transform.position}");
-
-
+            
             int dir = 0;
             if(Mathf.Abs(moveDirection.z) > Mathf.Abs(moveDirection.x)) // North or south
             {
@@ -377,7 +371,7 @@ namespace TMM
 
             bool found = false;
             int spawnTileIndex = -1;
-            Debug.Log($"TEST - ClownC - NewCoords.Count:{newCoords.Count}");
+           
             while (newCoords.Count > 0 && !found)
             {
                 var coords = newCoords[Random.Range(0, newCoords.Count)];
@@ -393,7 +387,7 @@ namespace TMM
          
             var spawnCoords = MazeBuilder.Instance.GetTileCoords(spawnTileIndex);
             spawnPosition = new Vector3(spawnCoords.x, 0, spawnCoords.y) * MazeBuilder.CellSize;
-            Debug.Log($"TEST - ClownC - SpawnPosition:{spawnPosition}");
+     
             return true;
         }
 
@@ -420,8 +414,7 @@ namespace TMM
         {
             if (newState == state) return;
 
-            Debug.Log($"TEST - ClownC - Setting state:{newState}");
-
+         
             var oldState = state;
             state = newState;
 

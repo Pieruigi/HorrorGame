@@ -337,7 +337,7 @@ namespace TMM.AI
 		protected virtual void EnterIdleState()
 		{
 			ResetPath();
-			float ratio = idleTimer * .25f;
+			//float ratio = idleTimer * .25f;
 			currentTimer = idleTimer;// Random.Range(idleTimer - ratio, idleTimer + ratio);
 			agent.speed = walkSpeed;
 		}

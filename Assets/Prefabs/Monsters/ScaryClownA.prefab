@@ -202,7 +202,7 @@ MonoBehaviour:
   sightAngle: 45
   hearMultiplier: 1
   smellRange: 4
-  idleTimer: 8
+  idleTimer: 9.6
   searchTimer: 3
 --- !u!114 &4694489374838300666
 MonoBehaviour:
@@ -810,7 +810,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.2
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0

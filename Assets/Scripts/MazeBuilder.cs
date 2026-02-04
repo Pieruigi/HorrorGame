@@ -526,16 +526,8 @@ namespace TMM
 			
 			for (int i = 0; i < creatureCount; i++)
 			{
-				// Choose a floor tile (type = 0) which is at a minimum distance the palayer spawn point
-				float minDistance = 10f / CellSize;
-				List<Tile> candidates = tiles.Where(t => t.type == 0 && Vector3.Distance(inTile.coords, t.coords) > minDistance).ToList();
-				if (candidates.Count == 0) // Just to be sure
-					candidates = tiles.Where(t => t.type == 0 && Vector3.Distance(inTile.coords, t.coords) > minDistance / 2f).ToList();
 
-				// Get a random point
-				var spawnTile = candidates[Random.Range(0, candidates.Count)];
-				// Remove current and closest tiles
-				candidates.RemoveAll(t => t == spawnTile || Vector3.Distance(t.coords, spawnTile.coords) < 12);
+				
 
 				// Chooser a random monster prefab
 				var monsterPrefab = availableMonsters[0]; // Default clown for when only one is available
@@ -554,7 +546,23 @@ namespace TMM
 				var monster = Instantiate(monsterPrefab);
 				monster.name = monsterPrefab.name; // To avoid having (Clone) at the end of the name
 				monster.GetComponent<NavMeshAgent>().enabled = false;
-				monster.transform.position = new Vector3(spawnTile.coords.x, 0, spawnTile.coords.y) * CellSize;
+
+				if (i == 0) // We only need to place the first clown on start
+				{
+                    // Choose a floor tile (type = 0) which is at a minimum distance the palayer spawn point
+                    float minDistance = 20f;
+                    List<Tile> candidates = tiles.Where(t => t.type == 0 && Vector3.Distance(inTile.coords, t.coords) > minDistance).ToList();
+                 
+                    if (candidates.Count == 0) // Just to be sure
+                        candidates = tiles.Where(t => t.type == 0 && Vector3.Distance(inTile.coords, t.coords) > minDistance / 2f).ToList();
+
+                    // Get a random point
+                    var spawnTile = candidates[Random.Range(0, candidates.Count)];
+                    // Remove current and closest tiles
+                    candidates.RemoveAll(t => t == spawnTile || Vector3.Distance(t.coords, spawnTile.coords) < 12);
+                    monster.transform.position = new Vector3(spawnTile.coords.x, 0, spawnTile.coords.y) * CellSize;
+                }
+				
 				monster.GetComponent<NavMeshAgent>().enabled = true;
 			}
 
@@ -1376,9 +1384,7 @@ namespace TMM
 			position /= 2f;
 			var coords = new Vector2(Mathf.Round(position.x), Mathf.Round(position.z));
 
-			Debug.Log($"TEST - TILE - PlayerPosition:{transform.position}");
-			Debug.Log($"TEST - TILE - Coords:{coords}");
-
+		
 			Tile tile = tiles.Where(t => t.type == 0).OrderBy(t => Vector2.Distance(t.coords, coords)).ToList()[0];
 			
 			return tiles.IndexOf(tile);

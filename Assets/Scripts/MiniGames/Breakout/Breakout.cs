@@ -29,6 +29,8 @@ namespace TMM
 
         int brickCount = 0;
 
+        int jumpscareScore = -1;
+
         protected override void Awake()
         {
             base.Awake();
@@ -53,6 +55,8 @@ namespace TMM
             {
                 if (!Paused)
                 {
+                    
+
                     // Move player ship
                     if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
                     {
@@ -125,6 +129,10 @@ namespace TMM
             brickCount--;
             if (brickCount <= 0)
                 ReportBeaten();
+
+            if (brickCount == jumpscareScore)
+                MiniJumpscare.Play();
+
         }
 
         public void ReportBrickAdded(BreakoutBrick brick)
@@ -142,6 +150,16 @@ namespace TMM
         {
             yield return new WaitForSeconds(delay);
             ship.transform.localPosition = shipPositionDefault;
+        }
+
+        public override void InitMiniJumpscare(MiniJumpscare miniJumpscare)
+        {
+            Debug.Log("TEST - Minijumpscare initialization");
+
+            base.InitMiniJumpscare(miniJumpscare);
+
+            // Play jumpscare at a specific score
+            jumpscareScore = Random.Range(1, brickCount);
         }
 	}
 }

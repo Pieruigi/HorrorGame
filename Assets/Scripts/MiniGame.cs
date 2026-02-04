@@ -93,7 +93,8 @@ namespace TMM
 		{
 			get { return stopTimer; }
 		}
-	
+
+		public MiniJumpscare MiniJumpscare { get; private set; }
 		
 
 		protected virtual void Awake()
@@ -385,5 +386,10 @@ namespace TMM
         {
 			timeLeft += 15;// timer / 3f;
         }
-	}
+
+        public virtual void InitMiniJumpscare(MiniJumpscare miniJumpscare)
+		{
+			MiniJumpscare = miniJumpscare;
+		}
+    }
 }

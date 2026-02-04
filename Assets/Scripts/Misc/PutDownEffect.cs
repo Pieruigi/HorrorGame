@@ -28,7 +28,7 @@ namespace TMM
 		
 		public void PlayEffect()
 		{
-			Debug.Log("TEST - PlayEffect - " + gameObject);
+			
 			gameObject.SetActive(true);
 			var originalPosition = transform.position;
 			var originalRotation = transform.rotation;
@@ -48,7 +48,7 @@ namespace TMM
 
 			// Move to the original position
 			float duration = .25f;
-			Debug.Log("TEST - Position:" + position);
+			
 			transform.rotation = rotation;
 			transform.DOMove(position, duration);
 			//transform.DORotate(Vector3.up * 180f, duration); 

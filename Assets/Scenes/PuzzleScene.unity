@@ -836,6 +836,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CameraFadeUI
       objectReference: {fileID: 0}
+    - target: {fileID: 4184032207761029357, guid: 9a46aca5371ee5942bab30381bf55c1a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4444722461925748724, guid: 9a46aca5371ee5942bab30381bf55c1a,
         type: 3}
       propertyPath: m_Pivot.x
@@ -3397,6 +3402,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf1a933a399450a46b0039c66272c19f, type: 3}
+--- !u!1001 &1882238502
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 418301287211695947, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_Name
+      value: JumpscareManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3733687158560444419, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3733687158560444419, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3733687158560444419, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3733687158560444419, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3733687158560444419, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3733687158560444419, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3733687158560444419, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3733687158560444419, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3733687158560444419, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3733687158560444419, guid: 2a5aa917fcf5ef349b7857a8b21bead2,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2a5aa917fcf5ef349b7857a8b21bead2, type: 3}
 --- !u!1 &1912230895 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2269800702610682574, guid: 7957334a4d5e31747ab792f75b922d89,
@@ -7061,3 +7134,4 @@ SceneRoots:
   - {fileID: 9175796022864603265}
   - {fileID: 976587230}
   - {fileID: 641906174}
+  - {fileID: 1882238502}

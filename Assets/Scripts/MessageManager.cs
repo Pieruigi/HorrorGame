@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using StarterAssets;
 using TMM.UI;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,17 +15,98 @@ namespace TMM
 		[SerializeField]
 		List<string> messages = new List<string>();
 
+		bool walletUpdated = false;
 
-		void OnEnable()
+		bool sprintAndjump = false;
+
+
+        private void Start()
+        {
+			
+        }
+
+        private void Update()
+        {
+		
+        }
+
+        void OnEnable()
 		{
 			SceneManager.sceneLoaded += HandleOnSceneLoaded;
 			MiniGame.OnMiniGameBeaten += HandleOnMiniGameBeaten;
+			Wallet.OnBalanceUpdated += HandleOnWalletUpdated;
+			MazeBuilder.OnMazeCreated += HandleOnMazeCreated;
 		}
 
         void OnDisable()
         {
             SceneManager.sceneLoaded -= HandleOnSceneLoaded;
             MiniGame.OnMiniGameBeaten -= HandleOnMiniGameBeaten;
+            Wallet.OnBalanceUpdated -= HandleOnWalletUpdated;
+            MazeBuilder.OnMazeCreated -= HandleOnMazeCreated;
+        }
+
+        private void HandleOnMazeCreated()
+        {
+            if(GameManager.Instance.GameStage > 1)
+			{
+				walletUpdated = true;
+				sprintAndjump = true;
+			}
+			else
+			{
+				StartCoroutine(CheckSprintAndJump());
+			}
+		}
+
+		IEnumerator CheckSprintAndJump()
+		{
+			if (sprintAndjump) yield break;
+
+			// Get player 
+			FirstPersonController player = FindFirstObjectByType<FirstPersonController>();
+
+			while (!sprintAndjump)
+			{
+                // Raycast
+				var origin = player.transform.position;
+				origin.y = 0.5f;
+				var direction = player.transform.forward;
+
+				if (Physics.Raycast(origin, direction, out var hit, 2.5f))
+				{
+					var ft = hit.collider.transform.parent.GetComponent<FloorTrigger>();
+					if (ft != null && !ft.Triggered) 
+					{
+						sprintAndjump = true;
+                        if (!IsMessageVisible())
+                            MessageUI.Instance.ShowMessage("Sprint (LSHIFT) and jump (SPACE)");
+                    }
+				}
+                
+
+				yield return new WaitForSeconds(.2f);
+            }
+
+		}
+
+		private void HandleOnWalletUpdated(int amount)
+        {
+			if (walletUpdated) return;
+
+			walletUpdated = true;
+
+			StartCoroutine(Do());
+
+			IEnumerator Do()
+			{
+				yield return new WaitForSeconds(1);
+
+				if(!IsMessageVisible())
+                    MessageUI.Instance.ShowMessage("TAB: show wallet");
+            }
+
+				
         }
 
         private void HandleOnMiniGameBeaten(MiniGame miniGame)
@@ -56,7 +139,7 @@ namespace TMM
 			//return;
 			var seq = DOTween.Sequence();
 			seq.AppendInterval(2f);
-			seq.OnComplete(() => { MessageUI.Instance.ShowMessage("F: flashlight on/off\nTAB: show wallet"); });
+			seq.OnComplete(() => { MessageUI.Instance.ShowMessage("F: flashlight on/off"); });
 		}
 
 		public void ShowCustomMessage(int messageId, bool keepOn = false)

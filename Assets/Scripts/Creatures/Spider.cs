@@ -209,7 +209,6 @@ namespace TMM
                 if (cardDirs.OrderBy(d => Vector3.Dot(d, transform.up)).ToList()[0] == -bestDir)
                 {
                     // Attack the player
-                    //Debug.Log("TEST - Spider - Attack!:" + cardDirs.OrderBy(d => Vector3.Dot(d, transform.up)).ToList()[0]);
                     SetState(SpiderState.Attack);
                 }
 
@@ -246,8 +245,6 @@ namespace TMM
                 
 
 
-                Debug.Log("TEST - Spider - Best dir: " + bestDir);
-
             // Look at the player
             Quaternion targetRotation = Quaternion.LookRotation(Vector3.up, bestDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f);
@@ -259,7 +256,6 @@ namespace TMM
                 if(cardDirs.OrderBy(d => Vector3.Dot(d, transform.up)).ToList()[0] == -bestDir)
                 {
                     // Attack the player
-                    //Debug.Log("TEST - Spider - Attack!:" + cardDirs.OrderBy(d => Vector3.Dot(d, transform.up)).ToList()[0]);
                     SetState(SpiderState.Attack);
                 }
                 
@@ -332,7 +328,6 @@ namespace TMM
             model.transform.DOLocalMove(Vector3.zero, .2f);
 
             
-            Debug.Log("TEST - Spider - CameraTarget:"+cameraTarget);
             // Jump to the player
             float time = .25f;
             float distance = .5f;

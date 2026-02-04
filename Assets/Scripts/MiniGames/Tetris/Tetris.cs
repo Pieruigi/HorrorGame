@@ -328,14 +328,14 @@ namespace TMM
 			float rayDist = .25f;
 			for (int i = 0; i < count && !failed; i++)
 			{
-				Debug.Log($"TEST - Try i:{i}");
+				
 				var child = currentBlock.transform.GetChild(i);
 				var orig = child.position;
 				var dir = -child.up;
 				RaycastHit hitInfo;
 				if (Physics.Raycast(orig, dir, out hitInfo, rayDist, LayerMask.GetMask(new string[] { "Interactable" })))
 				{
-					Debug.Log($"TEST - Hit:{hitInfo.collider.transform.parent.gameObject.name}/{hitInfo.collider.gameObject.name}");
+				
 					if ("e".Equals(hitInfo.collider.gameObject.name.ToLower()))
 						cells.Add(hitInfo.collider.gameObject);
 					else
@@ -343,12 +343,12 @@ namespace TMM
 				}
 				else
 				{
-					Debug.Log("Hit failed");
+		
 					failed = true;
 				}
 			}
 
-			Debug.Log($"TEST - Failed:{failed}");
+		
 
 			// If failed just shake the block
 			if (failed)
@@ -478,7 +478,7 @@ namespace TMM
 			// Set sprite
 
 			var sprite = sprites.Find(s => s.name.ToLower().EndsWith(nextBlockPrefab.name.Substring(nextBlockPrefab.name.Length - 2).ToLower()));
-			Debug.Log("TEST - Sprite:" + sprite.name + ", prefab:" + nextBlockPrefab.name.Substring(nextBlockPrefab.name.Length - 2).ToLower());
+			
 			nextBlockImage.sprite = sprite;
 
 		}
