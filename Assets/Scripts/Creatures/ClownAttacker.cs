@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -9,6 +10,7 @@ namespace TMM
 {
 	public class ClownAttacker : MonoBehaviour
 	{
+	
 
 		[SerializeField]
 		float attackRange;
@@ -23,8 +25,15 @@ namespace TMM
 
 		FirstPersonController player;
 
-	    // Start is called before the first frame update
-	    void Start()
+		float attackRangeDefault;
+
+        private void Awake()
+        {
+            attackRangeDefault = attackRange;
+        }
+
+        // Start is called before the first frame update
+        void Start()
 	    {
 			player = FindFirstObjectByType<FirstPersonController>();
 	    }
@@ -35,7 +44,37 @@ namespace TMM
 
 		}
 
-		public bool CanAttackPlayer()
+        private void OnEnable()
+        {
+			TimedBuffDebuff.OnApplied += HandleOnDeBuffApplied;
+            TimedBuffDebuff.OnExpired += HandleOnDeBuffExpired;
+        }
+
+        private void OnDisable()
+        {
+            TimedBuffDebuff.OnApplied -= HandleOnDeBuffApplied;
+            TimedBuffDebuff.OnExpired -= HandleOnDeBuffExpired;
+        }
+
+        private void HandleOnDeBuffApplied(TimedBuffDebuff arg0)
+        {
+			if (arg0.GetType() == typeof(StupidClownBuff))
+			{
+				attackRange = attackRangeDefault * (arg0 as StupidClownBuff).AttackRangeMultiplier;
+				return;
+			}
+        }
+
+        private void HandleOnDeBuffExpired(TimedBuffDebuff arg0)
+        {
+            if (arg0.GetType() == typeof(StupidClownBuff))
+            {
+                attackRange = attackRangeDefault;
+                return;
+            }
+        }
+
+        public bool CanAttackPlayer()
 		{
 			// Check distance
 			if (Vector3.Distance(player.transform.position, transform.position) > attackRange)
@@ -53,7 +92,9 @@ namespace TMM
 
 		public void Attack()
 		{
-			player.GetComponent<PlayerDeath>().Die(gameObject);
+            StupidClownBuff.Instance.ForceExpire();
+
+            player.GetComponent<PlayerDeath>().Die(gameObject);
 
 			player.transform.parent = playerDeadTarget;
 
@@ -72,6 +113,8 @@ namespace TMM
 				//GameManager.Instance.RestartGame();
 				GameManager.Instance.YouLose();
             });
+
+			
 
 		}
 		

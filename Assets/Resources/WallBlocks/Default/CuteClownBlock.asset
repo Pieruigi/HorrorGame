@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b5356ab92b5a9428fe41381b5e3e0f, type: 3}
+  m_Name: CuteClownBlock
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 5723928287559998530, guid: 82c45fe68d57d6949ab294d59c4bcd2a, type: 3}

@@ -74,6 +74,8 @@ namespace TMM.AI
 		float searchTimer = 2;
 
 
+		float speedMultiplier = 1;
+
 		//[SerializeField]
 		//Transform playerDeadTarget;
 
@@ -134,7 +136,11 @@ namespace TMM.AI
 
 		protected virtual void Start()
 		{
+			// Check cute clown buff
+			speedMultiplier = StupidClownBuff.Instance.IsActive ? StupidClownBuff.Instance.SpeedMultiplier : 1f;
+
 			SetState(ClownAState.Idle);
+			EnterIdleState();
 			player = FindFirstObjectByType<FirstPersonController>().gameObject;
 			fpc = player.GetComponent<FirstPersonController>();
 			flashlight = player.transform.parent.GetComponentInChildren<Flashlight>();
@@ -166,6 +172,8 @@ namespace TMM.AI
             MiniGame.OnStartPlaying += HandleOnMiniGameStartPlaying;
 			MiniGame.OnStopPlaying += HandleOnMiniGameStopPlaying;
 			MazeBuilder.OnMazeCreated += HandleOnMazeCreated;
+			TimedBuffDebuff.OnApplied += HandleOnDeBuffApplied;
+			TimedBuffDebuff.OnExpired += HandleOnDeBuffExpired;
         }
 
         private void OnDisable()
@@ -175,6 +183,30 @@ namespace TMM.AI
             MiniGame.OnStartPlaying -= HandleOnMiniGameStartPlaying;
 			MiniGame.OnStopPlaying -= HandleOnMiniGameStopPlaying;
 			MazeBuilder.OnMazeCreated -= HandleOnMazeCreated;
+            TimedBuffDebuff.OnApplied -= HandleOnDeBuffApplied;
+            TimedBuffDebuff.OnExpired -= HandleOnDeBuffExpired;
+        }
+
+        private void HandleOnDeBuffApplied(TimedBuffDebuff arg0)
+        {
+			if (arg0.GetType() == typeof(StupidClownBuff))
+			{
+				// Update speed
+				speedMultiplier = (arg0 as StupidClownBuff).SpeedMultiplier;
+				UpdateAgentSpeed();
+				return;
+			}
+        }
+
+        private void HandleOnDeBuffExpired(TimedBuffDebuff arg0)
+        {
+            if (arg0.GetType() == typeof(StupidClownBuff))
+            {
+				// Reset speed
+				speedMultiplier = 1f;
+				UpdateAgentSpeed();
+                return;
+            }
         }
 
         private void HandleOnMazeCreated()
@@ -185,17 +217,18 @@ namespace TMM.AI
         private void HandleOnAlarmActivated()
 		{
             if (state == ClownAState.Chase || state == ClownAState.Search)
-                agent.speed = runSpeed * activeAlarmSpeedMul;
+				UpdateAgentSpeed();
+                //agent.speed = runSpeed * activeAlarmSpeedMul;
             
         }
 
 		private void HandleOnAlarmDeactivated()
 		{
-			if (state == ClownAState.Chase || state == ClownAState.Search)
-				agent.speed = runSpeed;
-			else
-				agent.speed = walkSpeed;
-
+			//if (state == ClownAState.Chase || state == ClownAState.Search)
+			//	agent.speed = runSpeed;
+			//else
+			//	agent.speed = walkSpeed;
+			UpdateAgentSpeed();
 		}
 
 		private void HandleOnMiniGameStartPlaying()
@@ -208,6 +241,16 @@ namespace TMM.AI
         {
             idleTimer = idleTimerDefault;
             //miniGamePlaying = false;
+        }
+
+		void UpdateAgentSpeed()
+		{
+            if (state == ClownAState.Chase || state == ClownAState.Search)
+                agent.speed = runSpeed * (AlarmManager.Instance.IsActive() ? activeAlarmSpeedMul : 1f);
+            else
+                agent.speed = walkSpeed;
+
+			agent.speed *= speedMultiplier;
         }
 
         void InitByStage()
@@ -345,14 +388,16 @@ namespace TMM.AI
 			//float ratio = idleTimer * .25f;
 			//currentTimer = idleTimer;// Random.Range(idleTimer - ratio, idleTimer + ratio);
 			currentTimer = 0;
-			agent.speed = walkSpeed;
+			//agent.speed = walkSpeed;
+			UpdateAgentSpeed();
 		}
 
 		protected virtual void EnterChaseState()
 		{
 			ResetPath();
 			if (agent.isStopped) agent.isStopped = false;
-			agent.speed = runSpeed * (AlarmManager.Instance.IsActive() ? activeAlarmSpeedMul : 1f);
+			UpdateAgentSpeed();
+			//agent.speed = runSpeed * (AlarmManager.Instance.IsActive() ? activeAlarmSpeedMul : 1f);
 			
             // Kill any previous coroutine
             StopAllCoroutines();
@@ -364,14 +409,16 @@ namespace TMM.AI
 		protected virtual void EnterPatrolState()
 		{
 			ResetPath();
-			agent.speed = walkSpeed;
+			//agent.speed = walkSpeed;
+			UpdateAgentSpeed();
 			if (agent.isStopped) agent.isStopped = false;
 		}
 
 		protected virtual void EnterSearchState()
 		{
 			if (agent.isStopped) agent.isStopped = false;
-            agent.speed = runSpeed * (AlarmManager.Instance.IsActive() ? activeAlarmSpeedMul : 1f);
+			UpdateAgentSpeed();
+			//agent.speed = runSpeed * (AlarmManager.Instance.IsActive() ? activeAlarmSpeedMul : 1f);
             currentTimer = searchTimer;
 
 			StopAllCoroutines();
@@ -381,7 +428,8 @@ namespace TMM.AI
 		protected virtual void EnterForceDestination()
 		{
 			if (agent.isStopped) agent.isStopped = false;
-			agent.speed = runSpeed;
+			UpdateAgentSpeed();
+			//agent.speed = runSpeed;
 
 			StopAllCoroutines();
 			agent.SetDestination(forcedDestination);
@@ -564,7 +612,7 @@ namespace TMM.AI
 			// First we check the smell
 			if (pDir.magnitude < smellRange)
 			{
-				Debug.Log("Creature smelled you");
+				
 				target = player.transform;
 				OnPlayerSpotted?.Invoke(this, true);
 				return true;
@@ -577,7 +625,7 @@ namespace TMM.AI
 			//var _noisers = noisers.OrderBy(n => n.GetTargetDistance(transform.position) - n.GetNoiseRange()).ToList();
 			if (pDir.magnitude < fpc.NoiseRange * hearMultiplier)
 			{
-				Debug.Log("Creature heard you");
+				
 				//target = player.transform;
 				target = player.transform;
 				OnPlayerSpotted?.Invoke(this, true);
@@ -616,7 +664,7 @@ namespace TMM.AI
 
 			}
 
-			Debug.Log("Creature saw you");
+			
 			target = player.transform;
 			OnPlayerSpotted?.Invoke(this, true);
 			return true;

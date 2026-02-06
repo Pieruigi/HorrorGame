@@ -35,13 +35,15 @@ namespace TMM
         ClownAttacker attacker;
         CharacterController characterController;
 
+        float speedDefault;
+
         private void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             attacker = GetComponent<ClownAttacker>();
             
             state = ClownCState.Hidden;
-            EnterHiddenState();
+            speedDefault = agent.speed;
 
 
         }
@@ -49,8 +51,11 @@ namespace TMM
         // Start is called before the first frame update
         void Start()
 	    {
-			    
-	    }
+            // Check speed
+            agent.speed = speedDefault * (StupidClownBuff.Instance.IsActive ? StupidClownBuff.Instance.SpeedMultiplier : 1f);
+
+            EnterHiddenState();
+        }
 
 	    // Update is called once per frame
 	    void Update()
@@ -72,7 +77,8 @@ namespace TMM
 			MazeBuilder.OnMazeCreated += HandleOnMazeCreated;
             AlarmManager.OnActivated += HandleOnAlarmActivated;
             AlarmManager.OnDeactivated += HandleOnAlarmDeactivated;
-
+            TimedBuffDebuff.OnApplied += HandleOnDeBuffApplied;
+            TimedBuffDebuff.OnExpired += HandleOnDeBuffExpired;
         }
 
         private void OnDisable()
@@ -80,6 +86,26 @@ namespace TMM
             MazeBuilder.OnMazeCreated -= HandleOnMazeCreated;
             AlarmManager.OnActivated -= HandleOnAlarmActivated;
             AlarmManager.OnDeactivated -= HandleOnAlarmDeactivated;
+            TimedBuffDebuff.OnApplied -= HandleOnDeBuffApplied;
+            TimedBuffDebuff.OnExpired -= HandleOnDeBuffExpired;
+        }
+
+        private void HandleOnDeBuffApplied(TimedBuffDebuff arg0)
+        {
+            if (arg0.GetType() == typeof(StupidClownBuff))
+            {
+                agent.speed = speedDefault * (arg0 as StupidClownBuff).SpeedMultiplier;
+                return;
+            }
+        }
+
+        private void HandleOnDeBuffExpired(TimedBuffDebuff arg0)
+        {
+            if (arg0.GetType() == typeof(StupidClownBuff))
+            {
+                agent.speed = speedDefault;
+                return;
+            }
         }
 
         private void HandleOnAlarmActivated()

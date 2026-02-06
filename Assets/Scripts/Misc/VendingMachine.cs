@@ -8,7 +8,7 @@ namespace TMM
 	/// <summary>
 	/// NoTriggerTiles only disables trigger tiles, neither switchs the alarm off nor remove debuff cause by an already triggered trap
 	/// </summary>
-	public enum VendingMachineType { NoTriggerTiles, Map }
+	public enum VendingMachineType { NoTriggerTiles, Map, CuteClown }
 
 	public class VendingMachine : MonoBehaviour
 	{
@@ -27,6 +27,9 @@ namespace TMM
 
 		[SerializeField]
 		TMP_Text descriptionField;
+
+		[SerializeField]
+		TMP_Text timeField;
 
 		[SerializeField]
 		Color enabledColor;
@@ -80,6 +83,9 @@ namespace TMM
 			TriggerTileManager.OnChanged += HandleOnTriggerTileManagerChanged;
 			AlarmManager.OnActivated += HandleOnAlarmActivated;
 			AlarmManager.OnDeactivated += HandleOnAlarmDeactivated;
+
+			TimedBuffDebuff.OnApplied += HandleOnDeBuffApplied;
+            TimedBuffDebuff.OnExpired += HandleOnDeBuffExpired;
         }
 
         void OnDisable()
@@ -89,6 +95,29 @@ namespace TMM
 			TriggerTileManager.OnChanged -= HandleOnTriggerTileManagerChanged;
             AlarmManager.OnActivated -= HandleOnAlarmActivated;
 			AlarmManager.OnDeactivated -= HandleOnAlarmDeactivated;
+
+            TimedBuffDebuff.OnApplied -= HandleOnDeBuffApplied;
+            TimedBuffDebuff.OnExpired -= HandleOnDeBuffExpired;
+        }
+
+        private void HandleOnDeBuffApplied(TimedBuffDebuff arg0)
+        {
+			if (arg0.GetType() == typeof(StupidClownBuff) && type == VendingMachineType.CuteClown) 
+			{
+				InitButton(true);
+				InitDescription(true);
+				return;
+			}
+        }
+
+        private void HandleOnDeBuffExpired(TimedBuffDebuff arg0)
+        {
+            if (arg0.GetType() == typeof(StupidClownBuff) && type == VendingMachineType.CuteClown)
+            {
+                InitButton(false);
+                InitDescription(false);
+                return;
+            }
         }
 
         private void HandleOnAlarmActivated()
@@ -129,6 +158,14 @@ namespace TMM
 						StartCoroutine(SwitchAndForceOff());	
 					}
 					break;
+				case VendingMachineType.CuteClown:
+					if (Wallet.Instance.TryUseCoins(cost))
+					{
+						//StupidClownBuff.Instance.Timer = timer;
+						StupidClownBuff.Instance.Apply();
+						
+					}
+					break;
 			}
 
 		}
@@ -162,6 +199,11 @@ namespace TMM
 					InitButton(false);
 					InitDescription(false);
 					break;
+				case VendingMachineType.CuteClown:
+					InitButton(StupidClownBuff.Instance.IsActive);
+					InitDescription(StupidClownBuff.Instance.IsActive);
+					InitTime(timer);
+					break;
 			}
 		}
 
@@ -175,6 +217,11 @@ namespace TMM
 			descriptionField.color = disabled ? enabledColor : disabledColor;
 			deviceInteractor.MessageId = disabled ? -1 : messageId;
         }
+
+		void InitTime(float time)
+		{
+			timeField.text = $"{time.ToString("00")} sec";
+		}
 
 		// public void SetType(VendingMachineType type)
 		// {

@@ -40,6 +40,8 @@ namespace TMM
 
 		Vector3 spawnPosition;
 
+		float speedDefault;
+
 		
 
 		ClownBState state = ClownBState.Hidden;
@@ -69,13 +71,19 @@ namespace TMM
 			randomMaxDefault = randomMax;
 			attacker = GetComponent<ClownAttacker>();
 			checkIdleTimeDefault = checkIdleTime;
+			speedDefault = agent.speed;
         }
 
         // Start is called before the first frame update
         void Start()
 	    {
+
 			playerChased = FindFirstObjectByType<PlayerChased>();
 			playerController = FindFirstObjectByType<FirstPersonController>();
+
+			// Check speed
+			agent.speed = speedDefault * (StupidClownBuff.Instance.IsActive ? StupidClownBuff.Instance.SpeedMultiplier : 1f);
+
 			EnterHiddenState();
 	    }
 
@@ -98,6 +106,8 @@ namespace TMM
             MazeBuilder.OnMazeCreated += HandleOnMazeCreated;
 			MiniGame.OnStartPlaying += HandleOnMinigameStartPlaying;
 			MiniGame.OnStopPlaying += HandleOnMinigameStopPlaying;
+			TimedBuffDebuff.OnApplied += HandleOnDeBuffApplied;
+            TimedBuffDebuff.OnExpired += HandleOnDeBuffExpired;
         }
 
         private void OnDisable()
@@ -105,6 +115,26 @@ namespace TMM
             MazeBuilder.OnMazeCreated -= HandleOnMazeCreated;
 			MiniGame.OnStartPlaying -= HandleOnMinigameStartPlaying;
 			MiniGame.OnStopPlaying -= HandleOnMinigameStopPlaying;
+            TimedBuffDebuff.OnApplied -= HandleOnDeBuffApplied;
+            TimedBuffDebuff.OnExpired -= HandleOnDeBuffExpired;
+        }
+
+        private void HandleOnDeBuffApplied(TimedBuffDebuff arg0)
+        {
+			if (arg0.GetType() == typeof(StupidClownBuff))
+			{
+				agent.speed = speedDefault * (arg0 as StupidClownBuff).SpeedMultiplier;
+				return;
+			}
+        }
+
+        private void HandleOnDeBuffExpired(TimedBuffDebuff arg0)
+        {
+            if (arg0.GetType() == typeof(StupidClownBuff))
+            {
+                agent.speed = speedDefault;
+                return;
+            }
         }
 
         private void HandleOnMinigameStartPlaying()
