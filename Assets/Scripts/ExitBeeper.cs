@@ -87,7 +87,7 @@ namespace TMM
             var tPos = target.position;
             //pPos.y = tPos.y = 0;
             var dist = Vector3.Distance(pPos, tPos);
-            var maxDistance = 20f;
+            var maxDistance = 40f;
             var minDist = 2f;
             if (dist > maxDistance) return minSpeed;
             if(dist < minDist) return maxSpeed;

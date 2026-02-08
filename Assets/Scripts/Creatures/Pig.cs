@@ -21,7 +21,7 @@ namespace TMM.AI
 
 		FirstPersonController player;
 
-		float range = 8f;
+		float range = 6.4f;
 
 		[SerializeField]
 		Animator animator;

@@ -258,7 +258,11 @@ namespace TMM
             randomMax = randomMaxDefault;
             model.SetActive(true);
 
-            model.transform.DOScale(1f, .5f).SetEase(Ease.OutBounce);
+			float scale = 1f;
+			if(StupidClownBuff.Instance.IsActive)
+				scale *= StupidClownBuff.Instance.ScaleMultiplier;
+
+            model.transform.DOScale(scale, .5f).SetEase(Ease.OutBounce);
 
             spawnParticle.Play();
 

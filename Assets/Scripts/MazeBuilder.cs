@@ -9,6 +9,7 @@ using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 
@@ -373,8 +374,21 @@ namespace TMM
 
 			while (availables.Count > 0 && count < maxCoins)
 			{
+				Tile tile = null;
 				// get a random tile
-				var tile = availables[Random.Range(0, availables.Count)];
+				//var tile = availables[Random.Range(0, availables.Count)];
+				
+				if(GameManager.Instance.GameStage == 1 && count == 0)
+				{
+					var list = availables.Where(t => Vector3.Distance(t.coords, inTile.coords) < 6).ToList();
+                    tile = list[Random.Range(0, list.Count)];
+                }
+				
+				if(tile == null)
+				{
+                    tile = availables[Random.Range(0, availables.Count)];
+                }
+
 
 				tile.coin = InstantiateObject(coinPickerPrefab, tile.coords).GetComponent<CoinPicker>();
 
@@ -581,6 +595,8 @@ namespace TMM
 			int level = 1;
 			var miniGame = MiniGameManager.Instance.ChooseMiniGame(level);
 
+			Debug.Log("Minigame chosen:" + miniGame.name);
+
 			WallBlockData wbd = new WallBlockData();
 			wbd.prefabs = miniGame.Prefabs.ToList();
 			wbd.count = 1;
@@ -591,6 +607,8 @@ namespace TMM
 			availableBlocks.Add(wbd);
 
 			minigameBlockIndex = availableBlocks.Count - 1;
+
+
 		}
 
 		void InstantiateWallsAndFloors()
@@ -716,6 +734,7 @@ namespace TMM
 			// // Load wall blocks
 			var blocks = Resources.LoadAll<WallBlockAsset>($"{WallBlockAsset.ResourceFolder}/{theme}");
 
+			
 			// Clear the available block list
 			availableBlocks.Clear();
 			// Fill the list with common blocks
@@ -756,8 +775,12 @@ namespace TMM
 			//
 			int vendingCount = 1; // It depends by the stage
 
+			if (stage >= 3)
+				vendingCount++;
+			
 			// Check common vending machines
-			var vendBlocks = Resources.LoadAll<VendingMachineBlockAsset>($"{VendingMachineBlockAsset.ResourceFolder}/{theme}").ToList();
+			var vendBlocks = Resources.LoadAll<VendingMachineBlockAsset>($"{VendingMachineBlockAsset.ResourceFolder}/{theme}").Where(w => stage >= w.MinStage).ToList();
+
 			List<VendingMachineBlockAsset> weightedVendBlocks = new List<VendingMachineBlockAsset>();
 			foreach (var vb in vendBlocks)
 			{
@@ -876,7 +899,7 @@ namespace TMM
 				if (i == 0)
 				{
 					// Choose a random block
-					var blocks = availableBlocks.Where(b => b.count > 0).ToList();
+					var blocks = availableBlocks.Where(b => b.count > 0 && b.blockType == 1).ToList(); // TODO: starting with minigame to avoid shooter block bug
 					var block = blocks[Random.Range(0, blocks.Count)];
 					block.count--;
 

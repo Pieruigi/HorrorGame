@@ -201,7 +201,11 @@ namespace TMM
 
             model.SetActive(true);
 
-           
+            float scale = 1f;
+            if (StupidClownBuff.Instance.IsActive)
+                scale *= StupidClownBuff.Instance.ScaleMultiplier;
+
+            model.transform.localScale = Vector3.one * scale;
 
             elapsed = 0;
 
