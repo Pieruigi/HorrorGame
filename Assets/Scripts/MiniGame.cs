@@ -78,7 +78,7 @@ namespace TMM
 
 		bool activateFlashlightOnExit = false;
 
-		float recheargeTime = 20;
+		float recheargeTime = 10;
 		float recheargeElapsed = 0;
 
 		float wallHeightDefault;

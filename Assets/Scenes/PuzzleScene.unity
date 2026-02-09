@@ -7218,16 +7218,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pig
       objectReference: {fileID: 0}
-    - target: {fileID: 1222642708961184596, guid: be21e5fd17474dc4da747f2dda6a7baa,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1411083022803472952, guid: be21e5fd17474dc4da747f2dda6a7baa,
-        type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3065481129202462312, guid: be21e5fd17474dc4da747f2dda6a7baa,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7277,11 +7267,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4044903653679516558, guid: be21e5fd17474dc4da747f2dda6a7baa,
-        type: 3}
-      propertyPath: m_Height
-      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
