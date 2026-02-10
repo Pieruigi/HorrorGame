@@ -6234,7 +6234,7 @@ MonoBehaviour:
   - {fileID: 3947460689138014543}
   - {fileID: 6207206783812626692}
   - {fileID: 6040184330298544922}
-  tiling: 0.125
+  tiling: 0.2
   swooshAudioSource: {fileID: 4918253575689757365}
   swooshClips:
   - {fileID: 8300000, guid: 36f5bddc40880a94ea917f79d074e79b, type: 3}
