@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9cc998953d4156340a46d068478ff801
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 345540
+  packageName: PSX-Spaceship
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Spaceship/Materials/PSX-Spaceship_Glass.mat
+  uploadId: 820978

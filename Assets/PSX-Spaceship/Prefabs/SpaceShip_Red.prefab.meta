@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8db2ba9d72883ee41bf3e9017ba44c65
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 345540
+  packageName: PSX-Spaceship
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Spaceship/Prefabs/SpaceShip_Red.prefab
+  uploadId: 820978

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 5aa1d2b47e6d810418ae5beff62996c2
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 345540
+  packageName: PSX-Spaceship
+  packageVersion: 1.0
+  assetPath: Assets/PSX-Spaceship/Prefabs/SpaceShip_Yellow.prefab
+  uploadId: 820978
