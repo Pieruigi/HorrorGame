@@ -18,7 +18,10 @@ namespace TMM
         // Start is called before the first frame update
         void Start()
 	    {
-	        
+            if (StupidClownBuff.Instance.IsActive)
+            {
+                transform.localScale *= StupidClownBuff.Instance.ScaleMultiplier;
+            }
 	    }
 
 	    // Update is called once per frame

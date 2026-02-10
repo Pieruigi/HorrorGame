@@ -36,7 +36,10 @@ namespace TMM
         void Start()
 	    {
 			player = FindFirstObjectByType<FirstPersonController>();
-	    }
+
+			attackRange = attackRangeDefault * (StupidClownBuff.Instance.IsActive ? StupidClownBuff.Instance.AttackRangeMultiplier : 1f);
+
+        }
 
 		// Update is called once per frame
 		void Update()

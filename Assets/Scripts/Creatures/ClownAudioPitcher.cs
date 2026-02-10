@@ -20,7 +20,10 @@ namespace TMM
         // Start is called before the first frame update
         void Start()
 	    {
-	        
+            if (StupidClownBuff.Instance.IsActive)
+            {
+                audioSource.pitch = StupidClownBuff.Instance.LaughPitchMultiplier * pitchDefault;
+            }
 	    }
 
 	    // Update is called once per frame
