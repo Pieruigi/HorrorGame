@@ -15,6 +15,12 @@ namespace TMM
 		[SerializeField]
 		float tiling = .125f;
 
+		[SerializeField]
+		AudioSource swooshAudioSource;
+
+		[SerializeField]
+		List<AudioClip> swooshClips;
+
 		List<Vector3> originalPositions = new List<Vector3>();
 
 		//List<int> order = new List<int>();
@@ -26,20 +32,26 @@ namespace TMM
 
 		GameObject over = null;
 
-//#if UNITY_EDITOR
+        int jumpscareScore = -1;
 
-//		protected override void Awake()
-//        {
-//            base.Awake();
+		Vector3[] selectionStartingPositions = new Vector3[2];
 
-//            // Initialize tiles
-//            InitializeTiles();
 
-//            // Shuffle
-//            ShuffleTiles();
 
-//        }
-//#endif
+#if UNITY_EDITOR
+
+		protected override void Awake()
+		{
+			base.Awake();
+
+			// Initialize tiles
+			InitializeTiles();
+
+			// Shuffle
+			ShuffleTiles();
+
+		}
+#endif
 
 
 		protected override void Update()
@@ -101,12 +113,14 @@ namespace TMM
                         if (selections[0] < 0)
 						{
 							selections[0] = tileIndex;
+							selectionStartingPositions[0] = tiles[tileIndex].transform.position;
 							Select(tileIndex);
 						}
 						else
 						{
 							selections[1] = tileIndex;
-							Select(tileIndex);
+                            selectionStartingPositions[1] = tiles[tileIndex].transform.position;
+                            Select(tileIndex);
 						}
 					}
 				}
@@ -137,6 +151,15 @@ namespace TMM
 
         void Select(int index)
 		{
+			if(jumpscareScore > 0)
+			{
+				jumpscareScore--;
+				if (jumpscareScore == 0)
+					MiniJumpscare.Play();
+			}
+
+			PlaySwoosh();
+
 			var tile = tiles[index];
 			var dest = tile.transform.localPosition;
 			dest.z = selectedZ;
@@ -171,6 +194,12 @@ namespace TMM
                     });
                 }
 			});
+		}
+
+		void PlaySwoosh()
+		{
+			swooshAudioSource.clip = swooshClips[Random.Range(0, swooshClips.Count)];
+			swooshAudioSource.Play();
 		}
 
         private bool CheckBeaten()
@@ -262,15 +291,30 @@ namespace TMM
         {
             base.DoChildDeactivation();
 
-			for (int i = 0; i < selections.Length; i++)
-			{
-				if (selections[i] < 0) continue;
+            //for (int i = 0; i < selections.Length; i++)
+            //{
+            //	if (selections[i] < 0) continue;
 
-				Deselect(selections[i]);
-				selections[i] = -1;
+            //	Deselect(selections[i]);
+            //	selections[i] = -1;
+            //}
+            ClearOver();
+
+            if (selections[0] >= 0)
+			{
+				tiles[selections[0]].transform.DOKill();
+				tiles[selections[0]].transform.position = selectionStartingPositions[0];
+				selections[0] = -1;
 			}
 
-			ClearOver();
+            if (selections[1] >= 0)
+            {
+                tiles[selections[1]].transform.DOKill();
+                tiles[selections[1]].transform.position = selectionStartingPositions[1];
+                selections[1] = -1;
+            }
+
+            
         }
 
 		void Deselect(int selection)
@@ -287,5 +331,15 @@ namespace TMM
 		}
 
 
-	}
+        public override void InitMiniJumpscare(MiniJumpscare miniJumpscare)
+        {
+            Debug.Log("TEST - Minijumpscare initialization");
+
+            base.InitMiniJumpscare(miniJumpscare);
+
+            // Play jumpscare at a specific score
+            jumpscareScore = Random.Range(5, 12);
+        }
+
+    }
 }
