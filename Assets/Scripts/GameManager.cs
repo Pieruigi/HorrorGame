@@ -11,7 +11,7 @@ namespace TMM
 	public class GameManager : SingletonPersistent<GameManager>
 	{
 #if UNITY_EDITOR
-		int gameStage = 3;
+		int gameStage = 4;
 #else
 		int gameStage = 1;
 #endif
@@ -61,7 +61,10 @@ namespace TMM
 
 		public void StartNewGame()
 		{
-			gameStage = 1;
+            gameStage = 1;
+#if UNITY_EDITOR
+            //gameStage = 4;
+#endif
 
 
 			StartCoroutine(DoLoadGameScene("GameScene"));

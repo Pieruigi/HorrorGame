@@ -23,14 +23,14 @@ namespace TMM
 		void Update()
 		{
 #if UNITY_EDITOR
-			//if (Input.GetKeyDown(KeyCode.X))
-			//{
-   //             screamAudioSource.PlayDelayed(.7f);
-   //             StartCoroutine(LoadNextLevelDelayed());
-   //         }
-            
+			if (Input.GetKeyDown(KeyCode.X))
+			{
+				screamAudioSource.PlayDelayed(.7f);
+				StartCoroutine(LoadNextLevelDelayed());
+			}
+
 #endif
-        }
+		}
 
 		void OnTriggerEnter(Collider other)
 		{

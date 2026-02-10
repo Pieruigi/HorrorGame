@@ -56,7 +56,7 @@ namespace TMM
                 vignette.intensity.value = 0f;
             };
 
-            staminaUI = FindFirstObjectByType<StaminaUI>();
+            
         }
 
 	    // Update is called once per frame
@@ -70,6 +70,7 @@ namespace TMM
             TimedBuffDebuff.OnApplied += OnBuffApplied;
             TimedBuffDebuff.OnExpired += OnBuffExpired;
             FirstPersonController.OnOutOfBreath += HandleOnOutOfBreath;
+            MazeBuilder.OnMazeCreated += HandleOnMazeCreated;
         }
 
         private void OnDisable()
@@ -77,6 +78,12 @@ namespace TMM
             TimedBuffDebuff.OnApplied -= OnBuffApplied;
             TimedBuffDebuff.OnExpired -= OnBuffExpired;
             FirstPersonController.OnOutOfBreath -= HandleOnOutOfBreath;
+            MazeBuilder.OnMazeCreated -= HandleOnMazeCreated;
+        }
+
+        private void HandleOnMazeCreated()
+        {
+            staminaUI = FindFirstObjectByType<StaminaUI>();
         }
 
         private void HandleOnOutOfBreath()

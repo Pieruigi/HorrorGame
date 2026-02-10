@@ -142,7 +142,7 @@ namespace TMM
 
         void UpdateHiddenState()
         {
-            if(clownA.State == ClownAState.Chase || clownA.State == ClownAState.Search || clownB?.State == ClownBState.Chase)
+            if(clownA.State == ClownAState.Chase || clownA.State == ClownAState.Search) // ClownA only  // || clownB?.State == ClownBState.Chase)
             {
                 elapsed += Time.deltaTime;
                 if(elapsed >= chaseCheckTimer)

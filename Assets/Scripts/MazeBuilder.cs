@@ -534,7 +534,12 @@ namespace TMM
 			foreach (var m in monsterPrefabs)
 				availableMonsters.Add(m);
 
-			if(stage == 4) // We don't want the same clown we had on stage 3 
+#if UNITY_EDITOR
+			if (stage >= 4 && secondClownIndexOnFirstDoubleStage < 0) secondClownIndexOnFirstDoubleStage = 1;
+#endif
+
+
+			if (stage == 4) // We don't want the same clown we had on stage 3 
 				availableMonsters.RemoveAt(secondClownIndexOnFirstDoubleStage);
 		
 			

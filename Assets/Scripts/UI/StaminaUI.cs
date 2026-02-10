@@ -22,6 +22,8 @@ namespace TMM.UI
 		List<AudioClip> gaspClips;
 
 		float maxWidth;
+
+		[SerializeField]
 		CanvasGroup canvasGroup;
 		FirstPersonController player;
 
@@ -119,6 +121,7 @@ namespace TMM.UI
 
 		public void Shake()
 		{
+			Debug.Log($"TEST - StaminaUI.Shake() - CanvasGroup:{canvasGroup}");
 			canvasGroup.alpha = 1;
 			fillImage.color = Color.red;
             panel.transform.DOKill();

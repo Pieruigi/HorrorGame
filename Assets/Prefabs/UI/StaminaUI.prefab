@@ -458,6 +458,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4e0516d3ec2a0374887f6b279d6cdf1c, type: 3}
   - {fileID: 8300000, guid: 9add99631caffc243926818aeaa4b912, type: 3}
   - {fileID: 8300000, guid: 2d689a170f9b7004184761e0d97daff3, type: 3}
+  canvasGroup: {fileID: 1392448388390666499}
 --- !u!114 &6986169434289957079
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using StarterAssets;
+using TMM.AI;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -41,6 +42,8 @@ namespace TMM
 		Vector3 spawnPosition;
 
 		float speedDefault;
+
+		ClownA clownA;
 
 		
 
@@ -150,6 +153,7 @@ namespace TMM
         private void HandleOnMazeCreated()
         {
             miniGame = FindFirstObjectByType<MiniGame>();
+			clownA = FindFirstObjectByType<ClownA>();	
         }
 
         void UpdateState()
@@ -285,7 +289,7 @@ namespace TMM
 		IEnumerator DoGetSpawnPosition()
 		{
 			bool spawnPositionFound = TryGetSpawnPosition(out spawnPosition);
-			while(!spawnPositionFound)
+			while(!spawnPositionFound || clownA.State == ClownAState.Search || clownA.State == ClownAState.Chase )
 			{
 				yield return new WaitForSeconds(.5f);
 
