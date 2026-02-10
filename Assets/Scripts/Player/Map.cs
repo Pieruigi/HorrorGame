@@ -11,6 +11,7 @@ namespace TMM
 {
 	public class Map : SingletonPersistent<Map>
 	{
+		public static UnityAction OnExpired;
 
 		float timer = 0;
 
@@ -18,7 +19,7 @@ namespace TMM
 
 		bool showMessage = false;
 
-
+		public bool Available { get { return GetTimer() > 0; } }
 
 	    // Start is called before the first frame update
 	    void Start()
@@ -35,7 +36,11 @@ namespace TMM
 					MessageManager.Instance.ShowCustomMessage(5);
 
                 if (MapUI.Instance.IsOpen)
-					Close();
+				{
+                    Close();
+					OnExpired?.Invoke();
+                }
+					
 				return;
 			}
 

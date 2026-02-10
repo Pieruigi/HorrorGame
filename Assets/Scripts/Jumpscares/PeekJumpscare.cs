@@ -28,11 +28,19 @@ namespace TMM
 
 		List<ClownA> creatures;
 
+		ClownA clownA;
+		ClownB clownB;
+		ClownC clownC;
+
         protected override void Start()
         {
 			base.Start();
 
 			creatures = FindObjectsByType<ClownA>(FindObjectsSortMode.None).ToList();
+
+			clownA = FindFirstObjectByType<ClownA>();
+			clownB = FindFirstObjectByType<ClownB>();
+			clownC= FindFirstObjectByType<ClownC>();
         }
 
 
@@ -52,7 +60,11 @@ namespace TMM
 			if (Triggered) return;
 
 			// Only if you are not chased or searched for
-			if (creatures.Exists(c => c.State == ClownAState.Chase || c.State == ClownAState.Search)) return;
+			//if (creatures.Exists(c => c.State == ClownAState.Chase || c.State == ClownAState.Search)) return;
+			if (clownA.State == ClownAState.Chase || clownA.State == ClownAState.Search) return;
+			if (clownB?.State == ClownBState.Chase) return;
+			if (clownC?.State == ClownCState.Chase) return;
+
 			
 			// The player must be looking along the trigger's forward axis
 			float signedAngle = Vector3.SignedAngle(FirstPersonController.transform.forward, t.transform.forward, Vector3.up);

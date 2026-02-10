@@ -19,6 +19,7 @@ namespace TMM
         GameObject model;
 
         ClownCState state;
+        public ClownCState State { get { return state; } }
 
 		FirstPersonController player;
         PlayerChased playerChased;

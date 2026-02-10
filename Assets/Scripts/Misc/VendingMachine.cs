@@ -86,6 +86,8 @@ namespace TMM
 
 			TimedBuffDebuff.OnApplied += HandleOnDeBuffApplied;
             TimedBuffDebuff.OnExpired += HandleOnDeBuffExpired;
+
+			Map.OnExpired += HandleOnMapExpired;
         }
 
         void OnDisable()
@@ -98,6 +100,17 @@ namespace TMM
 
             TimedBuffDebuff.OnApplied -= HandleOnDeBuffApplied;
             TimedBuffDebuff.OnExpired -= HandleOnDeBuffExpired;
+
+            Map.OnExpired -= HandleOnMapExpired;
+        }
+
+        private void HandleOnMapExpired()
+        {
+            if(type == VendingMachineType.Map)
+			{
+				InitButton(false);
+				InitDescription(false);
+			}
         }
 
         private void HandleOnDeBuffApplied(TimedBuffDebuff arg0)
@@ -196,8 +209,8 @@ namespace TMM
 					InitDescription(TriggerTileManager.Instance.TriggerTilesDisabled);
 					break;
 				case VendingMachineType.Map:
-					InitButton(false);
-					InitDescription(false);
+					InitButton(Map.Instance.Available);
+					InitDescription(Map.Instance.Available);
 					break;
 				case VendingMachineType.CuteClown:
 					InitButton(StupidClownBuff.Instance.IsActive);
