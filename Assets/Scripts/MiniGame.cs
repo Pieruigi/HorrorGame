@@ -30,8 +30,8 @@ namespace TMM
 		DeviceInteractor recharger;
 
 		//float attempts = 10;
-		[SerializeField]
-		float timer = 30;
+		//[SerializeField]
+		float timer = 60;
 
 		[SerializeField]
 		AudioSource beatenAudioSource;
@@ -112,7 +112,7 @@ namespace TMM
 	    // Start is called before the first frame update
 	    protected virtual void Start()
 	    {
-			timer = 45;// - (GameManager.Instance.GameStage - 1) * 5f;
+			timer = 60;// - (GameManager.Instance.GameStage - 1) * 5f;
             timeLeft = timer;
             player = FindFirstObjectByType<FirstPersonController>();
 			//cameraRoot = player.GetComponent<CameraShake>().transform;
@@ -144,7 +144,7 @@ namespace TMM
 				if (Input.GetKeyDown(KeyCode.E))
 #endif
 				{
-					bool fail = Random.Range(0, 10) == 0; // A change the minigame fails on exit
+					bool fail = Random.Range(0, 10) == -1; // A chance the minigame fails on exit
 					//fail = true;
 					if (!fail)
 					{
@@ -406,7 +406,7 @@ namespace TMM
 		
 		public void Recharge()
         {
-			timeLeft += 15;// timer / 3f;
+			timeLeft += 30;// timer / 3f;
 			if(!AlarmManager.Instance.IsActive()) deviceInteractor.MessageId = activatorMessageId;
         }
 
