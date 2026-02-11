@@ -113,7 +113,12 @@ namespace TMM
 	    protected virtual void Start()
 	    {
 			timer = 60;// - (GameManager.Instance.GameStage - 1) * 5f;
-            timeLeft = timer;
+
+#if UNITY_EDITOR
+			//timer = 6000000;
+#endif
+
+			timeLeft = timer;
             player = FindFirstObjectByType<FirstPersonController>();
 			//cameraRoot = player.GetComponent<CameraShake>().transform;
 			flashlight = player.transform.parent.GetComponentInChildren<Flashlight>();

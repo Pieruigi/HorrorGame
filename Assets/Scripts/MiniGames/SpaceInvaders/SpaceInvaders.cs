@@ -25,7 +25,7 @@ namespace TMM
 
 
         [SerializeField]
-        List<Spaceship>[] spaceships;
+        List<Spaceship>[] spaceshipRows;
 
         protected override void Awake()
         {
@@ -39,26 +39,26 @@ namespace TMM
         {
             base.Start();
 
-            spaceships = new List<Spaceship>[enemyRoot.childCount];
+            spaceshipRows = new List<Spaceship>[enemyRoot.childCount];
 
             // Init rows
             for (int i = 0; i < enemyRoot.childCount; i++)
             {
-                spaceships[i] = new List<Spaceship>();
+                spaceshipRows[i] = new List<Spaceship>();
                 Transform row = enemyRoot.GetChild(i);
                 for(int j=0; j<row.childCount; j++)
                 {
-                    spaceships[i].Add(row.GetChild(j).GetComponent<Spaceship>());
+                    spaceshipRows[i].Add(row.GetChild(j).GetComponent<Spaceship>());
                 }
                        
                 
             }
 
             // Get the move step as the horizontal distance between two spaceships
-            stepDist = Mathf.Abs(spaceships[0][0].transform.localPosition.x - spaceships[0][1].transform.localPosition.x);
+            stepDist = Mathf.Abs(spaceshipRows[0][0].transform.localPosition.x - spaceshipRows[0][1].transform.localPosition.x);
 
-            Debug.Log($"TEST - Spaships.Length:{spaceships.Length}");
-            foreach (List<Spaceship> spaceshipList in spaceships)
+            Debug.Log($"TEST - Spaships.Length:{spaceshipRows.Length}");
+            foreach (List<Spaceship> spaceshipList in spaceshipRows)
             {
                 Debug.Log("TEST - Count:" + spaceshipList.Count);
             }
@@ -101,29 +101,59 @@ namespace TMM
                             
                             // Move right
                             currentStep++;
-                            var d = currentStep * stepDist + stepOffset;
-                            Debug.Log("TEST - Moving - D:"+d);
-                            enemyRoot.DOLocalMoveX(d, .2f).SetEase(Ease.OutQuint).OnComplete(() => 
-                            {
-                                var pos = enemyRoot.transform.localPosition;
-                                pos.x = d;
-                                enemyRoot.transform.localPosition = pos;
+                            //var d = currentStep * stepDist + stepOffset;
+                            //Debug.Log("TEST - Moving - D:"+d);
+                            //enemyRoot.DOLocalMoveX(d, .2f).SetEase(Ease.OutQuint).OnComplete(() => 
+                            //{
+                            //    var pos = enemyRoot.transform.localPosition;
+                            //    pos.x = d;
+                            //    enemyRoot.transform.localPosition = pos;
 
                                
-                                if (maxX - d < 0.001f)
-                                    stepDir = -1;
-                            });
+                            //    if (maxX - d < 0.001f)
+                            //        stepDir = -1;
+                            //});
                         }
                     }
                     else
                     {
-                        
+                        if(currentX - minX > 0.001f)
+                        {
+                            // Move left 
+                            currentStep--;
+                            //var d = currentStep * stepDist + stepOffset;
+                            //enemyRoot.DOLocalMoveX(d, .2f).SetEase(Ease.OutQuint).OnComplete(() =>
+                            //{
+                            //    var pos = enemyRoot.transform.localPosition;
+                            //    pos.x = d;
+                            //    enemyRoot.transform.localPosition = pos;
+
+
+                            //    if (d - minX< 0.001f)
+                            //        stepDir = 1;
+                            //});
+                        }
                     }
 
-                        Debug.Log("TEST - MinX:" + minX);
+                    var d = currentStep * stepDist * .5f + stepOffset;
+                    Debug.Log("TEST - Moving - D:" + d);
+                    enemyRoot.DOLocalMoveX(d, .1f).SetEase(Ease.OutQuint).OnComplete(() =>
+                    {
+                        var pos = enemyRoot.transform.localPosition;
+                        pos.x = d;
+                        enemyRoot.transform.localPosition = pos;
+
+
+                        if (stepDir > 0 && maxX - d < 0.001f)
+                            stepDir = -1;
+                        else if (stepDir < 0 && d - minX < 0.001f)
+                            stepDir = 1;
+                    });
+
+                    Debug.Log("TEST - MinX:" + minX);
                     Debug.Log("TEST - MaxX:" + maxX);
 
-                    yield return new WaitForSeconds(2f);
+                    yield return new WaitForSeconds(.5f);
                 }
             }
         }
@@ -142,11 +172,11 @@ namespace TMM
         {
             int index = -1;
             
-            for (int i = 0; i < spaceships.Length; i++)
+            for (int i = 0; i < spaceshipRows.Length; i++)
             {
-                for(int j=0;j<spaceships[i].Count;j++)
+                for(int j=0;j<spaceshipRows[i].Count;j++)
                 {
-                    if (!spaceships[i][j].Destroyed)
+                    if (!spaceshipRows[i][j].Destroyed)
                     {
                         if(index < 0 || j < index)
                             index = j;
@@ -163,14 +193,14 @@ namespace TMM
         {
             int index = -1;
 
-            for (int i = 0; i < spaceships.Length; i++)
+            for (int i = 0; i < spaceshipRows.Length; i++)
             {
-                for (int j = 0; j < spaceships[i].Count; j++)
+                for (int j = 0; j < spaceshipRows[i].Count; j++)
                 {
-                    if (!spaceships[i][spaceships[i].Count - 1 - j].Destroyed)
+                    if (!spaceshipRows[i][spaceshipRows[i].Count - 1 - j].Destroyed)
                     {
-                        if (index < 0 || spaceships[i].Count - 1 - j > index)
-                            index = spaceships[i].Count - 1 - j;
+                        if (index < 0 || spaceshipRows[i].Count - 1 - j > index)
+                            index = spaceshipRows[i].Count - 1 - j;
 
                         break;
                     }
@@ -178,6 +208,21 @@ namespace TMM
             }
 
             return index;
+        }
+
+        public void ReportSpaceshipDestroyed()
+        {
+            // Check if the game has been beaten
+            foreach(var spaceshipRow in spaceshipRows)
+            {
+                foreach (var spaceship in spaceshipRow)
+                {
+                    if (!spaceship.Destroyed)
+                        return;
+                }
+            }
+
+            ReportBeaten();
         }
 	}
 }
