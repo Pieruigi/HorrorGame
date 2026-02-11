@@ -270,7 +270,7 @@ namespace StarterAssets
 
 		void UpdateMouseSensitivity()
 		{
-            mouseSensitivity = .5f + OptionsManager.Instance.MouseSpeed / OptionsManager.MouseSpeedOptionMax;
+			mouseSensitivity = .5f + OptionsManager.Instance.MouseSpeed;
         }
 
 		void UpdateVerticalMouse()

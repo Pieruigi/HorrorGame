@@ -19,7 +19,7 @@ namespace TMM
         public const string MouseSpeedOptionParam = "MouseSpeed";
 
         public const int MouseSpeedOptionMin = 0;
-        public const int MouseSpeedOptionMax = 20;
+        public const int MouseSpeedOptionMax = 100;
 
         public const int MouseSpeedOptionDefault = 10;
 

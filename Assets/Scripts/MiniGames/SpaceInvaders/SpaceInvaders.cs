@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,11 @@ namespace TMM
 
         float stepDist = 0;
 
-        int steps = 7;
+        int steps = 8;
         int currentStep = 0;
+        float stepOffset;
 
-        int moveDir = -1;
+        int stepDir = 1;
 
 
         [SerializeField]
@@ -28,7 +30,9 @@ namespace TMM
         protected override void Awake()
         {
             base.Awake();
-			
+
+            stepOffset = enemyRoot.localPosition.x;
+            Debug.Log("TEST - Test offset:"+stepOffset);
         }
 
         protected override void Start()
@@ -86,8 +90,40 @@ namespace TMM
                     Debug.Log("TEST - Left Index:" + leftIndex);
                     Debug.Log("TEST - Right Index:" + rightIndex);
 
+                    float minX = -leftIndex * stepDist + stepOffset;
+                    float maxX = (steps - 1 - rightIndex) * stepDist + stepOffset;
 
-                    yield return new WaitForSeconds(.5f);
+                    var currentX = enemyRoot.transform.localPosition.x;
+                    if(stepDir > 0)
+                    {
+                        if (maxX - currentX > 0.001f)
+                        {
+                            
+                            // Move right
+                            currentStep++;
+                            var d = currentStep * stepDist + stepOffset;
+                            Debug.Log("TEST - Moving - D:"+d);
+                            enemyRoot.DOLocalMoveX(d, .2f).SetEase(Ease.OutQuint).OnComplete(() => 
+                            {
+                                var pos = enemyRoot.transform.localPosition;
+                                pos.x = d;
+                                enemyRoot.transform.localPosition = pos;
+
+                               
+                                if (maxX - d < 0.001f)
+                                    stepDir = -1;
+                            });
+                        }
+                    }
+                    else
+                    {
+                        
+                    }
+
+                        Debug.Log("TEST - MinX:" + minX);
+                    Debug.Log("TEST - MaxX:" + maxX);
+
+                    yield return new WaitForSeconds(2f);
                 }
             }
         }
