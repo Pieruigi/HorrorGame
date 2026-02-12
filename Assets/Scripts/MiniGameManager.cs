@@ -76,9 +76,14 @@ namespace TMM
 		public MiniGameAsset ChooseMiniGame(int level)
 		{
 			LoadMiniGameFromResourcesAll();
+#if DEMO
+			var availables = miniGames.Where(m => "tetris".Equals(m.name.ToLower()) || "memory".Equals(m.name.ToLower())).ToList();
+#else
 			var availables = miniGames.Where(m => (m.MinLevel < 0 || m.MinLevel <= level) && (m.MaxLevel < 0 || m.MaxLevel >= level)).ToList();
+#endif
 
-			foreach(var last in lastChosenAssets)
+
+            foreach (var last in lastChosenAssets)
 				availables.Remove(last);
         
     

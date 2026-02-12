@@ -54,11 +54,16 @@ namespace TMM
 				//yield break;
 #endif
 
+#if !DEMO
+
 				if (GameManager.Instance.GameStage < 5)
 					GameManager.Instance.StartNextStage();
 				else
 					GameManager.Instance.YouWin();
-            }
+#else
+				GameManager.Instance.LoadMainMenu();
+#endif
+			}
 			else
 			{
 				if("loserscene" == SceneManager.GetActiveScene().name.ToLower())
