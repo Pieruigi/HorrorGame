@@ -86,7 +86,7 @@ namespace TMM
 			lastChosenAssets.Add(lastChosen);
 
 #if UNITY_EDITOR
-            //lastChosen = availables.Find(m => "shooter".Equals(m.name.ToLower()));
+            //lastChosen = availables.Find(m => "spaceinvaders".Equals(m.name.ToLower()));
 #endif
 
             //var smg = spawnedMiniGames.Find(m => m.asset == lastChosen);

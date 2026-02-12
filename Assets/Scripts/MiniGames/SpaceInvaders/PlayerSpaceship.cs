@@ -20,6 +20,15 @@ namespace TMM
 		[SerializeField]
 		ParticleSystem creationFx;
 
+		[SerializeField]
+		AudioSource shotAudioSource;
+
+		[SerializeField]
+		AudioSource hitAudioSource;
+
+		[SerializeField]
+		AudioSource creationAudioSource;
+
 		bool activated = false;
 
 		float maxDistance = .625f;
@@ -77,6 +86,9 @@ namespace TMM
 				// Avoid collision with player
 				Physics.IgnoreCollision(_collider, bullet.GetComponent<Collider>(), true);
 
+				// Play sound
+				shotAudioSource.Play();
+
 			}
         }
 
@@ -127,10 +139,15 @@ namespace TMM
 
 			IEnumerator DoDestroy()
 			{
+				if (destroyed) yield break;
 
                 destroyed = true;
 
-				var fx = Instantiate(explosionFx, transform);
+                // Play sound
+                hitAudioSource.Play();
+                creationAudioSource.PlayDelayed(.8f);
+
+                var fx = Instantiate(explosionFx, transform);
 				fx.transform.localPosition = Vector3.zero;
 				fx.transform.localEulerAngles = -90f * Vector3.right;
 				fx.transform.localScale = Vector3.one * .7f;
@@ -154,6 +171,8 @@ namespace TMM
                 fx.transform.localScale = Vector3.one * .7f;
                 fx.Play();
                 Destroy(fx.gameObject, 5f);
+
+				
 
                 yield return new WaitForSeconds(.8f);
 

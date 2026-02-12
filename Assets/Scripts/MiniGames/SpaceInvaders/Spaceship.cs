@@ -15,7 +15,13 @@ namespace TMM
 		[SerializeField]
 		ParticleSystem explosionParticlePrefab;
 
-		bool destroyed = false;
+		[SerializeField]
+		AudioSource destroyAudioSource;
+
+        [SerializeField]
+        AudioSource shootAudioSource;
+
+        bool destroyed = false;
 		public bool Destroyed { get { return destroyed; } }
 
 		Collider _collider;
@@ -24,7 +30,7 @@ namespace TMM
 
 		SpaceInvaders miniGame;
 
-		float fireTime = 4f;
+		float fireTime = 5f;
 
 		float fireElapsed = 0;
 
@@ -94,6 +100,8 @@ namespace TMM
 				if (hit.collider.GetComponent<Spaceship>()) return;
 			}
 
+			shootAudioSource.Play();
+
             var bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
 			// Set speed
 			bullet.SetSpeed(-1.5f);
@@ -129,6 +137,8 @@ namespace TMM
 		
 		IEnumerator PlayExplosionFX()
 		{
+			destroyAudioSource.Play();
+
 			var particle = Instantiate(explosionParticlePrefab, transform);
 			particle.transform.localPosition = Vector3.zero;
 			particle.transform.localEulerAngles = -90f * Vector3.right;

@@ -40,17 +40,17 @@ namespace TMM
 
 #if UNITY_EDITOR
 
-		protected override void Awake()
-		{
-			base.Awake();
+		//protected override void Awake()
+		//{
+		//	base.Awake();
 
-			// Initialize tiles
-			InitializeTiles();
+		//	// Initialize tiles
+		//	InitializeTiles();
 
-			// Shuffle
-			ShuffleTiles();
+		//	// Shuffle
+		//	ShuffleTiles();
 
-		}
+		//}
 #endif
 
 

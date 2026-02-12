@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -32,6 +33,21 @@ namespace TMM
         {
             lifeTime -= Time.deltaTime;
             if (lifeTime < 0) Destroy(gameObject);
+        }
+
+        private void OnEnable()
+        {
+            MiniGame.OnStopPlaying += HandleOnStopPlaying;
+        }
+
+        private void OnDisable()
+        {
+            MiniGame.OnStopPlaying -= HandleOnStopPlaying;
+        }
+
+        private void HandleOnStopPlaying()
+        {
+            Destroy(gameObject);
         }
 
         private void OnCollisionEnter(Collision collision)

@@ -41,7 +41,7 @@ namespace TMM
             get
             {
                 var v = PlayerPrefs.GetInt("MouseSpeed", MouseSpeedOptionDefault);
-                return Mathf.Lerp(1f, 10f, (float)v / (float)MouseSpeedOptionMax);
+                return Mathf.Lerp(1f, 40f, (float)v / (float)MouseSpeedOptionMax) / 40f;
             }
         }
 
