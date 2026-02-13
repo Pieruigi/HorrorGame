@@ -27,6 +27,8 @@ namespace TMM
         [SerializeField]
         List<Spaceship>[] spaceshipRows;
 
+        int jumpscareScore = -1;
+
         protected override void Awake()
         {
             base.Awake();
@@ -222,7 +224,24 @@ namespace TMM
                 }
             }
 
+            if(jumpscareScore > 0)
+            {
+                jumpscareScore--;
+                if (jumpscareScore == 0)
+                    MiniJumpscare.Play();
+            }
+
             ReportBeaten();
         }
-	}
+
+        public override void InitMiniJumpscare(MiniJumpscare miniJumpscare)
+        {
+            Debug.Log("TEST - Minijumpscare initialization");
+
+            base.InitMiniJumpscare(miniJumpscare);
+
+            // Play jumpscare at a specific score
+            jumpscareScore = Random.Range(6, 16);
+        }
+    }
 }

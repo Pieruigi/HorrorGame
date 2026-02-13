@@ -201,7 +201,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 22cf24c481b34594cb343af093b2c1de, type: 3}
   m_Resource: {fileID: 8300000, guid: 22cf24c481b34594cb343af093b2c1de, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.64
+  m_Volume: 0.512
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -654,7 +654,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: e0ec7ed9fbc22b84f86525cc1459a43e, type: 3}
   m_Resource: {fileID: 8300000, guid: e0ec7ed9fbc22b84f86525cc1459a43e, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.32
+  m_Volume: 0.256
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -855,7 +855,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: d0849d3fbe211bc4881081328acf4ef7, type: 3}
   m_Resource: {fileID: 8300000, guid: d0849d3fbe211bc4881081328acf4ef7, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.36
+  m_Volume: 0.288
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1204,7 +1204,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.53
+  m_Volume: 0.424
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -16746,6 +16746,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MiniJumpscare
       objectReference: {fileID: 0}
+    - target: {fileID: 1697282283755624205, guid: 33c89dc0bd2752c499404cc02b39f27c,
+        type: 3}
+      propertyPath: miniGame
+      value: 
+      objectReference: {fileID: 6636971098310073975}
     - target: {fileID: 7732343011485769580, guid: 33c89dc0bd2752c499404cc02b39f27c,
         type: 3}
       propertyPath: m_LocalPosition.x
