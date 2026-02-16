@@ -77,7 +77,7 @@ namespace TMM
 
 		public void Apply()
 		{
-			Debug.Log("TEST - RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+		
 			timer = timerDefault;
 			DoApply();
 			OnApplied?.Invoke(this);

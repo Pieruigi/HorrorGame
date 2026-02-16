@@ -154,8 +154,6 @@ namespace TMM
 
         public override void InitMiniJumpscare(MiniJumpscare miniJumpscare)
         {
-            Debug.Log("TEST - Minijumpscare initialization");
-
             base.InitMiniJumpscare(miniJumpscare);
 
             // Play jumpscare at a specific score

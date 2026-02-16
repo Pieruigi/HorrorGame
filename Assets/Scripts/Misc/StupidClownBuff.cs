@@ -50,8 +50,8 @@ namespace TMM
         private void LateUpdate()
         {
 #if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.X))
-                Apply();
+            //if (Input.GetKeyDown(KeyCode.X))
+            //    Apply();
 #endif
         }
 

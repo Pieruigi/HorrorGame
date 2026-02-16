@@ -303,7 +303,7 @@ namespace StarterAssets
 
 		private void CameraRotation()
 		{
-			if(AimingDisabled || isDead)
+			if(AimingDisabled || isDead || Time.timeScale == 0)
             {
 				_input.look = Vector2.zero;
             }

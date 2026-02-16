@@ -121,7 +121,7 @@ namespace TMM.UI
 
 		public void Shake()
 		{
-			Debug.Log($"TEST - StaminaUI.Shake() - CanvasGroup:{canvasGroup}");
+		
 			canvasGroup.alpha = 1;
 			fillImage.color = Color.red;
             panel.transform.DOKill();

@@ -34,7 +34,7 @@ namespace TMM
             base.Awake();
 
             stepOffset = enemyRoot.localPosition.x;
-            Debug.Log("TEST - Test offset:"+stepOffset);
+           
         }
 
         protected override void Start()
@@ -59,11 +59,7 @@ namespace TMM
             // Get the move step as the horizontal distance between two spaceships
             stepDist = Mathf.Abs(spaceshipRows[0][0].transform.localPosition.x - spaceshipRows[0][1].transform.localPosition.x);
 
-            Debug.Log($"TEST - Spaships.Length:{spaceshipRows.Length}");
-            foreach (List<Spaceship> spaceshipList in spaceshipRows)
-            {
-                Debug.Log("TEST - Count:" + spaceshipList.Count);
-            }
+         
 
         }
 
@@ -89,9 +85,7 @@ namespace TMM
                 {
                     int leftIndex = GetLeftIndex();
                     int rightIndex = GetRightIndex();
-                    Debug.Log("TEST - Left Index:" + leftIndex);
-                    Debug.Log("TEST - Right Index:" + rightIndex);
-
+                  
                     float minX = -leftIndex * stepDist + stepOffset;
                     float maxX = (steps - 1 - rightIndex) * stepDist + stepOffset;
 
@@ -138,7 +132,7 @@ namespace TMM
                     }
 
                     var d = currentStep * stepDist * .5f + stepOffset;
-                    Debug.Log("TEST - Moving - D:" + d);
+                  
                     enemyRoot.DOLocalMoveX(d, .1f).SetEase(Ease.OutQuint).OnComplete(() =>
                     {
                         var pos = enemyRoot.transform.localPosition;
@@ -152,8 +146,7 @@ namespace TMM
                             stepDir = 1;
                     });
 
-                    Debug.Log("TEST - MinX:" + minX);
-                    Debug.Log("TEST - MaxX:" + maxX);
+              
 
                     yield return new WaitForSeconds(.5f);
                 }
@@ -236,7 +229,6 @@ namespace TMM
 
         public override void InitMiniJumpscare(MiniJumpscare miniJumpscare)
         {
-            Debug.Log("TEST - Minijumpscare initialization");
 
             base.InitMiniJumpscare(miniJumpscare);
 

@@ -170,7 +170,6 @@ namespace TMM
 				if (selections[0]  >= 0 && selections[1] >= 0)
 				{
 					// Switch tiles
-					Debug.Log($"TEST - Switching tiles [{selections[0]},{selections[1]}]");
 					var tile1 = tiles[selections[0]];
                     var tile2 = tiles[selections[1]];
 					var dest1 = tile2.transform.position;
@@ -333,8 +332,7 @@ namespace TMM
 
         public override void InitMiniJumpscare(MiniJumpscare miniJumpscare)
         {
-            Debug.Log("TEST - Minijumpscare initialization");
-
+           
             base.InitMiniJumpscare(miniJumpscare);
 
             // Play jumpscare at a specific score

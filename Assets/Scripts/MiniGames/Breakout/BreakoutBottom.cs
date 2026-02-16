@@ -29,8 +29,6 @@ namespace TMM
         {
             BreakoutBall ball = other.GetComponent<BreakoutBall>();
 
-			Debug.Log("TEST - Enter :" + ball);
-
 			if (ball == null) return;
 
 			StartCoroutine(ResetBallDelayed(ball, .5f));

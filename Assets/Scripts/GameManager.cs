@@ -63,7 +63,7 @@ namespace TMM
 		{
             gameStage = 1;
 #if UNITY_EDITOR
-            //gameStage = 4;
+            //gameStage = 2;
 #endif
 
 
