@@ -63,7 +63,7 @@ namespace TMM
 		{
             gameStage = 1;
 #if UNITY_EDITOR
-            gameStage = 4;
+            //gameStage = 4;
 #endif
 
 
@@ -84,13 +84,18 @@ namespace TMM
 
 		public void YouWin()
 		{
-            //SceneManager.LoadSceneAsync("WinnerScene", LoadSceneMode.Single);
+            SteamAchievementManager.Instance.UnlockAchievement("STAGE_" + gameStage + "_COMPLETED");
+
             StartCoroutine(DoLoadGameScene("WinnerScene"));
         }
 
         public void StartNextStage()
         {
-			gameStage++;
+			// Check steam achievement
+			
+			SteamAchievementManager.Instance.UnlockAchievement("STAGE_" + gameStage + "_COMPLETED");
+			
+            gameStage++;
 
 			StartCoroutine(DoLoadGameScene("GameScene"));
         }
