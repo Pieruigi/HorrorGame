@@ -60,7 +60,26 @@ namespace TMM
             {
                 return achName + "ARKANOID";
             }
-
+            if(type == typeof(HammerGame))
+            {
+                return achName + "HAMMER";
+            }
+            if (type == typeof(Puzzle))
+            {
+                return achName + "PUZZLE";
+            }
+            if (type == typeof(SpaceInvaders))
+            {
+                return achName + "INVADERS";
+            }
+            if (type == typeof(HawkingGame))
+            {
+                return achName + "HAWKING";
+            }
+            if (type == typeof(Shooter))
+            {
+                return achName + "SHOOTER";
+            }
             return "";
         }
 
