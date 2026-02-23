@@ -26,15 +26,14 @@ namespace TMM
 
         private void Awake()
         {
-            rb = GetComponent<Rigidbody>(); 
+            rb = GetComponent<Rigidbody>();
+            miniGame = FindFirstObjectByType<HawkingGame>();
         }
 
         // Start is called before the first frame update
         void Start()
 	    {
-#if UNITY_EDITOR
-            miniGame = FindFirstObjectByType<HawkingGame>();
-#endif
+           
 
             // Randomize force
             var dir = transform.forward * Random.Range(.5f, .7f);
@@ -62,13 +61,11 @@ namespace TMM
 
         private void OnEnable()
         {
-            MazeBuilder.OnMazeCreated += HandleOnMazeCreated;
             MiniGame.OnStopPlaying += HandleOnStopPlaying;
         }
 
         private void OnDisable()
         {
-            MazeBuilder.OnMazeCreated -= HandleOnMazeCreated;
             MiniGame.OnStopPlaying -= HandleOnStopPlaying;
         }
 
@@ -77,11 +74,7 @@ namespace TMM
             Destroy(gameObject);
         }
 
-        private void HandleOnMazeCreated()
-        {
-            miniGame = FindFirstObjectByType<HawkingGame>();    
-        }
-
+        
         private void FixedUpdate()
         {
             rb.AddForce(Vector3.down * .7f, ForceMode.Acceleration);
@@ -96,7 +89,7 @@ namespace TMM
             particles.transform.parent = null;
             particles.transform.localScale = Vector3.one * .4f;
             particles.Play();
-            
+
             Destroy(particles.gameObject, 3);
             //model.SetActive(false); 
 
