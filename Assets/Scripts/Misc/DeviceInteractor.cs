@@ -37,10 +37,14 @@ namespace TMM
 
 		bool lastShowMessage = false;
 
+		StarterAssetsInputs _input;
+
+		bool lastAction = false;
+
 	    // Start is called before the first frame update
 	    void Start()
 	    {
-	        
+			_input = FindFirstObjectByType<FirstPersonController>().GetComponent<StarterAssetsInputs>();
 	    }
 
 		// Update is called once per frame
@@ -59,7 +63,7 @@ namespace TMM
 						// Show message if any
 						showMessage = true; 
 						// Check interaction
-						if((mouseButton0 && Input.GetMouseButtonDown(0)) || Input.GetKeyDown(key))
+						if((mouseButton0 && Input.GetMouseButtonDown(0)) || Input.GetKeyDown(key) || (_input.action && !lastAction))
 							OnInteraction?.Invoke(this);	
 					}
 					
@@ -83,7 +87,7 @@ namespace TMM
 			}
 
 			lastShowMessage = showMessage;
-			
+			lastAction = _input.action;
 		}
 
 		void OnEnable()

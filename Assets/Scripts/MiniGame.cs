@@ -3,7 +3,6 @@ using StarterAssets;
 using TMM.UI;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
 
 
 
@@ -97,6 +96,9 @@ namespace TMM
 		public MiniJumpscare MiniJumpscare { get; private set; }
 
 		int activatorMessageId = -1;
+
+		StarterAssetsInputs _input;
+		bool lastAction = false;
 		
 
 		protected virtual void Awake()
@@ -114,11 +116,13 @@ namespace TMM
 	    {
 			timer = 60;// - (GameManager.Instance.GameStage - 1) * 5f;
 
+            _input = FindFirstObjectByType<FirstPersonController>().GetComponent<StarterAssetsInputs>();
+
 #if UNITY_EDITOR
-			//timer = 6000000;
+            //timer = 6000000;
 #endif
 
-			timeLeft = timer;
+            timeLeft = timer;
             player = FindFirstObjectByType<FirstPersonController>();
 			//cameraRoot = player.GetComponent<CameraShake>().transform;
 			flashlight = player.transform.parent.GetComponentInChildren<Flashlight>();
@@ -143,8 +147,10 @@ namespace TMM
 #endif
 			if (activated && !noExit)
 			{
+				var lastActionOld = lastAction;
+				lastAction = _input.action;
 #if UNITY_EDITOR				
-				if (Input.GetKeyDown(KeyCode.E))
+				if (Input.GetKeyDown(KeyCode.E) || (_input.action && !lastActionOld))
 #else
 				if (Input.GetKeyDown(KeyCode.E))
 #endif

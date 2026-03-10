@@ -139,7 +139,9 @@ namespace TMM
 			//return;
 			var seq = DOTween.Sequence();
 			seq.AppendInterval(2f);
-			seq.OnComplete(() => { MessageUI.Instance.ShowMessage("F: flashlight on/off"); });
+			seq.AppendCallback(() => { MessageUI.Instance.ShowMessage("Find and beat the minigame"); });
+            seq.AppendInterval(3f);
+            seq.OnComplete(() => { MessageUI.Instance.ShowMessage("F: flashlight on/off"); });
 		}
 
 		public void ShowCustomMessage(int messageId, bool keepOn = false)
