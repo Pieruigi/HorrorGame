@@ -32,8 +32,7 @@ namespace TMM
 
         int jumpscareScore = -1;
 
-        StarterAssetsInputs input;
-
+        
         protected override void Awake()
         {
             base.Awake();
@@ -48,8 +47,6 @@ namespace TMM
         {
             base.Update();
 
-            input = FindFirstObjectByType<StarterAssetsInputs>();
-
 #if UNITY_EDITOR
             //if (Input.GetKeyDown(KeyCode.X))
             //    Time.timeScale = 0;
@@ -63,12 +60,12 @@ namespace TMM
                     
 
                     // Move player ship
-                    if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || input.move.x != 0 )
+                    if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || NewInput.move.x != 0 )
                     {
                         if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
                             shipDirection = Input.GetKey(KeyCode.A) ? -1 : 1;
                         else
-                            shipDirection = input.move.x < 0 ? -1 : 1;
+                            shipDirection = NewInput.move.x < 0 ? -1 : 1;
                         // Move the player ship
                         var shipPos = ship.transform.localPosition;
                         shipPos.x += shipDirection * shipSpeed * Time.deltaTime;

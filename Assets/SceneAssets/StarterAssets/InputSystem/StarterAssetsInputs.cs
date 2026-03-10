@@ -14,6 +14,11 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 		public bool crouch;
+		public bool shoot;
+		public bool reset;
+		public bool flashlight;
+		public bool map;
+		public bool wallet;
 
 		public bool action;
 
@@ -34,6 +39,8 @@ namespace StarterAssets
         {
 			action = false;
         }
+
+        
 
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputValue value)
@@ -68,10 +75,35 @@ namespace StarterAssets
         {
 			ActionInput(value.isPressed);
         }
+
+        public void OnShoot(InputValue value)
+        {
+            ShootInput(value.isPressed);
+        }
+
+        public void OnReset(InputValue value)
+        {
+            ResetInput(value.isPressed);
+        }
+
+        public void OnFlashlight(InputValue value)
+        {
+            FlashlightInput(value.isPressed);
+        }
+
+        public void OnMap(InputValue value)
+        {
+            MapInput(value.isPressed);
+        }
+
+        public void OnWallet(InputValue value)
+        {
+            WalletInput(value.isPressed);
+        }
 #endif
 
 
-		public void MoveInput(Vector2 newMoveDirection)
+        public void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
 		} 
@@ -110,6 +142,31 @@ namespace StarterAssets
         {
 			action = newActionState;
         }
-	}
+
+        public void ShootInput(bool newActionState)
+        {
+            shoot = newActionState;
+        }
+
+		public void ResetInput(bool newState)
+		{
+			reset = newState;
+		}
+
+        public void FlashlightInput(bool newState)
+        {
+            flashlight = newState;
+        }
+
+        public void MapInput(bool newState)
+        {
+            map = newState;
+        }
+
+        public void WalletInput(bool newState)
+        {
+            wallet = newState;
+        }
+    }
 	
 }

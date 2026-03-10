@@ -99,6 +99,10 @@ namespace TMM
 
 		StarterAssetsInputs _input;
 		bool lastAction = false;
+		public StarterAssetsInputs NewInput
+		{
+			get { return _input; }	
+		}
 		
 
 		protected virtual void Awake()
@@ -116,7 +120,7 @@ namespace TMM
 	    {
 			timer = 60;// - (GameManager.Instance.GameStage - 1) * 5f;
 
-            _input = FindFirstObjectByType<FirstPersonController>().GetComponent<StarterAssetsInputs>();
+            _input = FindFirstObjectByType<StarterAssetsInputs>();
 
 #if UNITY_EDITOR
             //timer = 6000000;
@@ -152,10 +156,10 @@ namespace TMM
 #if UNITY_EDITOR				
 				if (Input.GetKeyDown(KeyCode.E) || (_input.action && !lastActionOld))
 #else
-				if (Input.GetKeyDown(KeyCode.E))
+				if (Input.GetKeyDown(KeyCode.E) || (_input.action && !lastActionOld))
 #endif
-				{
-					bool fail = Random.Range(0, 10) == -1; // A chance the minigame fails on exit
+                {
+                    bool fail = Random.Range(0, 10) == -1; // A chance the minigame fails on exit
 					//fail = true;
 					if (!fail)
 					{

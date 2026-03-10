@@ -1,3 +1,4 @@
+using StarterAssets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,6 +49,9 @@ namespace TMM
 
 		List<Renderer> renderers;
 
+		StarterAssetsInputs input;
+		bool lastShootAction = false;
+
         private void Awake()
         {
             _collider = GetComponent<Collider>();
@@ -57,6 +61,7 @@ namespace TMM
         void Start()
 	    {
 	        renderers = GetComponentsInChildren<Renderer>().ToList();
+			input = FindFirstObjectByType<StarterAssetsInputs>();
 	    }
 
 	    // Update is called once per frame
@@ -75,7 +80,7 @@ namespace TMM
 			shootElapsed += Time.deltaTime;
 			if (shootElapsed < shootCooldown) return;
 
-			if (Input.GetMouseButton(0)) 
+			if (Input.GetMouseButton(0) || (input.shoot)) 
 			{
 				// Shoot
 				shootElapsed = 0;
@@ -90,17 +95,26 @@ namespace TMM
 				shotAudioSource.Play();
 
 			}
+
+			lastShootAction = input.shoot;
         }
 
         void Move()
 		{
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || input.move.x != 0)
             {
-                if (Input.GetKey(KeyCode.A))
-                    targetSpeed = -maxSpeed;
+				if(Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+				{
+                    if (Input.GetKey(KeyCode.A))
+                        targetSpeed = -maxSpeed;
 
-                if (Input.GetKey(KeyCode.D))
-                    targetSpeed = maxSpeed;
+                    if (Input.GetKey(KeyCode.D))
+                        targetSpeed = maxSpeed;
+                }
+				else
+				{
+					targetSpeed = input.move.x > 0 ? maxSpeed : -maxSpeed;
+				}
             }
             else
             {

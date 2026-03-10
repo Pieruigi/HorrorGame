@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using StarterAssets;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace TMM
 {
@@ -45,6 +46,10 @@ namespace TMM
 
 		CameraShake shake;
 
+		StarterAssetsInputs input;
+
+		bool lastShootAction = false;
+
         void Awake()
         {
 			parentDefault = transform.parent;
@@ -56,6 +61,7 @@ namespace TMM
         void Start()
 	    {
 			shake = FindFirstObjectByType<FirstPersonController>().GetComponentInChildren<CameraShake>();
+			input = FindFirstObjectByType<StarterAssetsInputs>();
 	    }
 
 		// Update is called once per frame
@@ -77,7 +83,7 @@ namespace TMM
 
 
 
-			if (Input.GetMouseButton(0))
+			if (Input.GetMouseButton(0) ||(input.shoot && !lastShootAction))
 			{
 				if (cooldown <= 0)
 				{
@@ -98,6 +104,8 @@ namespace TMM
 					PlayShotAudio();
 				}
 			}
+
+			lastShootAction = input.shoot;
 		}
 
 		IEnumerator ShakeCamera()

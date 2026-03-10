@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,6 +45,9 @@ namespace TMM
 
 		int jumpscareScore = -1;
 
+		
+		bool lastShootAction = false;
+
 		protected override void Awake()
 		{
 			base.Awake();
@@ -56,7 +60,7 @@ namespace TMM
 			verticalSymmetry = Random.Range(0, 2) == 0 ? true : false;
 		}
 
-
+        
         protected override void Update()
         {
 			base.Update();
@@ -84,7 +88,7 @@ namespace TMM
 
 				if (selected)
 				{
-					if (Input.GetMouseButtonDown(0))
+					if (Input.GetMouseButtonDown(0) || (NewInput.shoot && !lastShootAction))
 					{
 						busy = true;
 						float angle = selected.transform.localEulerAngles.y + 90f;
@@ -105,6 +109,7 @@ namespace TMM
 						
 					}
 				}
+				lastShootAction = NewInput.shoot;
 			}
         }
 

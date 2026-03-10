@@ -1,4 +1,5 @@
 using DG.Tweening;
+using StarterAssets;
 using System;
 using System.Collections;
 using TMPro;
@@ -28,6 +29,8 @@ namespace TMM.UI
 
 		Vector3 originalScale;
 
+		StarterAssetsInputs inputs;
+		bool lastWalletInput = false;
 		
         void Awake()
         {
@@ -43,13 +46,17 @@ namespace TMM.UI
 			balanceField.text = Wallet.Instance.Balance.ToString("00");
 			//ShowAndHide();
 
+			inputs = FindFirstObjectByType<StarterAssetsInputs>();
+
 	    }
 
 		// Update is called once per frame
 		void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.Tab))
+			if (Input.GetKeyDown(KeyCode.Tab) || (inputs.wallet && !lastWalletInput))
 				ShowAndHide();
+
+			lastWalletInput = inputs.wallet;
 		}
 
 		void OnEnable()

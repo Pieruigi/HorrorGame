@@ -29,6 +29,8 @@ namespace TMM
 
 		int jumpscareScore = -1;
 
+		bool lastShootAction = false;
+
         protected override void Awake()
         {
 			base.Awake();
@@ -115,7 +117,7 @@ namespace TMM
 			// If there is a shaking 
 			if (shakingTile)
 			{
-				if (Input.GetMouseButtonDown(0))
+				if (Input.GetMouseButtonDown(0) || (NewInput.shoot && !lastShootAction))
 				{
 					if (!selectedTiles[0])
 						selectedTiles[0] = shakingTile;
@@ -131,6 +133,8 @@ namespace TMM
 			{
 				StartCoroutine(CheckTiles());
 			}
+
+			lastShootAction = NewInput.shoot;
 		}
 
 		IEnumerator CheckTiles()

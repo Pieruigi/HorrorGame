@@ -1,4 +1,5 @@
 using DG.Tweening;
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -29,6 +30,10 @@ namespace TMM
 
 		bool ready = false;
 
+		bool lastShootAction = false;
+
+		StarterAssetsInputs input;
+
         private void Awake()
         {
 			
@@ -45,7 +50,7 @@ namespace TMM
         // Start is called before the first frame update
         void Start()
 	    {
-	        
+			input = FindFirstObjectByType<StarterAssetsInputs>();
 	    }
 
 	    // Update is called once per frame
@@ -61,10 +66,12 @@ namespace TMM
 
 			if(!active || !ready) return;
 
-			if (Input.GetMouseButtonDown(0))
+			if (Input.GetMouseButtonDown(0) || (input.shoot && !lastShootAction))
 			{
 				Hit();
 			}
+
+			lastShootAction = input.shoot;
 	    }
 
         private void LateUpdate()

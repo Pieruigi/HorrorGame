@@ -1,3 +1,4 @@
+using StarterAssets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,18 +22,25 @@ namespace TMM
 
 		public bool Available { get { return GetTimer() > 0; } }
 
+		StarterAssetsInputs inputs;
+		bool lastMapInput = false;
+
 	    // Start is called before the first frame update
 	    void Start()
 	    {
 			MapUI.Instance.Close();
+			inputs = FindFirstObjectByType<StarterAssetsInputs>();
 	    }
 
 		// Update is called once per frame
 		void Update()
 		{
+			var lastMap = lastMapInput; 
+			lastMapInput = inputs.map;
+
 			if(timer <= 0)
 			{
-                if (Input.GetKeyDown(KeyCode.Q))
+                if (Input.GetKeyDown(KeyCode.Q) || (inputs.map && !lastMap))
 					MessageManager.Instance.ShowCustomMessage(5);
 
                 if (MapUI.Instance.IsOpen)
@@ -44,7 +52,7 @@ namespace TMM
 				return;
 			}
 
-			if (Input.GetKeyDown(KeyCode.Q))
+			if (Input.GetKeyDown(KeyCode.Q) || (inputs.map && !lastMap))
 			{
 				if (MapUI.Instance.IsOpen)
 					Close();
@@ -60,7 +68,8 @@ namespace TMM
 				showMessage = false;
 				MessageManager.Instance.ShowCustomMessage(4);
 			}
-	
+
+            
 		}
 
 		void OnEnable()

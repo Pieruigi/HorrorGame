@@ -1,3 +1,4 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO.IsolatedStorage;
@@ -27,6 +28,9 @@ namespace TMM
 
 		Animator animator;
 
+		StarterAssetsInputs input;
+		bool lastInput = false;
+
         void Awake()
         {
 			animator = GetComponentInParent<Animator>();
@@ -45,6 +49,8 @@ namespace TMM
 			// 	_light.gameObject.SetActive(false);
 			// }
 
+			input = FindFirstObjectByType<StarterAssetsInputs>();
+
 			SetOn(true);
 	    }
 
@@ -53,11 +59,12 @@ namespace TMM
 		{
 			if (!available) return;
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.F) || (input.flashlight && !lastInput))
             {
 				SetOn(!isOn);
             }
 
+			lastInput = input.flashlight;
 		}
 
 		public void SetAvailable(bool available)

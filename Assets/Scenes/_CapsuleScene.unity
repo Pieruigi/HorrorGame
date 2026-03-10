@@ -5804,7 +5804,6 @@ MonoBehaviour:
   activateDot: 0
   deviceInteractor: {fileID: 60209236}
   recharger: {fileID: 60209235}
-  timer: 45
   beatenAudioSource: {fileID: 60209237}
   mainLight: {fileID: 60209240}
   mainCanvas: {fileID: 60209238}
@@ -10420,7 +10419,6 @@ MonoBehaviour:
   activateDot: 0
   deviceInteractor: {fileID: 103067304}
   recharger: {fileID: 103067303}
-  timer: 45
   beatenAudioSource: {fileID: 103067305}
   mainLight: {fileID: 103067308}
   mainCanvas: {fileID: 103067306}
@@ -13103,7 +13101,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 631b7a2c561c78a4b9df7421b240d94c,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1846256759547140760, guid: 631b7a2c561c78a4b9df7421b240d94c,
         type: 3}
@@ -17215,7 +17213,6 @@ MonoBehaviour:
   activateDot: 0
   deviceInteractor: {fileID: 176871922}
   recharger: {fileID: 176871921}
-  timer: 45
   beatenAudioSource: {fileID: 176871923}
   mainLight: {fileID: 176871926}
   mainCanvas: {fileID: 176871924}
@@ -27836,7 +27833,6 @@ MonoBehaviour:
   activateDot: 0
   deviceInteractor: {fileID: 275270549}
   recharger: {fileID: 275270548}
-  timer: 45
   beatenAudioSource: {fileID: 275270550}
   mainLight: {fileID: 275270553}
   mainCanvas: {fileID: 275270551}
@@ -34375,7 +34371,6 @@ MonoBehaviour:
   activateDot: 0
   deviceInteractor: {fileID: 315231360}
   recharger: {fileID: 315231359}
-  timer: 45
   beatenAudioSource: {fileID: 315231361}
   mainLight: {fileID: 315231364}
   mainCanvas: {fileID: 315231362}
@@ -71224,7 +71219,6 @@ MonoBehaviour:
   activateDot: 0
   deviceInteractor: {fileID: 661198902}
   recharger: {fileID: 661198901}
-  timer: 45
   beatenAudioSource: {fileID: 661198903}
   mainLight: {fileID: 661198906}
   mainCanvas: {fileID: 661198904}
@@ -89924,7 +89918,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &872236781
 Transform:
   m_ObjectHideFlags: 0
@@ -100309,7 +100303,6 @@ MonoBehaviour:
   activateDot: 0
   deviceInteractor: {fileID: 938835025}
   recharger: {fileID: 938835024}
-  timer: 45
   beatenAudioSource: {fileID: 938835026}
   mainLight: {fileID: 938835029}
   mainCanvas: {fileID: 938835027}
@@ -104724,7 +104717,6 @@ MonoBehaviour:
   activateDot: 0
   deviceInteractor: {fileID: 974291330}
   recharger: {fileID: 974291329}
-  timer: 45
   beatenAudioSource: {fileID: 974291331}
   mainLight: {fileID: 974291334}
   mainCanvas: {fileID: 974291332}
@@ -128324,7 +128316,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e760495f83f3e6f4d9402bad5122e204, type: 2}
+  - {fileID: 2100000, guid: c6ab1d6b2f1e961479222d49ae451fa7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -135356,7 +135348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1279363666
 Transform:
   m_ObjectHideFlags: 0
@@ -192782,7 +192774,6 @@ MonoBehaviour:
   activateDot: 0
   deviceInteractor: {fileID: 1892079642}
   recharger: {fileID: 1892079641}
-  timer: 45
   beatenAudioSource: {fileID: 1892079643}
   mainLight: {fileID: 1892079646}
   mainCanvas: {fileID: 1892079644}
@@ -204646,7 +204637,6 @@ MonoBehaviour:
   activateDot: 0
   deviceInteractor: {fileID: 2006742224}
   recharger: {fileID: 2006742223}
-  timer: 45
   beatenAudioSource: {fileID: 2006742225}
   mainLight: {fileID: 2006742228}
   mainCanvas: {fileID: 2006742226}

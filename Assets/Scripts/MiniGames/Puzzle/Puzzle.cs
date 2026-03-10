@@ -36,7 +36,7 @@ namespace TMM
 
 		Vector3[] selectionStartingPositions = new Vector3[2];
 
-
+		bool lastShootAction = false;
 
 #if UNITY_EDITOR
 
@@ -104,7 +104,7 @@ namespace TMM
 				// Check mouse button
 				if (over)
 				{
-					if (Input.GetMouseButtonDown(0))
+					if (Input.GetMouseButtonDown(0) || (NewInput.shoot && !lastShootAction))
 					{
 						// Clear over
 						ClearOver();
@@ -124,6 +124,8 @@ namespace TMM
 						}
 					}
 				}
+
+				lastShootAction = NewInput.shoot;
 			}
         }
 

@@ -77,6 +77,9 @@ namespace TMM
 
 		int jumpscareScore = -1;
 
+		bool lastShootInput = false;
+		bool lastResetInput = false;
+
 		protected override void Awake()
 		{
 			base.Awake();
@@ -142,7 +145,7 @@ namespace TMM
 
 			if (IsActive)
 			{
-				if (Input.GetKeyDown(KeyCode.R))
+				if (Input.GetKeyDown(KeyCode.R) || (NewInput.reset && !lastResetInput))
 				{
 					ClearBoard();
 				}
@@ -158,17 +161,26 @@ namespace TMM
 					//Debug.Log($"Tetris hit:{hitInfo.collider.transform.parent.gameObject.name}/{hitInfo.collider.gameObject.name}");
 
 					// Check if the player is trying to insert the block
-					if (Input.GetMouseButtonDown(0))
+					if (Input.GetMouseButtonDown(0) || (NewInput.shoot && !lastShootInput))
 					{
 						
 						TryInsertCurrentBlock();
 					}
 
-					if (!blockBusy && (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))) // Rotate left
+					if (!blockBusy && (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || NewInput.move.x != 0)) // Rotate left
 					{
 						blockBusy = true;
 						var angle = currentBlock.transform.localEulerAngles;
-						var rotAngle = Input.GetKeyDown(KeyCode.A) ? 90f : -90f;
+						float rotAngle = 0;
+						if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
+						{
+							rotAngle = Input.GetKeyDown(KeyCode.A) ? 90f : -90f;
+                        }
+						else
+						{
+                            rotAngle = NewInput.move.x < 0 ? 90f : -90f;
+                        }
+
 						currentBlock.transform.DOLocalRotate(angle + Vector3.forward * rotAngle, rotationTime).SetEase(Ease.OutBounce).OnComplete(() =>
 						{
 							blockBusy = false;
@@ -212,6 +224,8 @@ namespace TMM
 
 				}
 
+				lastShootInput = NewInput.shoot;
+				lastResetInput = NewInput.reset;
 			}
 		}
 
