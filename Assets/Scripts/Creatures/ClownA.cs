@@ -530,7 +530,7 @@ namespace TMM.AI
 				var dest = list[Random.Range(0, list.Count)];
 				// Set destination
 				agent.SetDestination(dest);
-				Debug.Log("Monster set destination");
+				//Debug.Log("Monster set destination");
 
 				return;
 			}

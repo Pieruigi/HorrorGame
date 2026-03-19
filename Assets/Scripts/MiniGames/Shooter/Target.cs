@@ -54,7 +54,7 @@ namespace TMM
 
 			//if (hitter.GetComponent<Bullet>())
 			{
-				Debug.Log("HIT + " + gameObject.name);
+				//Debug.Log("HIT + " + gameObject.name);
 				hit = true;
 				//modelRoot.DOLocalRotate(Vector3.up * 90, .25f).SetEase(Ease.OutBounce);
 				modelRoot.gameObject.SetActive(false);

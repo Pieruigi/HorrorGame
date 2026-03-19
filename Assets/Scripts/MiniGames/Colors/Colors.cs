@@ -335,14 +335,14 @@ namespace TMM
 
 		public void CheckCompleted()
 		{
-			Debug.Log("Colors check -------------------------------------------------");
+			//Debug.Log("Colors check -------------------------------------------------");
 			for(int i=0; i<pillars.Length; i++)
 			{
 
 
 				if (pillars[i] == null)
 				{
-					Debug.Log($"Pillar[{i}] is null");
+					//Debug.Log($"Pillar[{i}] is null");
 					continue;
 				}
 
@@ -350,13 +350,13 @@ namespace TMM
 				Branch e = pillars[i].GetBranch(1);
 				Branch s = pillars[i].GetBranch(2);
 				Branch w = pillars[i].GetBranch(3);
-				Debug.Log($"Pillar[{i}] - N:{(n ? n.ColorId : -1)}, E:{(e ? e.ColorId : -1)}, S:{(s ? s.ColorId : -1)}, W:{(w ? w.ColorId : -1)},");
+				//Debug.Log($"Pillar[{i}] - N:{(n ? n.ColorId : -1)}, E:{(e ? e.ColorId : -1)}, S:{(s ? s.ColorId : -1)}, W:{(w ? w.ColorId : -1)},");
 
 				for(int j=0; j<4; j++)
                 {
                     if (pillars[i].HasBranch(j))
 					{
-						Debug.Log($"Checking pillars[{i}].Branch[{j}].ColorId = {pillars[i].GetBranch(j).ColorId}");
+						//Debug.Log($"Checking pillars[{i}].Branch[{j}].ColorId = {pillars[i].GetBranch(j).ColorId}");
 						// Get current branch
 						Branch currentBranch = pillars[i].GetBranch(j);
 
@@ -365,7 +365,7 @@ namespace TMM
 						// Collider origin
 						var pos = coll.transform.position;
 						var radius = coll.radius * coll.transform.lossyScale.x;
-						Debug.Log($"Collision pos:{pos}, radius:{radius}");
+						//Debug.Log($"Collision pos:{pos}, radius:{radius}");
 						// Disable current collider to ovoid overlap
 						coll.enabled = false;
 						// Overlap
@@ -374,14 +374,14 @@ namespace TMM
 						coll.enabled = true;
 						if (others.Length == 0)
 						{
-							Debug.Log("No overlap");
+							//Debug.Log("No overlap");
 							return;
 						}
                         else
                         {
 							var otherBranch = others[0].GetComponentInParent<Branch>();
-							Debug.Log("OtherBranch parent:" + otherBranch.GetComponentInParent<Pillar>());
-							Debug.Log("Other branch color id:" + otherBranch.ColorId);
+							//Debug.Log("OtherBranch parent:" + otherBranch.GetComponentInParent<Pillar>());
+							//Debug.Log("Other branch color id:" + otherBranch.ColorId);
 
 							if (otherBranch.ColorId != currentBranch.ColorId) return;
 							
@@ -389,9 +389,9 @@ namespace TMM
                     }
                 }
             }
-			Debug.Log("----------------------------------------------------------");
+			//Debug.Log("----------------------------------------------------------");
 			
-			Debug.Log("Game Has Completed");
+			//Debug.Log("Game Has Completed");
 			// Disable player 
 			//PlayerController.Instance.Disabled = true;
 

@@ -330,7 +330,7 @@ namespace TMM.UI
 			// Get the number of tiles
 			int count = builder.TileCount;
 
-			Debug.Log($"MapUI - Tile count:{count}");
+			//Debug.Log($"MapUI - Tile count:{count}");
 
 			// First simply add floor tiles
 			for (int i = 0; i < count; i++)

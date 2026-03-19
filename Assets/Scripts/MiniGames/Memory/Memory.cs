@@ -43,7 +43,7 @@ namespace TMM
 
 			// Shuffle
 			var shuffledList = Utility.Shuffle(tiles);
-			Debug.Log("ShuffledList.Count:" + shuffledList.Count);
+			//Debug.Log("ShuffledList.Count:" + shuffledList.Count);
 			for(int i=0;  i<shuffledList.Count; i++)
             {
 				shuffledList[i].transform.position = originalPositions[i];

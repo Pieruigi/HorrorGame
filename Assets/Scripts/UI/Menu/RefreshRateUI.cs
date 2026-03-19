@@ -89,11 +89,11 @@ namespace TMM.UI
             dropdown.options.Clear();
             refreshRateList.Clear();
 
-            Debug.Log($"Current Resolution:{Screen.currentResolution}");
-            foreach (Resolution r in Screen.resolutions)
-            {
-                Debug.Log("Resolution:" + r);
-            }
+            //Debug.Log($"Current Resolution:{Screen.currentResolution}");
+            //foreach (Resolution r in Screen.resolutions)
+            //{
+            //    Debug.Log("Resolution:" + r);
+            //}
 
             // Get all refresh rate for the current resolution
 

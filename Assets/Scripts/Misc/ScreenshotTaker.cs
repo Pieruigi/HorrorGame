@@ -21,7 +21,7 @@ public class ScreenshotTaker : SingletonPersistent<ScreenshotTaker>
             string fullPath = folderPath + "/" + fileName;
 
             ScreenCapture.CaptureScreenshot(fullPath);
-            Debug.Log("Screenshot salvato in: " + fullPath);
+            //Debug.Log("Screenshot salvato in: " + fullPath);
         }
 #endif
     }

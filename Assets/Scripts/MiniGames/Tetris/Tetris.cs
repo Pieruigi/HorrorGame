@@ -132,7 +132,7 @@ namespace TMM
 
 			}
 
-			Debug.Log($"Borders:{borders}");
+			//Debug.Log($"Borders:{borders}");
 
 			emptyMaterial = cellRows[0].transform.GetChild(0).GetComponent<Renderer>().material;
 

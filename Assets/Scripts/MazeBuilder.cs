@@ -236,8 +236,8 @@ namespace TMM
 
 			int count = Mathf.CeilToInt((float)mul * (float)tileCount); // Max number of pressure plates to add
 
-			Debug.Log("TileCount:" + tileCount);
-			Debug.Log("PressCount:" + count);
+			//Debug.Log("TileCount:" + tileCount);
+			//Debug.Log("PressCount:" + count);
 
 			// Load all assets
 			var all = Resources.LoadAll<FloorTriggerAsset>(FloorTriggerAsset.ResourceFolder).Where(r => (r.MinStage < 0 || r.MinStage <= stage)).ToList();
@@ -286,7 +286,7 @@ namespace TMM
 						tile = tiles.Find(t => t.coords == mg.origin.coords + Vector2.right);
 						break;
 				}
-				Debug.Log("Removing tile index:" + tiles.IndexOf(tile));
+				//Debug.Log("Removing tile index:" + tiles.IndexOf(tile));
 				floors.Remove(tile);
 		
 			}
@@ -312,7 +312,7 @@ namespace TMM
                         tile = tiles.Find(t => t.coords == vm.origin.coords + Vector2.right);
                         break;
                 }
-                Debug.Log("Removing tile index:" + tiles.IndexOf(tile));
+                //Debug.Log("Removing tile index:" + tiles.IndexOf(tile));
                 floors.Remove(tile);
 
             }
@@ -600,7 +600,7 @@ namespace TMM
 			int level = 1;
 			var miniGame = MiniGameManager.Instance.ChooseMiniGame(level);
 
-			Debug.Log("Minigame chosen:" + miniGame.name);
+			//Debug.Log("Minigame chosen:" + miniGame.name);
 
 			WallBlockData wbd = new WallBlockData();
 			wbd.prefabs = miniGame.Prefabs.ToList();

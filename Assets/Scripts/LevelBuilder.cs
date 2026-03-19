@@ -152,7 +152,7 @@ namespace TMM
 
 		int GetTile(float x, float z)
 		{
-			Debug.Log($"GetTile({x},{z})");
+			//Debug.Log($"GetTile({x},{z})");
 			foreach (var block in blocks)
 			{
 				var walls = block.GetComponentsInChildren<Transform>();
@@ -160,7 +160,7 @@ namespace TMM
 				{
 					if (wall.position.x == x && wall.position.z == z)
                     {
-						Debug.Log($"GetTile({x},{z}) => 1");
+						//Debug.Log($"GetTile({x},{z}) => 1");
 							return 1;
                     }
 						
@@ -172,12 +172,12 @@ namespace TMM
 			{
 				if (floor.transform.position.x == x && floor.transform.position.z == z)
                 {
-					Debug.Log($"GetTile({x},{z}) => 0");
+					//Debug.Log($"GetTile({x},{z}) => 0");
 					return 0;
                 }
 					
 			}
-					Debug.Log($"GetTile({x},{z}) => -1");
+					//Debug.Log($"GetTile({x},{z}) => -1");
 			return -1;
         }
 
@@ -192,7 +192,7 @@ namespace TMM
 			var bottom = floors.Where(f => !floors.Exists(f1 => f1.transform.position.z == f.transform.position.z - cellSize)).ToList();
 			var left = floors.Where(f => !floors.Exists(f1 => f1.transform.position.x == f.transform.position.x - cellSize)).ToList();
 
-			Debug.Log("TopCOunt:" + top.Count);
+			//Debug.Log("TopCOunt:" + top.Count);
 			
 
 			List<GameObject>[] tot = new List<GameObject>[4];
@@ -221,7 +221,7 @@ namespace TMM
 				var floor = tot[dir][Random.Range(0, tot[dir].Count)];
 				tot[dir].Remove(floor);
 
-				Debug.Log("Floor:" + floor.transform.position);
+				//Debug.Log("Floor:" + floor.transform.position);
 
 				// Get all the cells of the wall
 				List<Transform> cells = wall.GetComponentsInChildren<Transform>().ToList();
@@ -260,14 +260,14 @@ namespace TMM
 						case 0:
 							if (!cells.Exists(c => c.transform.position.z == cell.transform.position.z - cellSize)) // South border (no other cell below)
 							{
-								Debug.Log($"Tile name:{cell.name}");
+								//Debug.Log($"Tile name:{cell.name}");
 
 								// If there is a hole and then a floor under the cell fail
 								if (!floors.Exists(f => f.transform.position.z == cell.transform.position.z - cellSize && f.transform.position.x == cell.transform.position.x) &&
 									 floors.Exists(f => f.transform.position.z == cell.transform.position.z - 2f * cellSize && f.transform.position.x == cell.transform.position.x)
 									)
 								{
-									Debug.Log($"Tile name:{cell.name} found is false");
+									//Debug.Log($"Tile name:{cell.name} found is false");
 									found = false;
 								}
 							}
@@ -358,7 +358,7 @@ namespace TMM
 		void PlaceFloorAllAround(GameObject wall)
 		{
 			var l = wall.GetComponentsInChildren<Transform>().ToList();
-			Debug.Log("L:" + l.Count);
+			//Debug.Log("L:" + l.Count);
 
 			foreach (var cell in l)
 			{

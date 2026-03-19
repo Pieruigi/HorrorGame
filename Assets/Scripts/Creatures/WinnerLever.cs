@@ -41,13 +41,17 @@ namespace TMM
         [SerializeField]
         AudioSource stingerAudioSource;
 
+        [SerializeField]
+        AudioSource stinger2AudioSource;
+
 
         bool inside = false;
 
 	    // Start is called before the first frame update
 	    void Start()
 	    {
-            MessageManager.Instance.ShowCustomMessage(10, false);
+			//MessageManager.Instance.ShowCustomMessage(10, false);
+			StartCoroutine(ShowBeFreeMessage());
         }
 
 	    // Update is called once per frame
@@ -104,6 +108,13 @@ namespace TMM
 			inside = false;
         }
 
+		IEnumerator ShowBeFreeMessage()
+		{
+            MessageManager.Instance.ShowCustomMessage(10, false);
+            yield return new WaitForSeconds(3f);
+			MessageManager.Instance.HideMessage();
+		}
+
 		void PullTheLever()
 		{
 			// Stop player 
@@ -132,14 +143,14 @@ namespace TMM
 			seq.Append(spider.transform.DOMove(spiderTarget.position, .2f));
 			seq.Join(spider.transform.DORotateQuaternion(spiderTarget.rotation, .2f));
 			var eulers = leverPivot.localEulerAngles;
-            seq.AppendCallback(() => { leverAudioSource.PlayDelayed(.25f); stingerAudioSource.PlayDelayed(.25f+.85f); });
+            seq.AppendCallback(() => { leverAudioSource.PlayDelayed(.25f); stingerAudioSource.PlayDelayed(.25f+.95f); stinger2AudioSource.PlayDelayed(.25f + .7f); });
             seq.Append(leverPivot.DOLocalRotate(new Vector3(eulers.x, eulers.y, -18f), .2f).SetEase(Ease.OutBack));
 			
 
 			seq.AppendInterval(.5f);
-			seq.AppendCallback(() => { floor.SetActive(false); screamAudioSource.PlayDelayed(.7f); });
+			seq.AppendCallback(() => { floor.SetActive(false); screamAudioSource.PlayDelayed(1.0f); });
 
-			seq.AppendInterval(3f);
+			seq.AppendInterval(4f);
 			seq.AppendCallback(() => { GameManager.Instance.StartNewGame(); });
 
 

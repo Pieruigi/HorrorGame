@@ -62,14 +62,14 @@ namespace TMM
             }
 
             uint numAchievements = SteamUserStats.GetNumAchievements();
-            Debug.Log($"Numero achievement trovati: {numAchievements}");
+            //Debug.Log($"Numero achievement trovati: {numAchievements}");
 
             for (uint i = 0; i < numAchievements; i++)
             {
                 string achievementId = SteamUserStats.GetAchievementName(i);
                 bool achieved = SteamUserStats.GetAchievement(achievementId, out achieved);
 
-                Debug.Log($"Achievement [{i}]: {achievementId} - Sbloccato: {achieved}");
+                //Debug.Log($"Achievement [{i}]: {achievementId} - Sbloccato: {achieved}");
             }
         }
 
@@ -88,7 +88,7 @@ namespace TMM
             if (success)
             {
                 SteamUserStats.StoreStats();
-                Debug.Log($"Achievement sbloccato: {achievementId}");
+                //Debug.Log($"Achievement sbloccato: {achievementId}");
             }
             else
             {
@@ -119,7 +119,7 @@ namespace TMM
 
             SteamUserStats.ClearAchievement(achievementId);
             SteamUserStats.StoreStats();
-            Debug.Log($"Achievement resettato: {achievementId}");
+            //Debug.Log($"Achievement resettato: {achievementId}");
         }
         
         void HardResetAchievements()
@@ -138,7 +138,7 @@ namespace TMM
             SteamUserStats.ResetAllStats(true); // <-- il 'true' è importante!
             SteamAPI.RunCallbacks();
             
-            Debug.Log("Hard reset completato");
+            //Debug.Log("Hard reset completato");
         }
         
     }

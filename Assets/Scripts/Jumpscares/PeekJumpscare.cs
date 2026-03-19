@@ -72,7 +72,7 @@ namespace TMM
 
 			int index = triggers.IndexOf(t);
 
-			Debug.Log($"Jumpscare triggered - {transform.root.gameObject.name} - {index}, pitch:{FirstPersonController.GetTargetPitch()}, angle:{signedAngle}");
+			//Debug.Log($"Jumpscare triggered - {transform.root.gameObject.name} - {index}, pitch:{FirstPersonController.GetTargetPitch()}, angle:{signedAngle}");
 
 			float pitch = 20;
 			if (FirstPersonController.GetTargetPitch() > -pitch && FirstPersonController.GetTargetPitch() < pitch)

@@ -146,7 +146,6 @@ namespace TMM
 
 		public void ShowCustomMessage(int messageId, bool keepOn = false)
 		{
-			Debug.Log("Show custom message:" + messageId);
 			if (messageId < 0) return;
 			MessageUI.Instance.ShowMessage(messages[messageId], keepOn);
 		}

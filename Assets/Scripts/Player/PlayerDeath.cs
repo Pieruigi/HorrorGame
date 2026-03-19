@@ -24,7 +24,7 @@ namespace TMM
 		
 		public void Die(GameObject killer)
         {
-			Debug.Log("YOU ARE DEAD.................................");
+			//Debug.Log("YOU ARE DEAD.................................");
 			GetComponent<FirstPersonController>().Die();
 			transform.root.GetComponentInChildren<Flashlight>().SetOn(false);
 

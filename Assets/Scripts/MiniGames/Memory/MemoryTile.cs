@@ -39,7 +39,7 @@ namespace TMM
 		public void Shake(bool value)
 		{
 			
-			Debug.Log("Shake " + gameObject.name);
+			//Debug.Log("Shake " + gameObject.name);
 			if (value == shaking) return;
 			if (value && selected) return;
 		

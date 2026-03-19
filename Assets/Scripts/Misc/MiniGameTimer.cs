@@ -118,7 +118,7 @@ namespace TMM.UI
 			yield return new WaitForSeconds(1f);
 			if(miniGame.TimeLeft <= 0)
             {
-				Debug.Log("Timer noise");
+				//Debug.Log("Timer noise");
 				noiseRange = noiseRangeOnError;
 				//alarmAudioSource.Play();
 				AlarmManager.Instance.ReportTriggerActivated(miniGame.gameObject);
