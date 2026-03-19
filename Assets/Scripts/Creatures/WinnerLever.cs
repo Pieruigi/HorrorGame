@@ -110,7 +110,7 @@ namespace TMM
 
 		IEnumerator ShowBeFreeMessage()
 		{
-            MessageManager.Instance.ShowCustomMessage(10, false);
+            MessageManager.Instance.ShowCustomMessage(10, true);
             yield return new WaitForSeconds(3f);
 			MessageManager.Instance.HideMessage();
 		}
@@ -148,7 +148,7 @@ namespace TMM
 			
 
 			seq.AppendInterval(.5f);
-			seq.AppendCallback(() => { floor.SetActive(false); screamAudioSource.PlayDelayed(1.0f); });
+			seq.AppendCallback(() => { floor.SetActive(false); screamAudioSource.PlayDelayed(1f); });
 
 			seq.AppendInterval(4f);
 			seq.AppendCallback(() => { GameManager.Instance.StartNewGame(); });
