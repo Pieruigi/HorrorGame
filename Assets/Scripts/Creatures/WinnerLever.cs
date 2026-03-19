@@ -21,6 +21,12 @@ namespace TMM
 		GameObject floor;
 
 		[SerializeField]
+		Collider leverCollider;
+
+		[SerializeField]
+		GameObject endMessageCanvas;
+
+		[SerializeField]
 		AudioSource screamAudioSource;
 
 		[SerializeField]
@@ -32,13 +38,17 @@ namespace TMM
 		[SerializeField]
 		AudioSource musicAudioSource;
 
-		bool inside = false;
+        [SerializeField]
+        AudioSource stingerAudioSource;
+
+
+        bool inside = false;
 
 	    // Start is called before the first frame update
 	    void Start()
 	    {
-	        
-	    }
+            MessageManager.Instance.ShowCustomMessage(10, false);
+        }
 
 	    // Update is called once per frame
 	    void Update()
@@ -55,6 +65,7 @@ namespace TMM
 				if (Input.GetKeyDown(KeyCode.E))
 				{
 					// Disable collider
+					showMessage = false;
 					GetComponent<Collider>().enabled = false;
 					PullTheLever();
 				}
@@ -99,8 +110,15 @@ namespace TMM
 			//FirstPersonController player = FindFirstObjectByType<FirstPersonController>();
 			//player.InputDisabled = true;
 			//player.AimingDisabled = true;
+			leverCollider.enabled = false;
+            if (MessageManager.Instance.IsMessageVisible())
+                MessageManager.Instance.HideMessage();
 
-			clownLaughAudioSource.Play();
+			
+            //MessageManager.Instance.ShowCustomMessage(9, false);
+            StartCoroutine(ShowMessageDelayed(.5f+.75f));
+
+            clownLaughAudioSource.Play();
 			musicAudioSource.Stop();
 
             // Spawn spider
@@ -114,15 +132,23 @@ namespace TMM
 			seq.Append(spider.transform.DOMove(spiderTarget.position, .2f));
 			seq.Join(spider.transform.DORotateQuaternion(spiderTarget.rotation, .2f));
 			var eulers = leverPivot.localEulerAngles;
-            seq.AppendCallback(() => { leverAudioSource.PlayDelayed(.25f); });
+            seq.AppendCallback(() => { leverAudioSource.PlayDelayed(.25f); stingerAudioSource.PlayDelayed(.25f+.85f); });
             seq.Append(leverPivot.DOLocalRotate(new Vector3(eulers.x, eulers.y, -18f), .2f).SetEase(Ease.OutBack));
 			
 
 			seq.AppendInterval(.5f);
 			seq.AppendCallback(() => { floor.SetActive(false); screamAudioSource.PlayDelayed(.7f); });
 
-			seq.AppendInterval(2f);
+			seq.AppendInterval(3f);
 			seq.AppendCallback(() => { GameManager.Instance.StartNewGame(); });
+
+
+			IEnumerator ShowMessageDelayed(float time)
+			{
+				yield return new WaitForSeconds(time);
+                endMessageCanvas.GetComponent<FinalMessage>().PlayFinalSequence();
+			
+            }
 			
 		}
     }

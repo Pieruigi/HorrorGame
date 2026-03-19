@@ -56,6 +56,8 @@ namespace TMM.UI
 		{
 			if (visible) return;
 
+			Debug.Log("Showwwwwww " + message);
+
 			canvasGroup.DOKill();
 
 			visible = true;
