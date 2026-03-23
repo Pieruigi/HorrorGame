@@ -5,11 +5,15 @@ using DG.Tweening;
 using TMM.AI;
 using TMM.Interfaces;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TMM
 {
 	public class PlayerChased : MonoBehaviour
 	{
+		public static UnityAction OnChaseStarted;
+		public static UnityAction OnChaseStopped;
+
 		[SerializeField]
 		AudioSource chaseAudioSource;
 
@@ -46,6 +50,8 @@ namespace TMM
 					chasePlaying = true;
 					chaseAudioSource.DOKill();
 					chaseAudioSource.DOFade(chaseVolume, 1f);
+
+					OnChaseStarted?.Invoke();
 				}
 
 			}
@@ -57,6 +63,8 @@ namespace TMM
 					chasePlaying = false;
 					chaseAudioSource.DOKill();
 					chaseAudioSource.DOFade(0, 1f);
+
+					OnChaseStopped?.Invoke();
 				}
 			}
 		}

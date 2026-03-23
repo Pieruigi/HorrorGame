@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TMM
 {
 	public class OutOfBreathTrap : MonoBehaviour
 	{
+        public static UnityAction OnTriggered;
+
         [SerializeField]
         FloorTrigger floorTrigger;
 
@@ -64,7 +67,7 @@ namespace TMM
             OutOfBreathDebuff.Instance.Apply();
 
 
-
+            OnTriggered?.Invoke();
 
         }
     }

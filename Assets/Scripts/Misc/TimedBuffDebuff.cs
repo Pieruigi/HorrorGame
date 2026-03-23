@@ -16,11 +16,15 @@ namespace TMM
 
 		[SerializeField]
 		float timerDefault = 60;
-		
+		public float Duration => timerDefault;
+
+
 		public float Timer
 		{
 			get { return timer; }
 		}
+
+
 
 		protected abstract void DoApply();
 		protected abstract void DoExpire();

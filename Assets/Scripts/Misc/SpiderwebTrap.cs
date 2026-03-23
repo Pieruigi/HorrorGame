@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.Events;
 
 namespace TMM
 {
 	public class SpiderwebTrap : MonoBehaviour
 	{
+		public static UnityAction OnTriggered;
+
 		[SerializeField]
 		FloorTrigger floorTrigger;
 
@@ -64,7 +67,7 @@ namespace TMM
 			triggered = true;
 			PlayerSpeedDebuff.Instance.Apply();
 
-		
+			OnTriggered?.Invoke();
 		}
 		
 	

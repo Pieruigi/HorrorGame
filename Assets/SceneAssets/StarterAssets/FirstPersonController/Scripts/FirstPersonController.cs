@@ -143,6 +143,7 @@ namespace StarterAssets
 		CinemachineVirtualCamera _virtualCamera;
 
 		bool isDead = false;
+		public bool IsDead => isDead;
 
 		public bool IsRunning
 		{

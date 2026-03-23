@@ -32,10 +32,14 @@ namespace TMM
 		void Update()
 		{
 #if !UNITY_WEBGL
-			//if (Input.GetKeyDown(KeyCode.Escape))
-			//	Application.Quit();
+            //if (Input.GetKeyDown(KeyCode.Escape))
+            //	Application.Quit();
+
+
 #endif
-		}
+
+
+        }
 
 		void OnEnable()
 		{

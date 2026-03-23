@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TMM
 {
@@ -12,6 +13,7 @@ namespace TMM
 
 	public class VendingMachine : MonoBehaviour
 	{
+		public static UnityAction<VendingMachineType> OnPurchased;
 
 		[SerializeField]
 		VendingMachineType type = VendingMachineType.NoTriggerTiles;
@@ -162,13 +164,18 @@ namespace TMM
 				case VendingMachineType.NoTriggerTiles:
 					if (TriggerTileManager.Instance.TriggerTilesDisabled) return; // Already disabled (unless we want to give the player the change to buy more time)
 					if (Wallet.Instance.TryUseCoins(cost))
-						TriggerTileManager.Instance.DisableTriggers(timer);
+					{
+                        TriggerTileManager.Instance.DisableTriggers(timer);
+						OnPurchased?.Invoke(VendingMachineType.NoTriggerTiles);
+                    }
+						
 					break;
 				case VendingMachineType.Map:
 					if (Wallet.Instance.TryUseCoins(cost))
 					{
 						Map.Instance.SetTimer(timer);
-						StartCoroutine(SwitchAndForceOff());	
+						StartCoroutine(SwitchAndForceOff());
+						OnPurchased?.Invoke(VendingMachineType.Map);
 					}
 					break;
 				case VendingMachineType.CuteClown:
@@ -176,7 +183,7 @@ namespace TMM
 					{
 						//StupidClownBuff.Instance.Timer = timer;
 						StupidClownBuff.Instance.Apply();
-						
+						OnPurchased?.Invoke(VendingMachineType.CuteClown);
 					}
 					break;
 			}

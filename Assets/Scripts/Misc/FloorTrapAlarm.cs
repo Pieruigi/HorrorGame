@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TMM
 {
 	public class FloorTrapAlarm : MonoBehaviour
 	{
+		public static UnityAction OnTriggered;
+
 		[SerializeField]
 		FloorTrigger floorTrigger;
 
@@ -80,6 +83,8 @@ namespace TMM
 			StartCoroutine(ReportTriggerActivated());
 			elapsed = 0;
 			activated = true;
+
+			OnTriggered?.Invoke();
 		}
 		
 		IEnumerator ReportTriggerActivated()

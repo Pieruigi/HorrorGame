@@ -34,12 +34,12 @@ namespace TMM
         {
 #if UNITY_EDITOR
 
-            if (Input.GetKeyDown(KeyCode.Y))
-            {
-                if (!IsAchievementUnlocked("STAGE_1_COMPLETED"))
-                    UnlockAchievement("STAGE_1_COMPLETED");
+            //if (Input.GetKeyDown(KeyCode.Y))
+            //{
+            //    if (!IsAchievementUnlocked("STAGE_1_COMPLETED"))
+            //        UnlockAchievement("STAGE_1_COMPLETED");
 
-            }
+            //}
 
             if (Input.GetKeyDown(KeyCode.U))
             {
@@ -138,7 +138,7 @@ namespace TMM
             SteamUserStats.ResetAllStats(true); // <-- il 'true' è importante!
             SteamAPI.RunCallbacks();
             
-            //Debug.Log("Hard reset completato");
+            Debug.Log("Hard reset completato");
         }
         
     }

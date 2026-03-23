@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TMM
 {
 	public class PiggyTrap : MonoBehaviour
 	{
+		public static UnityAction OnTriggered;
+
 		[SerializeField]
 		FloorTrigger floorTrigger;
 
@@ -65,6 +68,8 @@ namespace TMM
 
 			// Remove coins
 			Wallet.Instance.TryUseCoins(1);
+
+			OnTriggered?.Invoke();
 		
 		}
 	}
