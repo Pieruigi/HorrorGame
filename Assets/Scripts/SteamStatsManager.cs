@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMM.AI;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace TMM
 {
@@ -24,7 +25,7 @@ namespace TMM
             InitializeSteamStats();
 
 #if UNITY_EDITOR
-            DebugAllStats();
+            //DebugAllStats();
 #endif
 
         }
@@ -388,6 +389,7 @@ namespace TMM
 
             if (!SteamManager.Initialized) return false;
 
+            
             bool success = SteamUserStats.GetStat(statName, out value);
             if (!success)
             {
@@ -437,6 +439,16 @@ namespace TMM
 
             //SteamUserStats.RequestCurrentStats();
             Debug.Log("Statistiche ricaricate da Steam");
+        }
+
+        public bool GetGameLevel(out int level)
+        {
+            return GetStatInt("STAT_LEVEL", out level);
+        }
+
+        public void SetGameLevel(int level)
+        {
+            SetStat("STAT_LEVEL", level);
         }
 
         public void DebugAllStats()

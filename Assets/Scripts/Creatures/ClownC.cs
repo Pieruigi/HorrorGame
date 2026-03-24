@@ -44,6 +44,10 @@ namespace TMM
             attacker = GetComponent<ClownAttacker>();
             
             state = ClownCState.Hidden;
+
+            chaseCheckTimer -= (chaseCheckTimer * .1f * GameManager.Instance.Level);
+
+            agent.speed += (agent.speed * .05f * GameManager.Instance.Level);
             speedDefault = agent.speed;
 
 

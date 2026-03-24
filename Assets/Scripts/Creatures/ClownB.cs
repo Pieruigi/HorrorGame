@@ -73,8 +73,15 @@ namespace TMM
 			agent = GetComponent<NavMeshAgent>();
 			randomMaxDefault = randomMax;
 			attacker = GetComponent<ClownAttacker>();
+			
+			checkIdleTime -= (checkIdleTime * .1f * GameManager.Instance.Level);
 			checkIdleTimeDefault = checkIdleTime;
-			speedDefault = agent.speed;
+
+            agent.speed += (agent.speed * .05f * GameManager.Instance.Level);
+            speedDefault = agent.speed;
+
+			
+
         }
 
         // Start is called before the first frame update

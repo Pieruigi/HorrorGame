@@ -10,6 +10,8 @@ namespace TMM
 {
 	public class GameManager : SingletonPersistent<GameManager>
 	{
+		public readonly int MaxLevel = 2;
+
 #if UNITY_EDITOR
 		int gameStage = 1;
 #else
@@ -19,13 +21,22 @@ namespace TMM
 		{
 			get { return gameStage; }
 		}
-		
+
+#if UNITY_EDITOR
+		int level = 2;
+#else
+		int level = 0;
+#endif
+        public int Level => level;
 
 
-	    // Start is called before the first frame update
-	    void Start()
+
+
+        // Start is called before the first frame update
+        void Start()
 	    {
-	        
+			if (SteamStatsManager.Instance.GetGameLevel(out var l))
+				Debug.Log("TEST - Last level:" + l);
 	    }
 
 		// Update is called once per frame
@@ -89,6 +100,17 @@ namespace TMM
 		public void YouWin()
 		{
             SteamAchievementManager.Instance.UnlockAchievement("STAGE_" + gameStage + "_COMPLETED");
+
+			// Check level
+			if(SteamStatsManager.Instance.GetGameLevel(out var l))
+			{
+				if (l < MaxLevel && l <= level)
+				{
+                    SteamStatsManager.Instance.SetGameLevel(l + 1);
+					level++;
+                }
+					
+			}
 
             StartCoroutine(DoLoadGameScene("WinnerScene"));
         }

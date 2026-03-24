@@ -124,13 +124,16 @@ namespace TMM.AI
 			attacker  = GetComponent<ClownAttacker>();
 
 #if UNITY_EDITOR
-            // walkSpeed *= 0.75f; // Max 1.75
-            // runSpeed *= 0.75f; // Max 1.75
+			// walkSpeed *= 0.75f; // Max 1.75
+			// runSpeed *= 0.75f; // Max 1.75
 
-            //idleTimer = 30000;
+			//idleTimer = 30000;
 #endif
 
-            InitByStage();
+			var v = walkSpeed * .15f;
+			walkSpeed += (v * GameManager.Instance.Level);
+			v = runSpeed * .15f;
+			runSpeed += (v * GameManager.Instance.Level);
 
 		}
 
@@ -253,44 +256,7 @@ namespace TMM.AI
 			agent.speed *= speedMultiplier;
         }
 
-        void InitByStage()
-		{
-		
-			//switch (GameManager.Instance.GameStage)
-   //         {
-			//	case 1:
-			//		walkSpeed *= 1f;// .75f;
-			//		runSpeed *= 1f;// .75f;
-   //                 break;
-			//	case 2:
-			//		walkSpeed *= 1.3f;
-			//		runSpeed *= 1.3f;
-			//		break;
-			//	case 3:
-			//		walkSpeed *= 1.3f;
-			//		runSpeed *= 1.3f;
-			//		break;
-			//	case 4:
-			//		walkSpeed *= 1.6f;
-			//		runSpeed *= 1.6f;
-			//		break;
-			//	case 5:
-			//		walkSpeed *= 1.6f;
-			//		runSpeed *= 1.6f;
-			//		break;
-			//	case 6:
-			//		walkSpeed *= 1.8f;
-			//		runSpeed *= 1.8f;
-			//		break;
-			//	default:
-			//		walkSpeed *= 1.8f;
-			//		runSpeed *= 1.8f;
-			//		break;
-
-   //         }	
-
-		
-        }
+     
 
 		void UpdateState()
 		{

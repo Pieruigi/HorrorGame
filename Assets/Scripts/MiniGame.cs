@@ -118,7 +118,10 @@ namespace TMM
 	    // Start is called before the first frame update
 	    protected virtual void Start()
 	    {
-			timer = 60;// - (GameManager.Instance.GameStage - 1) * 5f;
+			int level = GameManager.Instance.Level;
+
+            //timer = 60;
+            timer = 60f - (10*level);
 
             _input = FindFirstObjectByType<StarterAssetsInputs>();
 
@@ -421,7 +424,7 @@ namespace TMM
 		
 		public void Recharge()
         {
-			timeLeft += 30;// timer / 3f;
+			timeLeft += 30f - (5f*GameManager.Instance.Level);
 			if(!AlarmManager.Instance.IsActive()) deviceInteractor.MessageId = activatorMessageId;
         }
 
