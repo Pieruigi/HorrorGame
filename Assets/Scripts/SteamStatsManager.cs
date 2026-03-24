@@ -3,6 +3,7 @@ using Steamworks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMM.AI;
 using UnityEngine;
 
 namespace TMM
@@ -11,6 +12,8 @@ namespace TMM
     {
         float chaseTime = 0;
         bool chasing = false;
+        bool pigChasing = false;
+        float pigChaseTime = 0;
 
         //FirstPersonController player;
         
@@ -45,6 +48,11 @@ namespace TMM
             {
                 chaseTime += Time.deltaTime;
             }
+
+            if (pigChasing)
+            {
+                pigChaseTime += Time.deltaTime;
+            }
         }
 
         void OnEnable()
@@ -60,6 +68,7 @@ namespace TMM
             PlayerChased.OnChaseStarted += HandleOnChaseStarted;
             PlayerChased.OnChaseStopped += HandleOnChaseStopped;
             Wallet.OnBalanceUpdated += HandleOnWalletUpdated;
+            Pig.OnStateChanged += HandleOnStateChanged;
         }
 
         void OnDisable()
@@ -75,6 +84,30 @@ namespace TMM
             PlayerChased.OnChaseStarted -= HandleOnChaseStarted;
             PlayerChased.OnChaseStopped -= HandleOnChaseStopped;
             Wallet.OnBalanceUpdated -= HandleOnWalletUpdated;
+            Pig.OnStateChanged -= HandleOnStateChanged;
+        }
+
+        private void HandleOnStateChanged(PigState oldState, PigState newState)
+        {
+            switch (newState)
+            {
+                case PigState.Chasing:
+                    pigChaseTime = 0;
+                    pigChasing = true;
+                    break;
+                case PigState.Idle:
+                    if (pigChasing)
+                    {
+                        var player = FindFirstObjectByType<FirstPersonController>();
+                        pigChasing = false;
+                        if (!player.IsDead)
+                        {
+                            IncrementStat("STAT_PIG_TIME", (int)pigChaseTime);
+                        }
+                        pigChaseTime = 0;
+                    }
+                    break;
+            }
         }
 
         private void HandleOnWalletUpdated(int amount)
@@ -100,7 +133,7 @@ namespace TMM
 
             if (!player.IsDead)
             {
-                IncrementStat("STAT_CHASE_TIME", chaseTime);
+                IncrementStat("STAT_CHASE_TIME", (int)(chaseTime));
             }
 
             chaseTime = 0;
@@ -110,7 +143,11 @@ namespace TMM
         {
             if(arg0.GetType() == typeof(PlayerDeafDebuff))
             {
-
+                var player = FindFirstObjectByType<FirstPersonController>();
+                if(!player.IsDead)
+                {
+                    IncrementStat("STAT_DEAF_TIME", (int)arg0.Duration);
+                }
             }
         }
 

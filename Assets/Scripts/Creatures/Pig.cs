@@ -14,6 +14,9 @@ namespace TMM.AI
 
     public class Pig : MonoBehaviour
 	{
+        public delegate void StateChangedDelegate(PigState oldState, PigState newState);
+        public static StateChangedDelegate OnStateChanged;
+
 		PigState state = PigState.Idle;
 		public PigState State => state;
 
@@ -89,6 +92,8 @@ namespace TMM.AI
 					EnterChasingState();
 					break;
             }
+
+            OnStateChanged?.Invoke(oldState, newState);
         }
 
         private void EnterChasingState()
