@@ -13,6 +13,9 @@ namespace TMM
 		[SerializeField]
 		TMP_Text stageField;
 
+		[SerializeField]
+		TMP_Text modeField;
+
         void Awake()
         {
 			canvasGroup.alpha = 0;
@@ -50,7 +53,19 @@ namespace TMM
 
 		void Open()
 		{
+			string mode = "Normal";
+			switch (GameManager.Instance.Level)
+			{
+				case 1:
+					mode = "Hard";
+					break;
+				case 2:
+					mode = "Nightmare";
+					break;
+			}
 			stageField.text = $"Stage {GameManager.Instance.GameStage}";
+
+			modeField.text = mode;
 
 			var seq = DOTween.Sequence();
 			seq.Append(canvasGroup.DOFade(1, .1f));

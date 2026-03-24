@@ -27,10 +27,14 @@ namespace TMM
 #else
 		int level = 0;
 #endif
-        public int Level => level;
+        public int Level
+		{
+			get { return  level; }	
+			set { level = value; }
+		}
 
 
-
+       
 
         // Start is called before the first frame update
         void Start()
