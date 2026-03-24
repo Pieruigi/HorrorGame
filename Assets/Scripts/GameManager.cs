@@ -103,20 +103,27 @@ namespace TMM
 
 		public void YouWin()
 		{
-            SteamAchievementManager.Instance.UnlockAchievement("STAGE_" + gameStage + "_COMPLETED");
+			if(level == 0)
+				SteamAchievementManager.Instance.UnlockAchievement("STAGE_" + gameStage + "_COMPLETED");
+            else if (level == 1)
+                SteamAchievementManager.Instance.UnlockAchievement("BEAT_HARD");
+            else if (level == 2)
+                SteamAchievementManager.Instance.UnlockAchievement("BEAT_NIGHTMARE");
 
-			// Check level
-			if(SteamStatsManager.Instance.GetGameLevel(out var l))
+            // Check level
+            if (SteamStatsManager.Instance.GetGameLevel(out var l))
 			{
 				if (l < MaxLevel && l <= level)
 				{
                     SteamStatsManager.Instance.SetGameLevel(l + 1);
-					level++;
+
+                    level++;
                 }
 					
 			}
 
-            StartCoroutine(DoLoadGameScene("WinnerScene"));
+
+			StartCoroutine(DoLoadGameScene("WinnerScene"));
         }
 
         public void StartNextStage()

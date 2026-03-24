@@ -73,10 +73,12 @@ namespace TMM
 			agent = GetComponent<NavMeshAgent>();
 			randomMaxDefault = randomMax;
 			attacker = GetComponent<ClownAttacker>();
-			
+
+			//checkIdleTime *= .95f;
 			checkIdleTime -= (checkIdleTime * .1f * GameManager.Instance.Level);
 			checkIdleTimeDefault = checkIdleTime;
 
+			//agent.speed *= .95f;
             agent.speed += (agent.speed * .05f * GameManager.Instance.Level);
             speedDefault = agent.speed;
 

@@ -129,13 +129,31 @@ namespace TMM.AI
 
 			//idleTimer = 30000;
 #endif
-
-			var v = walkSpeed * .15f;
+			//walkSpeed *= 0.95f;
+			var v = walkSpeed * .05f;
 			walkSpeed += (v * GameManager.Instance.Level);
-			v = runSpeed * .15f;
+
+            //runSpeed *= 0.95f;
+            v = runSpeed * .05f;
 			runSpeed += (v * GameManager.Instance.Level);
 
-		}
+
+			//sightRange *= .95f;
+			v = sightRange * .1f;
+			sightRange += (v * GameManager.Instance.Level);
+
+			//hearMultiplier *= .95f;
+			v = hearMultiplier * .1f;
+            hearMultiplier += (v * GameManager.Instance.Level);
+
+            //smellRange *= .95f;
+            v = smellRange * .1f;
+            smellRange += (v * GameManager.Instance.Level);
+
+            v = sightAngle * .1f;
+            sightAngle += (v * GameManager.Instance.Level);
+
+        }
 
 		protected virtual void Start()
 		{
