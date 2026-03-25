@@ -130,23 +130,23 @@ namespace TMM.AI
 			//idleTimer = 30000;
 #endif
 			walkSpeed *= 0.95f;
-			walkSpeed += walkSpeed * .075f * GameManager.Instance.Level;
+			walkSpeed += walkSpeed * .1f * GameManager.Instance.Level;
 
             runSpeed *= 0.95f;
-            runSpeed += runSpeed * .075f * GameManager.Instance.Level;
+            runSpeed += runSpeed * .1f * GameManager.Instance.Level;
 
 
             sightRange *= .95f;
-			sightRange += sightRange * .15f * GameManager.Instance.Level;
+			sightRange += sightRange * .3f * GameManager.Instance.Level;
 
             hearMultiplier *= .95f;
-			hearMultiplier += hearMultiplier * .15f * GameManager.Instance.Level;
+			hearMultiplier += hearMultiplier * .3f * GameManager.Instance.Level;
 
             smellRange *= .95f;
-            smellRange += smellRange * .15f * GameManager.Instance.Level;
+            smellRange += smellRange * .3f * GameManager.Instance.Level;
 
             sightAngle *= .95f;
-            sightAngle += sightAngle * .15f * GameManager.Instance.Level;
+            sightAngle += sightAngle * .3f * GameManager.Instance.Level;
 
         }
 

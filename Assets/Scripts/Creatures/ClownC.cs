@@ -46,10 +46,10 @@ namespace TMM
             state = ClownCState.Hidden;
 
             chaseCheckTimer *= .95f;
-            chaseCheckTimer -= (chaseCheckTimer * .15f * GameManager.Instance.Level);
+            chaseCheckTimer -= (chaseCheckTimer * .3f * GameManager.Instance.Level);
 
             agent.speed *= .95f;
-            agent.speed += (agent.speed * .075f * GameManager.Instance.Level);
+            agent.speed += (agent.speed * .1f * GameManager.Instance.Level);
             speedDefault = agent.speed;
 
 
