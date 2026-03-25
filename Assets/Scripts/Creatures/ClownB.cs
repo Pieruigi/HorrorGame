@@ -74,12 +74,12 @@ namespace TMM
 			randomMaxDefault = randomMax;
 			attacker = GetComponent<ClownAttacker>();
 
-			//checkIdleTime *= .95f;
-			checkIdleTime -= (checkIdleTime * .1f * GameManager.Instance.Level);
+			checkIdleTime *= .95f;
+			checkIdleTime -= (checkIdleTime * .15f * GameManager.Instance.Level);
 			checkIdleTimeDefault = checkIdleTime;
 
-			//agent.speed *= .95f;
-            agent.speed += (agent.speed * .05f * GameManager.Instance.Level);
+			agent.speed *= .95f;
+            agent.speed += (agent.speed * .075f * GameManager.Instance.Level);
             speedDefault = agent.speed;
 
 			
